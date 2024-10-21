@@ -4,7 +4,7 @@ import { selectL2Account, selectL1Account, loginL2AccountAsync, loginL1AccountAs
 import { loadAudio } from "./audio";
 
 import {
-  selectMemeList,
+  setTargetMemeIndex,
 } from "../data/puppy_party/properties";
 
 
@@ -124,7 +124,8 @@ export function GameLanding() {
 
   const account = useAppSelector(selectL1Account);
   function startGame(index: number) {
-      dispatch(loginL2AccountAsync(account!))
+      dispatch(setTargetMemeIndex(index));
+      dispatch(loginL2AccountAsync(account!));
       loadAudio((ele) => {return ele;});
   }
 

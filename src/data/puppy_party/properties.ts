@@ -28,11 +28,12 @@ interface MemeListElement {
 }
 
 interface PropertiesState {
-    uIState: UIState;
-    player: PlayerState;
-    lastTxResult: string | number,
-    globalTimer: number;
-    memeList: MemeListElement[];
+  uIState: UIState;
+  player: PlayerState;
+  lastTxResult: string | number,
+  globalTimer: number;
+  targetMemeIndex: number;
+  memeList: MemeListElement[];
 }
 
 const SWAY = 0n;
@@ -51,6 +52,7 @@ const initialState: PropertiesState = {
     },
     lastTxResult: "",
     globalTimer: 0,
+    targetMemeIndex: 0,
     memeList: []
 };
 
@@ -58,6 +60,10 @@ export const propertiesSlice = createSlice({
   name: 'properties',
   initialState,
   reducers: {
+    setTargetMemeIndex: (state, action) => {
+      state.targetMemeIndex = action.payload;
+    },
+
     setUIState: (state, action) => {
       state.uIState = action.payload.uIState;
     },
@@ -119,5 +125,6 @@ export const selectLastLotteryTimestamp = (state: RootState) => state.puppyParty
 export const selectLastActionTimestamp = (state: RootState) => state.puppyParty.properties.player.data.last_action_timestamp;
 export const selectProgress = (state: RootState) => state.puppyParty.properties.player.data.progress;
 export const selectLastTxResult = (state: RootState) => state.puppyParty.properties.lastTxResult;
-export const { setUIState, setLastTxResult } = propertiesSlice.actions;
+export const selectTargetMemeIndex = (state: RootState) => state.puppyParty.properties.targetMemeIndex;
+export const { setTargetMemeIndex, setUIState, setLastTxResult } = propertiesSlice.actions;
 export default propertiesSlice.reducer;
