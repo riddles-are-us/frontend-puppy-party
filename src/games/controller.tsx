@@ -17,13 +17,15 @@ import {
   selectMemeList,
   selectLastLotteryTimestamp,
   selectBalance,
-  selectLastTxResult
+  selectLastTxResult,
+  selectTargetMemeIndex
 } from "../data/puppy_party/properties";
 import { getTransactionCommandArray } from "./rpc";
 import { selectL2Account, selectL1Account, loginL2AccountAsync, loginL1AccountAsync } from "../data/accountSlice";
 import "./style.scss";
 import BN from "bn.js"
 import { WithdrawComponent } from "./withdraw";
+import { GameLanding } from "./stage";
 
 //import cover from "./images/towerdefence.jpg";
 
@@ -52,11 +54,13 @@ export function GameController() {
   const lastLotteryTimestamp = useAppSelector(selectLastLotteryTimestamp);
   const globalTimer = useAppSelector(selectGlobalTimer);
   const memeList = useAppSelector(selectMemeList);
+  const targetMemeIndex = useAppSelector(selectTargetMemeIndex);
   const balance = useAppSelector(selectBalance);
   const lastTxResult = useAppSelector(selectLastTxResult);
   const [isWDModalVisible, setIsWDModalVisible] = useState(false);
   const [isWDResModalVisible, setIsWDResModalVisible] = useState(false);
   const [withdrawRes, setWithdrawRes] = useState('');
+  const [targetMemeRank, setTargetMemeRank] = useState(0);
   const [amount, setAmount] = useState('');
   const [cooldown, setCooldown] = useState(false);
   const [redeemCounting, setRedeemCounting] = useState(0);
@@ -73,6 +77,15 @@ export function GameController() {
       setAlreadyDraw(false);
     }
   }, [progress]);
+
+  useEffect(() => {
+     if (memeList[targetMemeIndex] != undefined) {
+       setTargetMemeRank(memeList[targetMemeIndex].rank);
+     }
+  }, [targetMemeIndex, memeList]);
+
+
+
 
   useEffect(() => {
     const delta = globalTimer - lastActionTimestamp;
@@ -183,7 +196,7 @@ export function GameController() {
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
-          cmd: getTransactionCommandArray(SHAKE_FEET, nonce, [0n, 0n, 0n]),
+          cmd: getTransactionCommandArray(SHAKE_FEET, nonce, [BigInt(targetMemeIndex), 0n, 0n]),
           prikey: l2account!.address,
         })
       );
@@ -197,7 +210,7 @@ export function GameController() {
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
-          cmd: getTransactionCommandArray(JUMP, nonce, [0n, 0n, 0n]),
+          cmd: getTransactionCommandArray(JUMP, nonce, [BigInt(targetMemeIndex), 0n, 0n]),
           prikey: l2account!.address,
         })
       );
@@ -211,7 +224,7 @@ export function GameController() {
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
-          cmd: getTransactionCommandArray(SHAKE_HEADS, nonce, [0n, 0n, 0n]),
+          cmd: getTransactionCommandArray(SHAKE_HEADS, nonce, [BigInt(targetMemeIndex), 0n, 0n]),
           prikey: l2account!.address,
         })
       );
@@ -225,7 +238,7 @@ export function GameController() {
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
-          cmd: getTransactionCommandArray(POST_COMMENTS, nonce, [0n, 0n, 0n]),
+          cmd: getTransactionCommandArray(POST_COMMENTS, nonce, [BigInt(targetMemeIndex), 0n, 0n]),
           prikey: l2account!.address,
         })
       );
@@ -304,12 +317,7 @@ export function GameController() {
   return (
     <>
       {!l2account && account &&
-      <div className="loading" id="stage"
-          onClick={() => {
-              dispatch(loginL2AccountAsync(account!))
-              loadAudio((ele) => {return ele;});
-          }}>
-      </div>
+      <GameLanding></GameLanding>
       }
       {l2account &&
       <>
@@ -329,6 +337,7 @@ export function GameController() {
             handleConfirmWithdraw={handleConfirmWithdraw}
           />
           <div className="balance">balance: {balance}</div>
+          <div className="balance">meme ({targetMemeIndex}): {targetMemeRank}</div>
         </div>
 
         <div className="center" id="stage">
