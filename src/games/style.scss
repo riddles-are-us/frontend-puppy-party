@@ -1,0 +1,157 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent scrollbars */
+  height: 100%;
+  background-image: url('images/bggray.jpg');
+  background-size: cover;
+  background-position: center;
+
+   /* Apply grayscale filter */
+}
+
+div.nav {
+  background-color:black;
+  color:white;
+  div {
+    margin-left: 10px;
+  }
+}
+div.loading {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    color:white;
+    background-image: url('images/loading.png');
+    background-size: cover;
+    cursor: pointer;
+}
+
+div.center {
+    position: absolute;
+    width: 960px;
+    height: 540px;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    color:white;
+
+    .withdraw {
+      position: absolute;
+      top: 2%;
+      right: 16%;
+      height: 30px;
+      width: 80px;
+      border: 1px solid white;
+      cursor: pointer;
+    }
+
+    .balance {
+      position: absolute;
+      top: 2%;
+      right: 5%;
+    }
+}
+canvas {
+  border: 0px solid gray;
+  display: block; /* Removes the default inline spacing for canvas */
+}
+
+button.btn-confirm {
+  font-size: 30px;
+  color: white;
+  background-color: black;
+}
+
+div.stage-buttons {
+  position: absolute;
+  left: 300px;
+  top: 460px;
+  .button1 {
+    display: inline-block;
+    height:70px;
+    width:70px;
+    background-image: url('images/btn1.png');
+    background-size: cover;
+  }
+  .button2 {
+    margin-left:15px;
+    display: inline-block;
+    height:70px;
+    width:70px;
+    background-image: url('images/btn2.png');
+    background-size: cover;
+  }
+  .button3 {
+    margin-left:15px;
+    display: inline-block;
+    height:70px;
+    width:70px;
+    background-image: url('images/btn3.png');
+    background-size: cover;
+  }
+  .button4 {
+    margin-left:15px;
+    display: inline-block;
+    height:70px;
+    width:70px;
+    background-image: url('images/btn4.png');
+    background-size: cover;
+  }
+}
+
+div.giftbox-buttons {
+  position: absolute;
+  left: 260px;
+  top: 260px;
+  width: 400px;
+  height: 95px;
+  background-image: url('images/giftbox.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  padding-left: 60px;
+  padding-top: 90px;
+  .button-yes {
+    cursor: pointer;
+    color: orange;
+    font-weight: 800;
+    display: inline-block;
+    height:70px;
+    width:270px;
+    background-color: black;
+    padding:5px;
+    text-align: center;
+    font-size: 16px;
+  }
+  animation: fadeIn 1s;
+}
+
+div.cd-false {
+  cursor: pointer;
+  //filter: grayscale(100%);
+}
+
+div.cd-false:hover {
+  cursor: pointer;
+}
+
+
+div.cd-true {
+  filter: grayscale(100%);
+}
+
+
+
+div.none {
+  display: None;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
