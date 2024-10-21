@@ -24,6 +24,7 @@ import { selectL2Account, selectL1Account, loginL2AccountAsync, loginL1AccountAs
 import "./style.scss";
 import BN from "bn.js"
 import { WithdrawComponent } from "./withdraw";
+import { GameLanding } from "./stage";
 
 //import cover from "./images/towerdefence.jpg";
 
@@ -304,12 +305,7 @@ export function GameController() {
   return (
     <>
       {!l2account && account &&
-      <div className="loading" id="stage"
-          onClick={() => {
-              dispatch(loginL2AccountAsync(account!))
-              loadAudio((ele) => {return ele;});
-          }}>
-      </div>
+      <GameLanding></GameLanding>
       }
       {l2account &&
       <>

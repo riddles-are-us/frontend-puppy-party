@@ -8,7 +8,8 @@ export enum UIState{
   QueryState,
   CreatePlayer,
   Idle,
-  Withdraw
+  Withdraw,
+  ConnectionError,
 }
 
 interface PlayerState {
@@ -71,6 +72,7 @@ export const propertiesSlice = createSlice({
         console.log("query config fulfilled");
       })
       .addCase(getConfig.rejected, (state, action) => {
+        state.uIState = UIState.ConnectionError;
         console.log(`query config rejected: ${action.payload}`);
       })
       .addCase(sendTransaction.fulfilled, (state, action) => {

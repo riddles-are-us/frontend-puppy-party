@@ -1,7 +1,6 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import accountReducer from '../data/accountSlice';
 import endpointReducer from "../data/endpoint";
-import gameReducer from "../data/game";
 import puppyPartyReducer from "../data/puppy_party/puppy_party";
 
 export const store = configureStore({
@@ -15,8 +14,6 @@ export const store = configureStore({
           "account.l1Account.web3",
           "endpoint.zkWasmServiceHelper",
           "status.config.latest_server_checksum",
-          "game.preMerkleRoot",
-          "game.postMerkleRoot",
           "account.l2account",
           "puppyParty.properties.player.data.action"
         ],
@@ -25,7 +22,6 @@ export const store = configureStore({
   reducer: {
     account: accountReducer,
     endpoint: endpointReducer,
-    game: gameReducer,
     puppyParty: puppyPartyReducer
   },
 });
