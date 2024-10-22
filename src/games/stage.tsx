@@ -103,7 +103,7 @@ export function GameLanding() {
             const l = shuffled.pop();
             const style = stageDivStyle(l!);
             installedDiv.push(
-             <div style={style} onClick={()=>startGame(35 - shuffled.length)}></div>
+             <div style={style} onClick={()=>startGame(shuffled.length)}></div>
             );
             return {
               divs: installedDiv,
