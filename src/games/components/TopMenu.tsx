@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import "./TopMenu.css";
+import WithdrawButton from "./WithdrawButton";
 
 interface WithdrawComponentProps {
   isWDModalVisible: boolean;
@@ -55,10 +56,13 @@ function TopMenu({
   return (
     <div className="top-menu-container">
       <div className="top-menu-background" />
-      <div className="withdraw" onClick={handleWithdrawClick}>
+      {/* <div className="withdraw" onClick={handleWithdrawClick}>
         Withdraw
+      </div> */}
+      <div className="top-menu-withdraw-button">
+        <WithdrawButton onClick={handleWithdrawClick} />
       </div>
-      <div className="balance">balance: {balance}</div>
+      <div className="top-menu-balance-text">balance: {balance}</div>
       {/* <Modal show={isWDModalVisible} onHide={() => setIsWDModalVisible(false)}>
           <Modal.Header closeButton>
             <Modal.Title>Enter Amount to Withdraw</Modal.Title>

@@ -28,7 +28,7 @@ import {
 } from "../data/accountSlice";
 import "./style.scss";
 import BN from "bn.js";
-import TopMenu from "./TopMenu";
+import TopMenu from "./components/TopMenu";
 
 //import cover from "./images/towerdefence.jpg";
 
