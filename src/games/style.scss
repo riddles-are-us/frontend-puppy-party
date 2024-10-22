@@ -3,20 +3,13 @@ body, html {
   padding: 0;
   overflow: hidden; /* Prevent scrollbars */
   height: 100%;
-  background-image: url('images/bggray.jpg');
+  background-image: url('images/bg.png');
   background-size: cover;
   background-position: center;
 
    /* Apply grayscale filter */
 }
 
-div.nav {
-  background-color:black;
-  color:white;
-  div {
-    margin-left: 10px;
-  }
-}
 div.loading {
     position: absolute;
     width: 300px;
@@ -49,12 +42,6 @@ div.center {
       width: 80px;
       border: 1px solid white;
       cursor: pointer;
-    }
-
-    .balance {
-      position: absolute;
-      top: 2%;
-      right: 5%;
     }
 }
 canvas {
