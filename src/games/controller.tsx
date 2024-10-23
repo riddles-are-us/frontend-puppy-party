@@ -29,6 +29,7 @@ import {
 import "./style.scss";
 import BN from "bn.js";
 import TopMenu from "./components/TopMenu";
+import WithdrawPopup from "./components/Popups/WithdrawPopup";
 
 //import cover from "./images/towerdefence.jpg";
 
@@ -68,6 +69,7 @@ export function GameController() {
   const [cooldown, setCooldown] = useState(false);
   const [redeemCounting, setRedeemCounting] = useState(0);
   const [alreadyDraw, setAlreadyDraw] = useState(false);
+  const showWithdrawPopup = uIState == UIState.WithdrawPopup;
 
   console.log(
     "lastActionTimestamp",
@@ -287,7 +289,7 @@ export function GameController() {
     console.log("Withdrawing amount:", amount);
     setIsWDModalVisible(false); // Hide the modal after withdrawal
     setIsWDResModalVisible(true);
-    dispatch(setUIState({ uIState: UIState.Withdraw }));
+    dispatch(setUIState({ uIState: UIState.QueryWithdraw }));
     withdrawRewards(BigInt(amount), nonce);
     setAmount("0");
   };
@@ -344,6 +346,7 @@ export function GameController() {
       )}
       {l2account && (
         <>
+          {showWithdrawPopup && <WithdrawPopup />}
           <TopMenu
             isWDModalVisible={isWDModalVisible}
             setIsWDModalVisible={setIsWDModalVisible}

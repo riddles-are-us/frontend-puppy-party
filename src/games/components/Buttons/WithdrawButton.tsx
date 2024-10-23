@@ -1,8 +1,8 @@
 import React from "react";
-import ImageButton from "./common/ImageButton";
-import buttonImage from "../images/Buttons/Withdraw/withdraw_button.png";
-import buttonHoverImage from "../images/Buttons/Withdraw/withdraw_button_hv.png";
-import buttonClickImage from "../images/Buttons/Withdraw/withdraw_button_click.png";
+import ImageButton from "../Common/ImageButton";
+import buttonImage from "../../images/Buttons/Withdraw/withdraw_button.png";
+import buttonHoverImage from "../../images/Buttons/Withdraw/withdraw_button_hv.png";
+import buttonClickImage from "../../images/Buttons/Withdraw/withdraw_button_click.png";
 import "./WithdrawButton.css";
 
 interface Props {

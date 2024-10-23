@@ -1,6 +1,12 @@
 import React, { useEffect } from "react";
 import "./TopMenu.css";
-import WithdrawButton from "./WithdrawButton";
+import WithdrawButton from "./Buttons/WithdrawButton";
+import {
+  selectUIState,
+  setUIState,
+  UIState,
+} from "../../data/puppy_party/properties";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
 interface WithdrawComponentProps {
   isWDModalVisible: boolean;
@@ -31,18 +37,15 @@ function TopMenu({
   handleConfirmWithdraw,
   handleWithdrawClick,
 }: WithdrawComponentProps) {
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const amount = e.target.value;
-    if (
-      /^\d*$/.test(amount) &&
-      Number(amount) >= 0 &&
-      Number(amount) <= balance
-    ) {
-      setAmount(amount);
-    } else {
-      setAmount("");
+  const dispatch = useAppDispatch();
+  const uiState = useAppSelector(selectUIState);
+
+  const onClickWithdraw = () => {
+    if (uiState == UIState.Idle) {
+      dispatch(setUIState({ uIState: UIState.WithdrawPopup }));
     }
   };
+
   useEffect(() => {
     if (typeof lastTxResult === "number") {
       setWithdrawRes(
@@ -56,11 +59,8 @@ function TopMenu({
   return (
     <div className="top-menu-container">
       <div className="top-menu-background" />
-      {/* <div className="withdraw" onClick={handleWithdrawClick}>
-        Withdraw
-      </div> */}
       <div className="top-menu-withdraw-button">
-        <WithdrawButton onClick={handleWithdrawClick} />
+        <WithdrawButton onClick={onClickWithdraw} />
       </div>
       <div className="top-menu-balance-text">balance: {balance}</div>
       {/* <Modal show={isWDModalVisible} onHide={() => setIsWDModalVisible(false)}>
