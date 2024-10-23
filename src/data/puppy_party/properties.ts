@@ -8,7 +8,8 @@ export enum UIState{
   QueryState,
   CreatePlayer,
   Idle,
-  Withdraw,
+  QueryWithdraw,
+  WithdrawPopup,
   ConnectionError,
 }
 
@@ -89,7 +90,7 @@ export const propertiesSlice = createSlice({
         console.log("send transaction fulfilled. The command processed at:", action.payload);
       })
       .addCase(sendTransaction.rejected, (state, action) => {
-        if (state.uIState == UIState.Withdraw){
+        if (state.uIState == UIState.QueryWithdraw){
           state.lastTxResult = action.payload!.message;
         }
         state.uIState = UIState.QueryState;
