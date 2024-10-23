@@ -5,6 +5,7 @@ import "./WithdrawPopup.css";
 import { sendTransaction } from "../../request";
 import { selectL1Account, selectL2Account } from "../../../data/accountSlice";
 import {
+  selectBalance,
   selectNonce,
   selectUIState,
   setUIState,
@@ -13,6 +14,7 @@ import {
 import BN from "bn.js";
 import WithdrawConfirmButton from "../Buttons/WithdrawConfirmButton";
 import { getTransactionCommandArray } from "../../rpc";
+import WithdrawCancelButton from "../Buttons/WithdrawCancelButton";
 
 const WITHDRAW = 8n;
 function bytesToHex(bytes: Array<number>): string {
@@ -27,6 +29,7 @@ const WithdrawPopup = () => {
   const nonce = useAppSelector(selectNonce);
   const l2account = useAppSelector(selectL2Account);
   const l1account = useAppSelector(selectL1Account);
+  const balance = useAppSelector(selectBalance);
   const [amountString, setAmountString] = useState("");
 
   async function withdrawRewards(amount: bigint, nonce: bigint) {
@@ -95,19 +98,21 @@ const WithdrawPopup = () => {
       <div onClick={onClickCancel} className="withdraw-popup-mask" />
       <div className="withdraw-popup-main-container">
         <img src={background} className="withdraw-popup-main-background" />
-        <p className="withdraw-popup-title-text">Withdraw</p>
-        <p className="withdraw-popup-amount-text">amount</p>
-        <div className="withdraw-popup-amount-container">
-          <input
-            type="number"
-            className="withdraw-popup-amount-input"
-            value={amountString}
-            onChange={(e) => setAmountString(e.target.value)}
-            min="0"
-          />
-        </div>
+        <p className="withdraw-popup-amount-text">
+          Please enter a number between 0 and {balance}.
+        </p>
+        <input
+          type="number"
+          className="withdraw-popup-amount-input"
+          value={amountString}
+          onChange={(e) => setAmountString(e.target.value)}
+          placeholder="Enter amount"
+        />
         <div className="withdraw-popup-confirm-button">
           <WithdrawConfirmButton onClick={onClickConfirm} />
+        </div>
+        <div className="withdraw-popup-cancel-button">
+          <WithdrawCancelButton onClick={onClickCancel} />
         </div>
       </div>
     </div>

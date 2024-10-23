@@ -7,7 +7,6 @@ import { scenario } from "./scenario";
 import { getConfig, sendTransaction, queryState } from "./request";
 import {
   UIState,
-  setLastTxResult,
   selectUIState,
   setUIState,
   selectNonce,
@@ -16,8 +15,6 @@ import {
   selectGlobalTimer,
   selectMemeList,
   selectLastLotteryTimestamp,
-  selectBalance,
-  selectLastTxResult,
 } from "../data/puppy_party/properties";
 import { getTransactionCommandArray } from "./rpc";
 import {
@@ -32,12 +29,6 @@ import TopMenu from "./components/TopMenu";
 import WithdrawPopup from "./components/Popups/WithdrawPopup";
 
 //import cover from "./images/towerdefence.jpg";
-
-function bytesToHex(bytes: Array<number>): string {
-  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join(
-    ""
-  );
-}
 
 const CREATE_PLAYER = 1n;
 const SHAKE_FEET = 2n;
@@ -60,12 +51,6 @@ export function GameController() {
   const lastLotteryTimestamp = useAppSelector(selectLastLotteryTimestamp);
   const globalTimer = useAppSelector(selectGlobalTimer);
   const memeList = useAppSelector(selectMemeList);
-  const balance = useAppSelector(selectBalance);
-  const lastTxResult = useAppSelector(selectLastTxResult);
-  const [isWDModalVisible, setIsWDModalVisible] = useState(false);
-  const [isWDResModalVisible, setIsWDResModalVisible] = useState(false);
-  const [withdrawRes, setWithdrawRes] = useState("");
-  const [amount, setAmount] = useState("");
   const [cooldown, setCooldown] = useState(false);
   const [redeemCounting, setRedeemCounting] = useState(0);
   const [alreadyDraw, setAlreadyDraw] = useState(false);
@@ -278,58 +263,6 @@ export function GameController() {
     dispatch(queryState({ cmd: [], prikey: l2account!.address }));
   }
 
-  // Function to handle the withdraw button click
-  const handleWithdrawClick = () => {
-    dispatch(setLastTxResult(""));
-    setIsWDModalVisible(true); // Show the modal
-  };
-
-  // Function to handle the confirmation of the withdraw
-  const handleConfirmWithdraw = () => {
-    console.log("Withdrawing amount:", amount);
-    setIsWDModalVisible(false); // Hide the modal after withdrawal
-    setIsWDResModalVisible(true);
-    dispatch(setUIState({ uIState: UIState.QueryWithdraw }));
-    withdrawRewards(BigInt(amount), nonce);
-    setAmount("0");
-  };
-
-  async function withdrawRewards(amount: bigint, nonce: bigint) {
-    const address = account!.address.slice(2);
-    const addressBN = new BN(address, 16);
-    const addressBE = addressBN.toArray("be", 20); // 20 bytes = 160 bits and split into 4, 8, 8
-    console.log("address is", address);
-    console.log("address big endian is", addressBE);
-    const firstLimb = BigInt(
-      "0x" + bytesToHex(addressBE.slice(0, 4).reverse())
-    );
-    const sndLimb = BigInt("0x" + bytesToHex(addressBE.slice(4, 12).reverse()));
-    const thirdLimb = BigInt(
-      "0x" + bytesToHex(addressBE.slice(12, 20).reverse())
-    );
-
-    /*
-    (32 bit amount | 32 bit highbit of address)
-    (64 bit mid bit of address (be))
-    (64 bit tail bit of address (be))
-    */
-
-    console.log("first is", firstLimb);
-    console.log("snd is", sndLimb);
-    console.log("third is", thirdLimb);
-
-    dispatch(
-      sendTransaction({
-        cmd: getTransactionCommandArray(WITHDRAW, nonce, [
-          (firstLimb << 32n) + amount,
-          sndLimb,
-          thirdLimb,
-        ]),
-        prikey: l2account!.address,
-      })
-    );
-  }
-
   return (
     <>
       {!l2account && account && (
@@ -347,20 +280,7 @@ export function GameController() {
       {l2account && (
         <>
           {showWithdrawPopup && <WithdrawPopup />}
-          <TopMenu
-            isWDModalVisible={isWDModalVisible}
-            setIsWDModalVisible={setIsWDModalVisible}
-            isWDResModalVisible={isWDResModalVisible}
-            setIsWDResModalVisible={setIsWDResModalVisible}
-            lastTxResult={lastTxResult}
-            withdrawRes={withdrawRes}
-            setWithdrawRes={setWithdrawRes}
-            amount={amount}
-            setAmount={setAmount}
-            balance={balance}
-            handleWithdrawClick={handleWithdrawClick}
-            handleConfirmWithdraw={handleConfirmWithdraw}
-          />
+          <TopMenu />
 
           <div className="center" id="stage">
             <canvas id="canvas"></canvas>
