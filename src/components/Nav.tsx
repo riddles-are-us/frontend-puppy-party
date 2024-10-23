@@ -9,8 +9,6 @@ import {
   Nav,
 } from "react-bootstrap";
 
-import { selectMD5, selectGameLoaded } from "../data/game";
-
 interface IProps {
   currency: number;
   handleRestart: () => void;
@@ -21,8 +19,6 @@ export function MainNavBar(props: IProps) {
 
   const account = useAppSelector(selectL1Account);
   const l2account = useAppSelector(selectL2Account);
-  const md5 = useAppSelector(selectMD5);
-  const gameLoaded = useAppSelector(selectGameLoaded);
 
   useEffect(() => {
     dispatch(loginL1AccountAsync());

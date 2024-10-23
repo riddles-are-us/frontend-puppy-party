@@ -9,7 +9,12 @@ import {
 } from "../../data/puppy_party/properties";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
-function TopMenu() {
+interface Props {
+  targetMemeIndex: number;
+  targetMemeRank: number;
+}
+
+function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
   const dispatch = useAppDispatch();
   const uiState = useAppSelector(selectUIState);
   const balance = useAppSelector(selectBalance);
@@ -27,6 +32,9 @@ function TopMenu() {
         <WithdrawButton onClick={onClickWithdraw} />
       </div>
       <div className="top-menu-balance-text">balance: {balance}</div>
+      <div className="top-menu-rank-text">
+        meme ({targetMemeIndex}): {targetMemeRank}
+      </div>
     </div>
   );
 }
