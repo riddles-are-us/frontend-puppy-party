@@ -31,7 +31,7 @@ import BN from "bn.js";
 import { WithdrawComponent } from "./withdraw";
 import { GameLanding } from "./stage";
 import TopMenu from "./components/TopMenu";
-import WithdrawPopup from "./components/Popups/WithdrawPopup";
+import WithdrawPopup from "./components/popups/WithdrawPopup";
 
 //import cover from "./images/towerdefence.jpg";
 
