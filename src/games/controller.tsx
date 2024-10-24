@@ -68,6 +68,7 @@ export function GameController() {
   const [redeemCounting, setRedeemCounting] = useState(0);
   const [alreadyDraw, setAlreadyDraw] = useState(false);
   const showWithdrawPopup = uIState == UIState.WithdrawPopup;
+  const [configLoaded, setConfigLoaded] = useState(false);
 
   console.log(
     "lastActionTimestamp",
@@ -155,9 +156,7 @@ export function GameController() {
   }
 
   function loginProcess() {
-    if (uIState == UIState.QueryConfig) {
-      dispatch(getConfig());
-    } else if (uIState == UIState.QueryState) {
+    if (uIState == UIState.QueryState) {
       dispatch(queryState({ cmd: [], prikey: l2account!.address }));
     } else if (uIState == UIState.CreatePlayer) {
       createPlayer();
@@ -165,17 +164,17 @@ export function GameController() {
   }
 
   useEffect(() => {
-    loginProcess();
-  }, [uIState]);
+    if (l2account) {
+        loginProcess();
+    }
+    updateConfigLoaded();
+  }, [uIState, l2account]);
 
   useEffect(() => {
     if (l2account) {
       scenario.status = "play";
       console.log(l2account);
 
-      if (uIState == UIState.Init) {
-        dispatch(setUIState({ uIState: UIState.QueryConfig }));
-      }
 
       const ele = document.getElementById("stage");
       ele!.style.transform = "translate(50%, -50%) scale(2)";
@@ -184,6 +183,10 @@ export function GameController() {
 
   useEffect(() => {
     dispatch(loginL1AccountAsync());
+    if (uIState == UIState.Init) {
+      //dispatch(setUIState({ uIState: UIState.QueryConfig }));
+      dispatch(getConfig());
+    }
   }, []);
 
   useEffect(() => {
@@ -194,6 +197,14 @@ export function GameController() {
 
   const account = useAppSelector(selectL1Account);
   console.log("l1 account:", account);
+
+  function updateConfigLoaded() {
+    if (uIState == UIState.Init || uIState == UIState.QueryConfig) {
+      setConfigLoaded(false);
+    } else {
+      setConfigLoaded(true);
+    }
+  }
 
   function handleDiscoShakeFeet() {
     if (cooldown == false) {
@@ -300,7 +311,8 @@ export function GameController() {
 
   return (
     <>
-      {!l2account && account && <GameLanding></GameLanding>}
+      {!configLoaded && <div>Get Service Config ... </div>}
+      {!l2account && account && configLoaded && <GameLanding memeList={memeList}></GameLanding>}
       {l2account && (
         <>
           {showWithdrawPopup && <WithdrawPopup />}
