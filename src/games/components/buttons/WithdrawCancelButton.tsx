@@ -1,5 +1,5 @@
 import React from "react";
-import ImageButton from "../Common/ImageButton";
+import ImageButton from "../common/ImageButton";
 import buttonImage from "../../images/Buttons/WithdrawCancel/cancel.png";
 import buttonHoverImage from "../../images/Buttons/WithdrawCancel/cancel_hover.png";
 import buttonClickImage from "../../images/Buttons/WithdrawCancel/cancel_click.png";

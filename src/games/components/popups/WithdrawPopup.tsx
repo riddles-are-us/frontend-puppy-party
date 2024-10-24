@@ -12,9 +12,9 @@ import {
   UIState,
 } from "../../../data/puppy_party/properties";
 import BN from "bn.js";
-import WithdrawConfirmButton from "../Buttons/WithdrawConfirmButton";
+import WithdrawConfirmButton from "../buttons/WithdrawConfirmButton";
 import { getTransactionCommandArray } from "../../rpc";
-import WithdrawCancelButton from "../Buttons/WithdrawCancelButton";
+import WithdrawCancelButton from "../buttons/WithdrawCancelButton";
 
 const WITHDRAW = 8n;
 function bytesToHex(bytes: Array<number>): string {

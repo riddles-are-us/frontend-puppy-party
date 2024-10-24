@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import "./TopMenu.css";
-import WithdrawButton from "./Buttons/WithdrawButton";
+import WithdrawButton from "./buttons/WithdrawButton";
 import {
   selectBalance,
   selectUIState,
