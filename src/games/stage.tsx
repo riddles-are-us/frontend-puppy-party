@@ -4,6 +4,7 @@ import { selectL2Account, selectL1Account, loginL2AccountAsync, loginL1AccountAs
 import { loadAudio } from "./audio";
 
 import {
+        selectMemeList,
   setTargetMemeIndex,
 } from "../data/puppy_party/properties";
 
@@ -59,12 +60,20 @@ function shuffleArray<T>(array: T[]): T[] {
   return retArray;
 }
 
-function sortLayout<T>(array: Array<T>): Array<T> {
+function sortLayout<T>(array: Array<T>): Array<{index: number, value:T}> {
   const retArray: Array<T> = [...array];
+
   retArray.sort((a:any, b:any) => {
      return a[2] - b[2];
   });
-  return retArray;
+
+  const ret = retArray.map((v, index) => {
+    return {
+      index: index,
+      value: v
+    }
+  });
+  return ret;
 }
 
 
@@ -86,14 +95,27 @@ interface LayoutInfo {
 }
 
 const shuffled = sortLayout(divLayout);
+
 const installedDiv: JSX.Element[] = [];
 
-export function GameLanding() {
+export function GameLanding(prop: {memeList: Array<any>}) {
   const dispatch = useAppDispatch();
   const layoutRef = useRef<LayoutInfo | null>(null);
   const [memelayout, setMemeLayout] = useState<LayoutInfo>({
     divs:[],
   });
+
+  const indexedMemeList = prop.memeList.map((v, index) => {
+    return {
+      index: index,
+      value: v
+    }
+  });
+
+  indexedMemeList.sort((a:any, b:any) => {
+     return a.value.rank - b.value.rank;
+  });
+
 
   useEffect(() => {
       // Set up an interval that adds a new div every 1 second
@@ -101,9 +123,9 @@ export function GameLanding() {
         setMemeLayout(m => {
           if (shuffled.length > 0) {
             const l = shuffled.pop();
-            const style = stageDivStyle(l!);
+            const style = stageDivStyle(l!.value);
             installedDiv.push(
-             <div style={style} onClick={()=>startGame(shuffled.length)}></div>
+             <div style={style} onClick={()=>startGame(indexedMemeList[l!.index].index)}></div>
             );
             return {
               divs: installedDiv,

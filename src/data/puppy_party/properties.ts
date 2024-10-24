@@ -76,6 +76,7 @@ export const propertiesSlice = createSlice({
     builder
       .addCase(getConfig.fulfilled, (state, action) => {
         state.uIState = UIState.CreatePlayer;
+        state.memeList = action.payload;
         console.log("query config fulfilled");
       })
       .addCase(getConfig.rejected, (state, action) => {
