@@ -154,3 +154,7 @@ export function GameLanding(prop: {memeList: Array<any>}) {
 
   return (<div className="loading" id="stage">{memelayout.divs}</div>);
 }
+
+export function GameConnecting(prop: {hint: string}) {
+  return (<div className="loading" id="stage">{prop.hint}</div>);
+}
