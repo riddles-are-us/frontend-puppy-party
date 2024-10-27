@@ -10,6 +10,7 @@ export enum UIState{
   Idle,
   QueryWithdraw,
   WithdrawPopup,
+  GiftboxPopup,
   ConnectionError,
 }
 
