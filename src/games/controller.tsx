@@ -28,10 +28,9 @@ import {
 } from "../data/accountSlice";
 import "./style.scss";
 import BN from "bn.js";
-import { WithdrawComponent } from "./withdraw";
 import { GameLanding } from "./stage";
 import TopMenu from "./components/TopMenu";
-import WithdrawPopup from "./components/popups/WithdrawPopup";
+import Popups from "./components/Popups";
 
 //import cover from "./images/towerdefence.jpg";
 
@@ -65,9 +64,6 @@ export function GameController() {
   const [targetMemeRank, setTargetMemeRank] = useState(0);
   const [amount, setAmount] = useState("");
   const [cooldown, setCooldown] = useState(false);
-  const [redeemCounting, setRedeemCounting] = useState(0);
-  const [alreadyDraw, setAlreadyDraw] = useState(false);
-  const showWithdrawPopup = uIState == UIState.WithdrawPopup;
   const [configLoaded, setConfigLoaded] = useState(false);
 
   console.log(
@@ -77,13 +73,36 @@ export function GameController() {
     globalTimer
   );
 
+  const preloadImages = (urls: string[], onReady: () => void) => {
+    let loadedCount = 0;
+    urls.forEach((url) => {
+      const img = new Image();
+      img.src = url;
+
+      img.onload = () => {
+        loadedCount++;
+        if (loadedCount === urls.length) {
+          onReady();
+        }
+      };
+
+      img.onerror = () => {
+        console.error(`Failed to load image: ${url}`);
+        loadedCount++;
+        if (loadedCount === urls.length) {
+          onReady();
+        }
+      };
+    });
+  };
+
   // Update the ref value whenever `progress` changes
   useEffect(() => {
     progressRef.current = progress;
 
     // Reset to false
     if (progress == 1000) {
-      setAlreadyDraw(false);
+      dispatch(setUIState({ uIState: UIState.GiftboxPopup }));
     }
   }, [progress]);
 
@@ -108,7 +127,6 @@ export function GameController() {
         handleCancelRewards();
       }
     }
-    setRedeemCounting(rc);
   }, [lastActionTimestamp, globalTimer]);
 
   useEffect(() => {
@@ -165,16 +183,25 @@ export function GameController() {
 
   useEffect(() => {
     if (l2account) {
-        loginProcess();
+      loginProcess();
     }
     updateConfigLoaded();
   }, [uIState, l2account]);
 
   useEffect(() => {
     if (l2account) {
+      const requireContext = require.context(
+        "./images",
+        true,
+        /\.(png|jpg|jpeg|gif)$/
+      );
+      const urls = requireContext.keys().map(requireContext) as string[];
+      preloadImages(urls, () => {
+        dispatch(setUIState({ uIState: UIState.QueryConfig }));
+      });
+
       scenario.status = "play";
       console.log(l2account);
-
 
       const ele = document.getElementById("stage");
       ele!.style.transform = "translate(50%, -45%) scale(2)";
@@ -287,9 +314,6 @@ export function GameController() {
   }
 
   function handleRedeemRewards() {
-    // Set to true as long as the player click the lottery button
-    setAlreadyDraw(true);
-
     dispatch(
       sendTransaction({
         cmd: getTransactionCommandArray(LOTTERY, nonce, [0n, 0n, 0n]),
@@ -312,10 +336,12 @@ export function GameController() {
   return (
     <>
       {!configLoaded && <div>Get Service Config ... </div>}
-      {!l2account && account && configLoaded && <GameLanding memeList={memeList}></GameLanding>}
+      {!l2account && account && configLoaded && (
+        <GameLanding memeList={memeList}></GameLanding>
+      )}
       {l2account && (
         <>
-          {showWithdrawPopup && <WithdrawPopup />}
+          <Popups />
           <TopMenu
             targetMemeIndex={targetMemeIndex}
             targetMemeRank={targetMemeRank}
@@ -340,18 +366,6 @@ export function GameController() {
                 className={`button4 cd-${cooldown}`}
                 onClick={handleDiscoPostComments}
               ></div>
-            </div>
-            <div
-              className={
-                progress >= 1000 && redeemCounting >= 0 && !alreadyDraw
-                  ? "giftbox-buttons"
-                  : "none"
-              }
-            >
-              <div className="button-yes" onClick={handleRedeemRewards}>
-                Raffle if full, click to collect rewards: {redeemCounting} ticks
-                left{" "}
-              </div>
             </div>
           </div>
         </>
