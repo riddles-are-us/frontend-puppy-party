@@ -177,7 +177,7 @@ export function GameController() {
 
 
       const ele = document.getElementById("stage");
-      ele!.style.transform = "translate(50%, -50%) scale(2)";
+      ele!.style.transform = "translate(50%, -45%) scale(2)";
     }
   }, [l2account]);
 

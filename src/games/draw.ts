@@ -366,14 +366,15 @@ export function drawHorn(ratioArray: Array<Beat>, ctx: CanvasRenderingContext2D)
   ctx.drawImage(spirites.horn, 0, 0, 177, 210, x, y+110, 88*rL, 105*rL);
   const ele = document.getElementById("stage");
   const height = window.document.body.offsetHeight - 100;
-  const r = Math.floor(height/5.4)/100;
-  const transform = `translate(50%, -50%) scale(${r})`;
+  const width = window.document.body.offsetWidth - 100;
+  const r = Math.min(Math.floor(height/(HEIGHT / 100))/100, Math.floor(width/(WIDTH / 100))/100);
+  const transform = `translate(50%, -45%) scale(${r})`;
 
   if (freeze==0 && (ratio > 1.08 && avg > 130)) {
     ele!.style.transition = 'transform 0.1s ease';
-    ele!.style.transform = "translate(50%, -50%)" + " " + `scale(${r + 0.02})` + " " + "rotate(0.25deg)";
+    ele!.style.transform = "translate(50%, -45%)" + " " + `scale(${r + 0.02})` + " " + "rotate(0.25deg)";
     ele!.style.transition = 'transform 0.1s ease';
-    ele!.style.transform = "translate(50%, -50%)" + " " + `scale(${r + 0.02})` + " " + "rotate(-0.25deg)";
+    ele!.style.transform = "translate(50%, -45%)" + " " + `scale(${r + 0.02})` + " " + "rotate(-0.25deg)";
     freeze = 10;
   } else {
     ele!.style.transform = transform;
