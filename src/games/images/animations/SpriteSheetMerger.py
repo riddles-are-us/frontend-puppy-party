@@ -1,25 +1,26 @@
+import re
 import os, shutil
 from PIL import Image
 
-def merge_images_to_sprite(folder_path, output_path, rows, columns):
+def merge_images_to_sprite(folder_path, output_path):
     
     image_files = [f for f in os.listdir(folder_path) if f.endswith('.png')]
     if len(image_files) == 0:
         raise ValueError("No PNG images found in the folder")
 
     
-    image_files.sort()
-
+    image_files.sort(key=lambda f: int(re.search(r'\d+', f).group()))
     
     first_image = Image.open(os.path.join(folder_path, image_files[0]))
     width, height = first_image.size
+    columns = len(image_files)
 
+    print([img for img in image_files])
     
     sprite_width = width * columns
-    sprite_height = height * rows
 
     
-    sprite_sheet = Image.new("RGBA", (sprite_width, sprite_height))
+    sprite_sheet = Image.new("RGBA", (sprite_width, height))
 
     
     for index, image_file in enumerate(image_files):
@@ -48,5 +49,5 @@ def merge_images_to_sprite(folder_path, output_path, rows, columns):
 #     merge_images_to_sprite(folder_path, sprite_sheet_output_path, 1, 24)
 #     shutil.copy(icon_input_path, icon_output_path)
 
-merge_images_to_sprite("./raw", "./giftbox_repeat.png", 1, 13)
+merge_images_to_sprite("./raw", "./giftbox_repeat.png")
 

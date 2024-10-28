@@ -5,17 +5,13 @@ import "./GiftboxPopup.css";
 import { sendTransaction } from "../../request";
 import { selectL1Account, selectL2Account } from "../../../data/accountSlice";
 import {
-  selectBalance,
-  selectNonce,
   selectUIState,
   setUIState,
   UIState,
 } from "../../../data/puppy_party/properties";
-import BN from "bn.js";
-import WithdrawConfirmButton from "../buttons/WithdrawConfirmButton";
-import { getTransactionCommandArray } from "../../rpc";
-import WithdrawCancelButton from "../buttons/WithdrawCancelButton";
 import GiftboxConfirmButton from "../buttons/GiftboxConfirmButton";
+import open_image from "../../images/animations/giftbox_open.png";
+import repeat_image from "../../images/animations/giftbox_repeat.png";
 
 const WITHDRAW = 8n;
 function bytesToHex(bytes: Array<number>): string {
@@ -27,37 +23,39 @@ function bytesToHex(bytes: Array<number>): string {
 const GiftboxPopup = () => {
   const dispatch = useAppDispatch();
   const uIState = useAppSelector(selectUIState);
+  const [isAnimationOpenFinished, setIsAnimationOpenFinished] = useState(false);
 
-  const [showRepeatAnimation, setShowRepeatAnimation] = useState(false);
-
-  useEffect(() => {
-    if (uIState == UIState.GiftboxPopup) {
-      setTimeout(() => {
-        setShowRepeatAnimation(true);
-      }, 1000);
-    }
-  }, [uIState]);
+  const handleAnimationEnd = () => {
+    setIsAnimationOpenFinished(true);
+  };
 
   const onClickConfirm = () => {
     if (uIState == UIState.GiftboxPopup) {
-      setShowRepeatAnimation(false);
+      setIsAnimationOpenFinished(false);
       dispatch(setUIState({ uIState: UIState.Idle }));
     }
   };
 
   return (
-    <div className="giftbox-popup-container">
-      <div className="giftbox-popup-main-container">
-        {showRepeatAnimation ? (
-          <div className="giftbox-popup-main-animation-repeat" />
-        ) : (
-          <div className="giftbox-popup-main-animation-open" />
-        )}
-        <div className="giftbox-popup-confirm-button">
-          <GiftboxConfirmButton onClick={onClickConfirm} />
+    <>
+      <link rel="preload" href={open_image} as="image" />
+      <link rel="preload" href={repeat_image} as="image" />
+      <div className="giftbox-popup-container">
+        <div className="giftbox-popup-main-container">
+          <div
+            className={
+              isAnimationOpenFinished
+                ? "giftbox-popup-main-animation-repeat"
+                : "giftbox-popup-main-animation-open"
+            }
+            onAnimationEnd={handleAnimationEnd}
+          ></div>
+          <div className="giftbox-popup-confirm-button">
+            <GiftboxConfirmButton onClick={onClickConfirm} />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

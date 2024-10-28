@@ -29,7 +29,7 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    animation: GiftboxAnimationOpen 1s steps(19) forwards;
+    animation: GiftboxAnimationOpen 2s steps(19) forwards;
     background-image: url("../../images/animations/giftbox_open.png");
     background-size: cover;
     user-select: none;
@@ -39,6 +39,34 @@
     from { background-position: 0px; }
     to { background-position: -12480px; }
 }
+/* @keyframes GiftboxAnimationRepeatTest {
+    0% { background-image: url('../../images/animations/raw/pop_1.png'); }
+    7.69% { background-image: url('../../images/animations/raw/pop_2.png'); }
+    15.38% { background-image: url('../../images/animations/raw/pop_3.png'); }
+    23.07% { background-image: url('../../images/animations/raw/pop_4.png'); }
+    30.76% { background-image: url('../../images/animations/raw/pop_5.png'); }
+    38.45% { background-image: url('../../images/animations/raw/pop_6.png'); }
+    46.14% { background-image: url('../../images/animations/raw/pop_7.png'); }
+    53.83% { background-image: url('../../images/animations/raw/pop_8.png'); }
+    61.52% { background-image: url('../../images/animations/raw/pop_9.png'); }
+    69.21% { background-image: url('../../images/animations/raw/pop_10.png'); }
+    76.90% { background-image: url('../../images/animations/raw/pop_11.png'); }
+    84.59% { background-image: url('../../images/animations/raw/pop_12.png'); }
+    92.28% { background-image: url('../../images/animations/raw/pop_13.png'); }
+    100% { background-image: url('../../images/animations/raw/pop_1.png'); }
+} */
+
+/* .giftbox-popup-main-animation-repeat {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    animation: GiftboxAnimationRepeatTest 2s steps(14) forwards infinite;
+    background-size: cover;
+    user-select: none;
+} */
 
 .giftbox-popup-main-animation-repeat {
     position: absolute;
@@ -47,7 +75,7 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    animation: GiftboxAnimationRepeat 1s steps(13) forwards infinite;
+    animation: GiftboxAnimationRepeat 2s steps(13) forwards infinite;
     background-image: url("../../images/animations/giftbox_repeat.png");
     background-size: cover;
     user-select: none;
