@@ -73,6 +73,29 @@ export function GameController() {
     globalTimer
   );
 
+  const preloadImages = (urls: string[], onReady: () => void) => {
+    let loadedCount = 0;
+    urls.forEach((url) => {
+      const img = new Image();
+      img.src = url;
+
+      img.onload = () => {
+        loadedCount++;
+        if (loadedCount === urls.length) {
+          onReady();
+        }
+      };
+
+      img.onerror = () => {
+        console.error(`Failed to load image: ${url}`);
+        loadedCount++;
+        if (loadedCount === urls.length) {
+          onReady();
+        }
+      };
+    });
+  };
+
   // Update the ref value whenever `progress` changes
   useEffect(() => {
     progressRef.current = progress;
@@ -167,6 +190,16 @@ export function GameController() {
 
   useEffect(() => {
     if (l2account) {
+      const requireContext = require.context(
+        "./images",
+        true,
+        /\.(png|jpg|jpeg|gif)$/
+      );
+      const urls = requireContext.keys().map(requireContext) as string[];
+      preloadImages(urls, () => {
+        dispatch(setUIState({ uIState: UIState.QueryConfig }));
+      });
+
       scenario.status = "play";
       console.log(l2account);
 

@@ -35,60 +35,38 @@
     top: 50%;
     transform: translate(-50%, -50%);
     animation: 
-        GiftboxAnimationOpen 2s steps(19) forwards, 
-        GiftboxAnimationRepeat 2s steps(13) infinite 2s;
+        GiftboxAnimationOpen 1s steps(19) forwards, 
+        GiftboxAnimationRepeat 1s steps(13) infinite 1s;
     background-image: url("../../images/animations/giftbox.png");
     background-size: cover;
     user-select: none;
 }
 
+@keyframes GiftboxFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.giftbox-popup-title-image {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 80%;
+    left: 50%;
+    width: 115px;
+    height: 25px;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in forwards;
+    animation-delay: 1s;
+    pointer-events: none;
+    user-select: none;
+}
+
 .giftbox-popup-confirm-button {
     position: absolute;
-    top: 82%;
-    left: 75%;
-    transform: translate(-50%, -50%);
-}
-
-.giftbox-popup-amount-text {
-    position: absolute;
-    top: 65%;
+    top: 86%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 18px;
-    text-align: center;
-    line-height: 18px;
-    margin: 0px;
-    width: 80%;
-    height: 18px;
-    font-family: "Allerta";
-    color: black;
-    user-select: none;
-}
-
-.giftbox-popup-amount-input {
-    position: absolute;
-    background: none; 
-    border: none;     
-    outline: none;    
-    color: grey;      
-    text-align: left;
-    font-size: 25px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 70%;
-    height: 25px;
-    user-select: none;
-}
-
-
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-
-input[type="number"] {
-  -moz-appearance: textfield;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in forwards;
+    animation-delay: 1s;
 }
