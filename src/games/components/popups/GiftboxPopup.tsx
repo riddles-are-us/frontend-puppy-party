@@ -10,8 +10,7 @@ import {
   UIState,
 } from "../../../data/puppy_party/properties";
 import GiftboxConfirmButton from "../buttons/GiftboxConfirmButton";
-import open_image from "../../images/animations/giftbox_open.png";
-import repeat_image from "../../images/animations/giftbox_repeat.png";
+import giftbox_image from "../../images/animations/giftbox.png";
 
 const WITHDRAW = 8n;
 function bytesToHex(bytes: Array<number>): string {
@@ -23,33 +22,19 @@ function bytesToHex(bytes: Array<number>): string {
 const GiftboxPopup = () => {
   const dispatch = useAppDispatch();
   const uIState = useAppSelector(selectUIState);
-  const [isAnimationOpenFinished, setIsAnimationOpenFinished] = useState(false);
-
-  const handleAnimationEnd = () => {
-    setIsAnimationOpenFinished(true);
-  };
 
   const onClickConfirm = () => {
     if (uIState == UIState.GiftboxPopup) {
-      setIsAnimationOpenFinished(false);
       dispatch(setUIState({ uIState: UIState.Idle }));
     }
   };
 
   return (
     <>
-      <link rel="preload" href={open_image} as="image" />
-      <link rel="preload" href={repeat_image} as="image" />
+      <link rel="preload" href={giftbox_image} as="image" />
       <div className="giftbox-popup-container">
         <div className="giftbox-popup-main-container">
-          <div
-            className={
-              isAnimationOpenFinished
-                ? "giftbox-popup-main-animation-repeat"
-                : "giftbox-popup-main-animation-open"
-            }
-            onAnimationEnd={handleAnimationEnd}
-          ></div>
+          <div className="giftbox-popup-main-animation" />
           <div className="giftbox-popup-confirm-button">
             <GiftboxConfirmButton onClick={onClickConfirm} />
           </div>
