@@ -28,7 +28,7 @@ import {
 } from "../data/accountSlice";
 import "./style.scss";
 import BN from "bn.js";
-import { GameLanding } from "./stage";
+import { GameLanding, GameConnecting } from "./stage";
 import TopMenu from "./components/TopMenu";
 import Popups from "./components/Popups";
 
@@ -167,8 +167,10 @@ export function GameController() {
   }
 
   function updateState() {
-    if (uIState >= UIState.Idle) {
-      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+    if (l2account) {
+      if (uIState >= UIState.Idle) {
+        dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+      }
     }
     setInc(inc + 1);
   }
@@ -190,7 +192,7 @@ export function GameController() {
 
   useEffect(() => {
     if (l2account) {
-      const requireContext = require.context(
+      const requireContext = (require as any).context(
         "./images",
         true,
         /\.(png|jpg|jpeg|gif)$/
@@ -226,7 +228,9 @@ export function GameController() {
   console.log("l1 account:", account);
 
   function updateConfigLoaded() {
-    if (uIState == UIState.Init || uIState == UIState.QueryConfig) {
+    if (uIState == UIState.Init
+      || uIState == UIState.QueryConfig
+      || uIState == UIState.ConnectionError) {
       setConfigLoaded(false);
     } else {
       setConfigLoaded(true);
@@ -335,10 +339,9 @@ export function GameController() {
 
   return (
     <>
-      {!configLoaded && <div>Get Service Config ... </div>}
-      {!l2account && account && configLoaded && (
-        <GameLanding memeList={memeList}></GameLanding>
-      )}
+      {!account && <GameConnecting hint="connect wallet"></GameConnecting>}
+      {!configLoaded && <GameConnecting hint="Connecting Server ..." />}
+      {!l2account && account && configLoaded && <GameLanding memeList={memeList}></GameLanding>}
       {l2account && (
         <>
           <Popups />
