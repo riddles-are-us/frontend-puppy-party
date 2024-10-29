@@ -199,7 +199,7 @@ export function GameController() {
   }
 
   if (!l2account && account) {
-    return <WelcomePage />;
+    return <WelcomePage progress={loadingProgress} />;
   } else {
     return <Gameplay />;
   }
