@@ -89,29 +89,8 @@ export function GameController() {
   };
 
   useEffect(() => {
-    const draw = (): void => {
-      const analyserInfo = audioSystem.play();
-      if (scenario.status === "play" && analyserInfo != null) {
-        const ratioArray = getBeat(analyserInfo!);
-        const progress = progressRef.current / 1000;
-        scenario.draw(ratioArray, {
-          progress,
-          l2account,
-          memeList,
-        });
-        scenario.step(ratioArray);
-      }
-    };
-
     dispatch(loginL1AccountAsync());
     dispatch(getConfig());
-    // Set the interval
-    const intervalId = setInterval(draw, 100); // 1000ms = 1 second
-
-    // Cleanup function to clear the interval when the component unmounts
-    return () => {
-      clearInterval(intervalId);
-    };
   }, []);
 
   function createPlayer() {
@@ -163,9 +142,6 @@ export function GameController() {
 
       scenario.status = "play";
       console.log(l2account);
-
-      const ele = document.getElementById("stage");
-      ele!.style.transform = "translate(50%, -45%) scale(2)";
     }
   }, [l2account]);
 
@@ -198,9 +174,9 @@ export function GameController() {
     dispatch(queryState({ cmd: [], prikey: l2account!.address }));
   }
 
-  if (!l2account && account) {
-    return <WelcomePage progress={loadingProgress} />;
-  } else {
+  if (uIState >= UIState.Idle) {
     return <Gameplay />;
+  } else {
+    return <WelcomePage progress={loadingProgress} />;
   }
 }
