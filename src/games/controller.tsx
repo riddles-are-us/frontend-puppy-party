@@ -53,7 +53,7 @@ export function GameController() {
   const lastActionTimestamp = useAppSelector(selectLastActionTimestamp);
   const globalTimer = useAppSelector(selectGlobalTimer);
   const memeList = useAppSelector(selectMemeList);
-  // const [progress, setProgress] = useState(0);
+  const [loadingProgress, setLoadingProgress] = useState(0);
 
   console.log(
     "lastActionTimestamp",
@@ -70,7 +70,9 @@ export function GameController() {
 
       img.onload = () => {
         loadedCount++;
-        // setProgress(Math.ceil((loadedCount / urls.length) * 8000) / 100);
+        setLoadingProgress(
+          Math.ceil((loadedCount / urls.length) * 10000) / 100
+        );
         if (loadedCount === urls.length) {
           onReady();
         }
@@ -101,6 +103,8 @@ export function GameController() {
       }
     };
 
+    dispatch(loginL1AccountAsync());
+    dispatch(getConfig());
     // Set the interval
     const intervalId = setInterval(draw, 100); // 1000ms = 1 second
 
@@ -141,34 +145,8 @@ export function GameController() {
   }
 
   useEffect(() => {
-    if (l2account) {
-      loginProcess();
-    }
-  }, [uIState, l2account]);
-
-  useEffect(() => {
-    const draw = (): void => {
-      const analyserInfo = audioSystem.play();
-      if (scenario.status === "play" && analyserInfo != null) {
-        const ratioArray = getBeat(analyserInfo!);
-        const progress = progressRef.current / 1000;
-        scenario.draw(ratioArray, {
-          progress,
-          l2account,
-          memeList,
-        });
-        scenario.step(ratioArray);
-      }
-    };
-
-    // Set the interval
-    const intervalId = setInterval(draw, 100); // 1000ms = 1 second
-
-    // Cleanup function to clear the interval when the component unmounts
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
+    loginProcess();
+  }, [uIState]);
 
   useEffect(() => {
     if (l2account) {
@@ -178,8 +156,9 @@ export function GameController() {
         /\.(png|jpg|jpeg|gif)$/
       );
       const urls = requireContext.keys().map(requireContext) as string[];
+      dispatch(setUIState({ uIState: UIState.Preloading }));
       preloadImages(urls, () => {
-        dispatch(setUIState({ uIState: UIState.QueryConfig }));
+        dispatch(setUIState({ uIState: UIState.QueryState }));
       });
 
       scenario.status = "play";
@@ -189,13 +168,6 @@ export function GameController() {
       ele!.style.transform = "translate(50%, -45%) scale(2)";
     }
   }, [l2account]);
-
-  useEffect(() => {
-    dispatch(loginL1AccountAsync());
-    if (uIState == UIState.Init) {
-      dispatch(getConfig());
-    }
-  }, []);
 
   useEffect(() => {
     setTimeout(() => {

@@ -11,7 +11,6 @@ const WelcomePage = () => {
 
   return (
     <>
-      <GameLanding memeList={memeList}></GameLanding>
       {!account && <GameConnecting hint="connect wallet" />}
       {!l2account && account && <GameLanding memeList={memeList}></GameLanding>}
     </>
