@@ -80,30 +80,6 @@ const Gameplay = () => {
     }
   }, [lastActionTimestamp, globalTimer]);
 
-  useEffect(() => {
-    const draw = (): void => {
-      const analyserInfo = audioSystem.play();
-      if (scenario.status === "play" && analyserInfo != null) {
-        const ratioArray = getBeat(analyserInfo!);
-        const progress = progressRef.current / 1000;
-        scenario.draw(ratioArray, {
-          progress,
-          l2account,
-          memeList,
-        });
-        scenario.step(ratioArray);
-      }
-    };
-
-    // Set the interval
-    const intervalId = setInterval(draw, 100); // 1000ms = 1 second
-
-    // Cleanup function to clear the interval when the component unmounts
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
-
   function createPlayer() {
     try {
       dispatch(
