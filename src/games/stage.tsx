@@ -126,7 +126,6 @@ export function GameLanding(prop: { memeList: Array<any> }) {
         if (shuffled.length > 0) {
           const l = shuffled.pop();
           const style = stageDivStyle(l!.value);
-          console.log(shuffled);
           installedDiv.push(
             <div
               key={installedDiv.length}

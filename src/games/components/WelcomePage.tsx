@@ -4,6 +4,7 @@ import { useAppSelector } from "../../app/hooks";
 import { selectL1Account, selectL2Account } from "../../data/accountSlice";
 import { selectMemeList } from "../../data/puppy_party/properties";
 import WelcomePageProgressBar from "./WelcomePageProgressBar";
+import "./WelcomePage.css";
 
 interface Props {
   progress: number;
@@ -20,7 +21,6 @@ const WelcomePage = ({ progress }: Props) => {
       {!l2account && account && <GameLanding memeList={memeList}></GameLanding>}
       {progress > 0 ? (
         <>
-          <div className="welcome-page-background-filter"></div>
           <WelcomePageProgressBar progress={progress} />
         </>
       ) : null}
