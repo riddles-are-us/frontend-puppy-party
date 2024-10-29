@@ -20,7 +20,7 @@ import { selectL2Account } from "../../data/accountSlice";
 import { getBeat } from "../draw";
 import { queryState, sendTransaction } from "../request";
 import { getTransactionCommandArray } from "../rpc";
-import "../style.scss";
+import "./Gameplay.css";
 
 const CREATE_PLAYER = 1n;
 const SHAKE_FEET = 2n;
