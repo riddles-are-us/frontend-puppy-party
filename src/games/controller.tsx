@@ -28,9 +28,8 @@ import {
 } from "../data/accountSlice";
 import "./style.scss";
 import BN from "bn.js";
-import { GameLanding, GameConnecting } from "./stage";
-import TopMenu from "./components/TopMenu";
-import Popups from "./components/Popups";
+import Gameplay from "./components/Gameplay";
+import WelcomePage from "./components/WelcomePage";
 
 //import cover from "./images/towerdefence.jpg";
 
@@ -52,19 +51,9 @@ export function GameController() {
   const progress = useAppSelector(selectProgress);
   const progressRef = useRef(progress);
   const lastActionTimestamp = useAppSelector(selectLastActionTimestamp);
-  const lastLotteryTimestamp = useAppSelector(selectLastLotteryTimestamp);
   const globalTimer = useAppSelector(selectGlobalTimer);
   const memeList = useAppSelector(selectMemeList);
-  const targetMemeIndex = useAppSelector(selectTargetMemeIndex);
-  const balance = useAppSelector(selectBalance);
-  const lastTxResult = useAppSelector(selectLastTxResult);
-  const [isWDModalVisible, setIsWDModalVisible] = useState(false);
-  const [isWDResModalVisible, setIsWDResModalVisible] = useState(false);
-  const [withdrawRes, setWithdrawRes] = useState("");
-  const [targetMemeRank, setTargetMemeRank] = useState(0);
-  const [amount, setAmount] = useState("");
-  const [cooldown, setCooldown] = useState(false);
-  const [configLoaded, setConfigLoaded] = useState(false);
+  // const [progress, setProgress] = useState(0);
 
   console.log(
     "lastActionTimestamp",
@@ -81,6 +70,7 @@ export function GameController() {
 
       img.onload = () => {
         loadedCount++;
+        // setProgress(Math.ceil((loadedCount / urls.length) * 8000) / 100);
         if (loadedCount === urls.length) {
           onReady();
         }
@@ -95,39 +85,6 @@ export function GameController() {
       };
     });
   };
-
-  // Update the ref value whenever `progress` changes
-  useEffect(() => {
-    progressRef.current = progress;
-
-    // Reset to false
-    if (progress == 1000) {
-      dispatch(setUIState({ uIState: UIState.GiftboxPopup }));
-    }
-  }, [progress]);
-
-  useEffect(() => {
-    if (memeList[targetMemeIndex] != undefined) {
-      setTargetMemeRank(memeList[targetMemeIndex].rank);
-    }
-  }, [targetMemeIndex, memeList]);
-
-  useEffect(() => {
-    const delta = globalTimer - lastActionTimestamp;
-    if (delta > 2) {
-      setCooldown(false);
-    } else {
-      setCooldown(true);
-    }
-    let rc = 0;
-    if (lastLotteryTimestamp != 0) {
-      rc = 10 - (globalTimer - lastLotteryTimestamp);
-
-      if (rc < 0) {
-        handleCancelRewards();
-      }
-    }
-  }, [lastActionTimestamp, globalTimer]);
 
   useEffect(() => {
     const draw = (): void => {
@@ -187,7 +144,6 @@ export function GameController() {
     if (l2account) {
       loginProcess();
     }
-    updateConfigLoaded();
   }, [uIState, l2account]);
 
   useEffect(() => {
@@ -213,7 +169,6 @@ export function GameController() {
   useEffect(() => {
     dispatch(loginL1AccountAsync());
     if (uIState == UIState.Init) {
-      //dispatch(setUIState({ uIState: UIState.QueryConfig }));
       dispatch(getConfig());
     }
   }, []);
@@ -226,98 +181,6 @@ export function GameController() {
 
   const account = useAppSelector(selectL1Account);
   console.log("l1 account:", account);
-
-  function updateConfigLoaded() {
-    if (
-      uIState == UIState.Init ||
-      uIState == UIState.QueryConfig ||
-      uIState == UIState.ConnectionError
-    ) {
-      setConfigLoaded(false);
-    } else {
-      setConfigLoaded(true);
-    }
-  }
-
-  function handleDiscoShakeFeet() {
-    if (cooldown == false) {
-      scenario.focusActor(440, 190);
-      dispatch(
-        sendTransaction({
-          cmd: getTransactionCommandArray(SHAKE_FEET, nonce, [
-            BigInt(targetMemeIndex),
-            0n,
-            0n,
-          ]),
-          prikey: l2account!.address,
-        })
-      );
-      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
-      setTimeout(() => {
-        scenario.restoreActor();
-      }, 5000);
-    }
-  }
-
-  function handleDiscoJump() {
-    if (cooldown == false) {
-      scenario.focusActor(440, 190);
-      dispatch(
-        sendTransaction({
-          cmd: getTransactionCommandArray(JUMP, nonce, [
-            BigInt(targetMemeIndex),
-            0n,
-            0n,
-          ]),
-          prikey: l2account!.address,
-        })
-      );
-      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
-      setTimeout(() => {
-        scenario.restoreActor();
-      }, 5000);
-    }
-  }
-
-  function handleDiscoShakeHeads() {
-    if (cooldown == false) {
-      scenario.focusActor(440, 190);
-      dispatch(
-        sendTransaction({
-          cmd: getTransactionCommandArray(SHAKE_HEADS, nonce, [
-            BigInt(targetMemeIndex),
-            0n,
-            0n,
-          ]),
-          prikey: l2account!.address,
-        })
-      );
-      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
-      setTimeout(() => {
-        scenario.restoreActor();
-      }, 5000);
-    }
-  }
-
-  function handleDiscoPostComments() {
-    if (cooldown == false) {
-      scenario.focusActor(440, 190);
-      dispatch(
-        sendTransaction({
-          cmd: getTransactionCommandArray(POST_COMMENTS, nonce, [
-            BigInt(targetMemeIndex),
-            0n,
-            0n,
-          ]),
-          prikey: l2account!.address,
-        })
-      );
-      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
-      setTimeout(() => {
-        scenario.restoreActor();
-      }, 5000);
-    }
-  }
 
   function handleRedeemRewards() {
     dispatch(
@@ -339,44 +202,9 @@ export function GameController() {
     dispatch(queryState({ cmd: [], prikey: l2account!.address }));
   }
 
-  return (
-    <>
-      {!account && <GameConnecting hint="connect wallet"></GameConnecting>}
-      {!configLoaded && <GameConnecting hint="Connecting Server ..." />}
-      {!l2account && account && configLoaded && (
-        <GameLanding memeList={memeList}></GameLanding>
-      )}
-      {l2account && (
-        <>
-          <Popups />
-          <TopMenu
-            targetMemeIndex={targetMemeIndex}
-            targetMemeRank={targetMemeRank}
-          />
-
-          <div className="center" id="stage">
-            <canvas id="canvas"></canvas>
-            <div className="stage-buttons">
-              <div
-                className={`button1 cd-${cooldown}`}
-                onClick={handleDiscoShakeFeet}
-              ></div>
-              <div
-                className={`button2 cd-${cooldown}`}
-                onClick={handleDiscoJump}
-              ></div>
-              <div
-                className={`button3 cd-${cooldown}`}
-                onClick={handleDiscoShakeHeads}
-              ></div>
-              <div
-                className={`button4 cd-${cooldown}`}
-                onClick={handleDiscoPostComments}
-              ></div>
-            </div>
-          </div>
-        </>
-      )}
-    </>
-  );
+  if (!l2account && account) {
+    return <WelcomePage />;
+  } else {
+    return <Gameplay />;
+  }
 }
