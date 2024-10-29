@@ -192,7 +192,7 @@ export function GameController() {
 
   useEffect(() => {
     if (l2account) {
-      const requireContext = (require as any).context(
+      const requireContext = require.context(
         "./images",
         true,
         /\.(png|jpg|jpeg|gif)$/
@@ -228,9 +228,11 @@ export function GameController() {
   console.log("l1 account:", account);
 
   function updateConfigLoaded() {
-    if (uIState == UIState.Init
-      || uIState == UIState.QueryConfig
-      || uIState == UIState.ConnectionError) {
+    if (
+      uIState == UIState.Init ||
+      uIState == UIState.QueryConfig ||
+      uIState == UIState.ConnectionError
+    ) {
       setConfigLoaded(false);
     } else {
       setConfigLoaded(true);
@@ -341,7 +343,9 @@ export function GameController() {
     <>
       {!account && <GameConnecting hint="connect wallet"></GameConnecting>}
       {!configLoaded && <GameConnecting hint="Connecting Server ..." />}
-      {!l2account && account && configLoaded && <GameLanding memeList={memeList}></GameLanding>}
+      {!l2account && account && configLoaded && (
+        <GameLanding memeList={memeList}></GameLanding>
+      )}
       {l2account && (
         <>
           <Popups />
