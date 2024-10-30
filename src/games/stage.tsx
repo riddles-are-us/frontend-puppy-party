@@ -125,17 +125,22 @@ export function GameLanding(prop: { memeList: Array<any> }) {
       setMemeLayout((m) => {
         if (shuffled.length > 0) {
           const l = shuffled.pop();
-          const style = stageDivStyle(l!.value);
-          installedDiv.push(
-            <div
-              key={installedDiv.length}
-              style={style}
-              onClick={() => startGame(indexedMemeList[l!.index].index)}
-            ></div>
-          );
-          return {
-            divs: installedDiv,
-          };
+
+          if (indexedMemeList[l!.index]) {
+            const style = stageDivStyle(l!.value);
+            installedDiv.push(
+              <div
+                key={installedDiv.length}
+                style={style}
+                onClick={() => startGame(indexedMemeList[l!.index].index)}
+              ></div>
+            );
+            return {
+              divs: installedDiv,
+            };
+          } else {
+            return m;
+          }
         } else {
           return m;
         }
