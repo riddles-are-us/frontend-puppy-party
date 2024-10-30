@@ -44,23 +44,12 @@ const WITHDRAW = 8n;
 
 export function GameController() {
   const dispatch = useAppDispatch();
+  const account = useAppSelector(selectL1Account);
   const l2account = useAppSelector(selectL2Account);
   const uIState = useAppSelector(selectUIState);
   const [inc, setInc] = useState(0);
   const nonce = useAppSelector(selectNonce);
-  const progress = useAppSelector(selectProgress);
-  const progressRef = useRef(progress);
-  const lastActionTimestamp = useAppSelector(selectLastActionTimestamp);
-  const globalTimer = useAppSelector(selectGlobalTimer);
-  const memeList = useAppSelector(selectMemeList);
-  const [loadingProgress, setLoadingProgress] = useState(0);
-
-  console.log(
-    "lastActionTimestamp",
-    lastActionTimestamp,
-    "globalTimer",
-    globalTimer
-  );
+  const [progress, setProgress] = useState(0);
 
   const preloadImages = (urls: string[], onReady: () => void) => {
     let loadedCount = 0;
@@ -70,9 +59,7 @@ export function GameController() {
 
       img.onload = () => {
         loadedCount++;
-        setLoadingProgress(
-          Math.ceil((loadedCount / urls.length) * 10000) / 100
-        );
+        setProgress(Math.ceil((loadedCount / urls.length) * 10000) / 100);
         if (loadedCount === urls.length) {
           onReady();
         }
@@ -90,8 +77,11 @@ export function GameController() {
 
   useEffect(() => {
     dispatch(loginL1AccountAsync());
-    dispatch(getConfig());
   }, []);
+
+  useEffect(() => {
+    dispatch(getConfig());
+  }, [account]);
 
   function createPlayer() {
     try {
@@ -151,9 +141,6 @@ export function GameController() {
     }, 5000);
   }, [inc]);
 
-  const account = useAppSelector(selectL1Account);
-  console.log("l1 account:", account);
-
   function handleRedeemRewards() {
     dispatch(
       sendTransaction({
@@ -177,6 +164,6 @@ export function GameController() {
   if (uIState >= UIState.Idle) {
     return <Gameplay />;
   } else {
-    return <WelcomePage progress={loadingProgress} />;
+    return <WelcomePage progress={progress} />;
   }
 }

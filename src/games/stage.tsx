@@ -151,6 +151,7 @@ export function GameLanding(prop: { memeList: Array<any> }) {
 
   const account = useAppSelector(selectL1Account);
   function startGame(index: number) {
+    console.log(index);
     dispatch(setTargetMemeIndex(index));
     dispatch(loginL2AccountAsync(account!));
     loadAudio((ele) => {

@@ -4,6 +4,7 @@ import { getConfig, sendTransaction, queryState } from "../../games/request"
 
 export enum UIState{
   Init,
+  WelcomePage,
   Preloading,
   QueryState,
   CreatePlayer,
@@ -77,7 +78,7 @@ export const propertiesSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getConfig.fulfilled, (state, action) => {
-        state.uIState = UIState.CreatePlayer;
+        state.uIState = UIState.WelcomePage;
         state.memeList = action.payload;
         console.log("query config fulfilled");
       })
