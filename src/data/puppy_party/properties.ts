@@ -4,8 +4,9 @@ import { getConfig, sendTransaction, queryState } from "../../games/request"
 
 export enum UIState{
   Init,
-  WelcomePage,
   Preloading,
+  QueryConfig,
+  WelcomePage,
   QueryState,
   CreatePlayer,
   Idle,

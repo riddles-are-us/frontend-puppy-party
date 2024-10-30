@@ -7,6 +7,7 @@ import {
   selectUIState,
   UIState,
 } from "../../data/puppy_party/properties";
+import WelcomePageConnecting from "./WelcomePageConnecting";
 import WelcomePageProgressBar from "./WelcomePageProgressBar";
 import "./WelcomePage.css";
 
@@ -21,11 +22,17 @@ const WelcomePage = ({ progress }: Props) => {
   const uIState = useAppSelector(selectUIState);
 
   if (uIState == UIState.Init) {
-    return <GameConnecting hint="connect wallet" />;
+    return <WelcomePageConnecting />;
+  } else if (uIState == UIState.Preloading) {
+    return <WelcomePageProgressBar progress={progress} />;
+  } else if (uIState == UIState.QueryConfig) {
+    return <WelcomePageProgressBar progress={80} />;
+  } else if (uIState == UIState.QueryState) {
+    return <WelcomePageProgressBar progress={90} />;
   } else if (uIState == UIState.WelcomePage) {
     return <GameLanding memeList={memeList} />;
   } else {
-    return <WelcomePageProgressBar progress={progress} />;
+    return null;
   }
 };
 

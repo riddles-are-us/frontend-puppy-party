@@ -59,7 +59,7 @@ export function GameController() {
 
       img.onload = () => {
         loadedCount++;
-        setProgress(Math.ceil((loadedCount / urls.length) * 10000) / 100);
+        setProgress(Math.ceil((loadedCount / urls.length) * 8000) / 100);
         if (loadedCount === urls.length) {
           onReady();
         }
@@ -80,7 +80,9 @@ export function GameController() {
   }, []);
 
   useEffect(() => {
-    dispatch(getConfig());
+    if (uIState == UIState.Init) {
+      dispatch(setUIState({ uIState: UIState.Preloading }));
+    }
   }, [account]);
 
   function createPlayer() {
@@ -119,21 +121,25 @@ export function GameController() {
 
   useEffect(() => {
     if (l2account) {
+      dispatch(setUIState({ uIState: UIState.QueryState }));
+      scenario.status = "play";
+    }
+  }, [l2account]);
+
+  useEffect(() => {
+    if (uIState == UIState.Preloading) {
       const requireContext = require.context(
         "./images",
         true,
         /\.(png|jpg|jpeg|gif)$/
       );
       const urls = requireContext.keys().map(requireContext) as string[];
-      dispatch(setUIState({ uIState: UIState.Preloading }));
       preloadImages(urls, () => {
-        dispatch(setUIState({ uIState: UIState.QueryState }));
+        dispatch(setUIState({ uIState: UIState.QueryConfig }));
+        dispatch(getConfig());
       });
-
-      scenario.status = "play";
-      console.log(l2account);
     }
-  }, [l2account]);
+  }, [uIState]);
 
   useEffect(() => {
     setTimeout(() => {

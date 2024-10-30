@@ -104,28 +104,6 @@ const Gameplay = () => {
     }
   }, [lastActionTimestamp, globalTimer]);
 
-  function createPlayer() {
-    try {
-      dispatch(
-        sendTransaction({
-          cmd: getTransactionCommandArray(CREATE_PLAYER, nonce, [0n, 0n, 0n]),
-          prikey: l2account!.address,
-        })
-      );
-    } catch (e) {
-      console.log("Error at create player " + e);
-    }
-  }
-
-  function updateState() {
-    if (l2account) {
-      if (uIState >= UIState.Idle) {
-        dispatch(queryState({ cmd: [], prikey: l2account!.address }));
-      }
-    }
-    setInc(inc + 1);
-  }
-
   function handleDiscoShakeFeet() {
     if (cooldown == false) {
       scenario.focusActor(440, 190);
