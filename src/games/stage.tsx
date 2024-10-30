@@ -6,6 +6,8 @@ import {
   loginL2AccountAsync,
   loginL1AccountAsync,
 } from "../data/accountSlice";
+
+import spirites  from "./spirite";
 import { loadAudio } from "./audio";
 
 import {
@@ -52,6 +54,7 @@ const divLayout = [
   [617, 132, 80],
 ];
 
+/*
 function shuffleArray<T>(array: T[]): T[] {
   //Loop through the array from the last element to the first
   const retArray: T[] = [];
@@ -63,26 +66,30 @@ function shuffleArray<T>(array: T[]): T[] {
   }
   return retArray;
 }
+*/
 
 function sortLayout<T>(array: Array<T>): Array<{ index: number; value: T }> {
   const retArray: Array<T> = [...array];
 
   retArray.sort((a: any, b: any) => {
     return a[2] - b[2];
-  });
+  }); // accending order
+
+  const len = array.length - 1;
 
   const ret = retArray.map((v, index) => {
     return {
-      index: index,
+      index: len - index,
       value: v,
     };
   });
   return ret;
 }
 
-function stageDivStyle(layout: Array<number>) {
+function stageDivStyle(layout: Array<number>, index: number) {
   const divStyle = {
     position: "absolute" as const, // ensures type is 'absolute' for TS
+    backgroundImage: `url('${spirites.memeImageList[index]}')`,
     top: `${layout[1]}px`,
     left: `${layout[0]}px`,
     width: `${layout[2]}px`,
@@ -97,7 +104,8 @@ interface LayoutInfo {
   divs: JSX.Element[];
 }
 
-const shuffled = sortLayout(divLayout);
+// We start with only 12 top nodes
+const shuffled = sortLayout(divLayout).slice(24);
 
 const installedDiv: JSX.Element[] = [];
 
@@ -125,13 +133,13 @@ export function GameLanding(prop: { memeList: Array<any> }) {
       setMemeLayout((m) => {
         if (shuffled.length > 0) {
           const l = shuffled.pop();
-          const style = stageDivStyle(l!.value);
+          const style = stageDivStyle(l!.value, l!.index);
           installedDiv.push(
             <div
               key={installedDiv.length}
               style={style}
               onClick={() => startGame(indexedMemeList[l!.index].index)}
-            ></div>
+            >{l!.index}</div>
           );
           return {
             divs: installedDiv,
@@ -150,6 +158,7 @@ export function GameLanding(prop: { memeList: Array<any> }) {
   }, []);
 
   const account = useAppSelector(selectL1Account);
+
   function startGame(index: number) {
     console.log(index);
     dispatch(setTargetMemeIndex(index));

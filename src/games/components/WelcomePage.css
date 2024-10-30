@@ -9,12 +9,9 @@ div.loading {
     color:white;
     cursor: pointer;
     div {
-        background-image: url('../images/loading.png');
         background-size: cover;
         animation: fadeInAnimation ease 3s;
         animation-iteration-count: 1;
         animation-fill-mode: forwards;
     }
 }
-  
-  
