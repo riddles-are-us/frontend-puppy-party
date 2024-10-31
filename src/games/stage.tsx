@@ -68,14 +68,16 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 */
 
-function sortLayout<T>(array: Array<T>): Array<{ index: number; value: T }> {
-  const retArray: Array<T> = [...array];
+function sortLayout<T>(array: Array<T>, sz: number): Array<{ index: number; value: T }> {
+  let retArray: Array<T> = [...array];
 
   retArray.sort((a: any, b: any) => {
     return a[2] - b[2];
   }); // accending order
 
-  const len = array.length - 1;
+  retArray = retArray.slice(36 - sz);
+
+  const len = retArray.length - 1;
 
   const ret = retArray.map((v, index) => {
     return {
@@ -105,7 +107,7 @@ interface LayoutInfo {
 }
 
 // We start with only 12 top nodes
-const shuffled = sortLayout(divLayout).slice(24);
+const shuffled = sortLayout(divLayout, 12);
 
 const installedDiv: JSX.Element[] = [];
 
@@ -124,7 +126,7 @@ export function GameLanding(prop: { memeList: Array<any> }) {
   });
 
   indexedMemeList.sort((a: any, b: any) => {
-    return a.value.rank - b.value.rank;
+    return b.value.rank - a.value.rank;
   });
 
   useEffect(() => {

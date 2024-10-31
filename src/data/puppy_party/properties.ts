@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
 import { getConfig, sendTransaction, queryState } from "../../games/request"
+import {scenario} from '../../games/scenario';
 
 export enum UIState{
   Init,
@@ -67,6 +68,7 @@ export const propertiesSlice = createSlice({
   reducers: {
     setTargetMemeIndex: (state, action) => {
       state.targetMemeIndex = action.payload;
+      scenario.setSelectedMeme(state.targetMemeIndex);
     },
 
     setUIState: (state, action) => {

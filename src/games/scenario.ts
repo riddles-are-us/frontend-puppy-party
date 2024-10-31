@@ -1,30 +1,13 @@
+import {Clip, createAnimationClip, createDefaultAnimationClip} from "./animations/meme";
 import {
   Torch, Audience, drawHorn,
   drawBackground, drawProgress,
-  ClipRect, Clip, Light, FixedLight,
+  Light, FixedLight,
   HEIGHT, WIDTH, Beat, drawScreen,
 }  from "./draw";
 import {ShapeBuilder, Shape, Effect} from "./effects";
 
 import spirits from "./spirite";
-
-function createDogClip(top:number, left:number, dogIndex: number, start: number) {
-  const spiriteHeight = 200;
-  const spiriteWeight = 200;
-  const boundry = new ClipRect(HEIGHT/2 - 40, 50, WIDTH-100, HEIGHT-200);
-  const clip = new Clip(spirits.spirites[0], boundry, 0.5);
-  const clips = [];
-  for (let i=0; i< 24; i++) {
-    const clipTop = dogIndex*spiriteHeight;
-    clips.push(new ClipRect(clipTop, spiriteWeight*i, spiriteWeight*(i+1), clipTop + spiriteHeight));
-  }
-  clip.clips.set("normal", clips);
-  clip.top = top;
-  clip.left = left;
-  clip.currentClip = "normal";
-  clip.currentFrame = start;
-  return clip;
-}
 
 function getRandomNumber(range: number): number {
     return Math.floor(Math.random() * range);
@@ -45,14 +28,21 @@ class Scenario {
   toggleShapeCounter: number;
   toggleShapeIndex: number;
   toggleText: Array<string>;
+
   constructor() {
     this.audience = new Audience();
     this.status = "pause";
     this.clips = [];
     for (let i = 0; i<20; i++) {
-      this.clips.push(
-        createDogClip(220 + getRandomNumber(80), 50 + getRandomNumber(800), getRandomNumber(4), (i * 2)% 24),
-      );
+      if (i % 2 == 0) {
+        this.clips.push(
+          createDefaultAnimationClip(getRandomNumber(4), 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24),
+        );
+      } else {
+        this.clips.push(
+          createAnimationClip(0, getRandomNumber(3), 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24),
+        );
+      }
     }
     this.clips[0].name = "ME";
     this.clips[0].focus = true;
@@ -74,6 +64,10 @@ class Scenario {
     this.shape = this.shapeBuilder.letter("!!!!!!!!!");
     this.toggleShapeCounter = 100;
     this.toggleShapeIndex = this.toggleText.length;
+  }
+
+  setSelectedMeme(index: number) {
+    this.actor.setAnimationClip(0, index, 220 + getRandomNumber(80), 50 + getRandomNumber(800), 0);
   }
 
   focusActor(left: number, top: number) {
