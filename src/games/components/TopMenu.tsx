@@ -8,7 +8,7 @@ import {
   UIState,
 } from "../../data/puppy_party/properties";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import spirites from "../spirite";
+import { getCover, memeInfoList } from "../config";
 
 interface Props {
   targetMemeIndex: number;
@@ -19,6 +19,8 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
   const dispatch = useAppDispatch();
   const uiState = useAppSelector(selectUIState);
   const balance = useAppSelector(selectBalance);
+  console.log(memeInfoList);
+  const cover = memeInfoList[targetMemeIndex].cover;
 
   const onClickWithdraw = () => {
     if (uiState == UIState.Idle) {
@@ -34,7 +36,7 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
       </div>
       <div className="top-menu-balance-text">balance: {balance}</div>
       <div className="top-menu-rank-text">
-        <img src = {spirites.memeImageList[targetMemeIndex]}></img>
+        <img src = {getCover(targetMemeIndex)}></img>
               Vote: {targetMemeRank}
       </div>
     </div>

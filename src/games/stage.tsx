@@ -14,6 +14,7 @@ import {
   selectMemeList,
   setTargetMemeIndex,
 } from "../data/puppy_party/properties";
+import {MemeInfo, memeInfoList} from "./config";
 
 const divLayout = [
   [-693, -343, 80],
@@ -91,7 +92,7 @@ function sortLayout<T>(array: Array<T>, sz: number): Array<{ index: number; valu
 function stageDivStyle(layout: Array<number>, index: number) {
   const divStyle = {
     position: "absolute" as const, // ensures type is 'absolute' for TS
-    backgroundImage: `url('${spirites.memeImageList[index]}')`,
+    backgroundImage: `url('${memeInfoList[index].cover}')`,
     top: `${layout[1]}px`,
     left: `${layout[0]}px`,
     width: `${layout[2]}px`,
@@ -107,7 +108,7 @@ interface LayoutInfo {
 }
 
 // We start with only 12 top nodes
-const shuffled = sortLayout(divLayout, 12);
+const shuffled = sortLayout(divLayout, 17);
 
 const installedDiv: JSX.Element[] = [];
 
@@ -118,7 +119,8 @@ export function GameLanding(prop: { memeList: Array<any> }) {
     divs: [],
   });
 
-  const indexedMemeList = prop.memeList.map((v, index) => {
+  /* Not sorting now
+  let indexedMemeList = prop.memeList.map((v, index) => {
     return {
       index: index,
       value: v,
@@ -128,6 +130,7 @@ export function GameLanding(prop: { memeList: Array<any> }) {
   indexedMemeList.sort((a: any, b: any) => {
     return b.value.rank - a.value.rank;
   });
+   */
 
   useEffect(() => {
     // Set up an interval that adds a new div every 1 second
@@ -140,7 +143,7 @@ export function GameLanding(prop: { memeList: Array<any> }) {
             <div
               key={installedDiv.length}
               style={style}
-              onClick={() => startGame(indexedMemeList[l!.index].index)}
+              onClick={() => startGame(memeInfoList[l!.index].index)}
             >{l!.index}</div>
           );
           return {
@@ -163,11 +166,13 @@ export function GameLanding(prop: { memeList: Array<any> }) {
 
   function startGame(index: number) {
     console.log(index);
-    dispatch(setTargetMemeIndex(index));
-    dispatch(loginL2AccountAsync(account!));
-    loadAudio((ele) => {
-      return ele;
-    });
+    if (index < 3) {
+      dispatch(setTargetMemeIndex(index));
+      dispatch(loginL2AccountAsync(account!));
+      loadAudio((ele) => {
+        return ele;
+      });
+    }
   }
 
   return (
