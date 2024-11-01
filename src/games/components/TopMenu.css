@@ -50,4 +50,9 @@
     font-family: "Allerta";
     pointer-events: none;
     user-select: none;
+    img {
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+    }
 }

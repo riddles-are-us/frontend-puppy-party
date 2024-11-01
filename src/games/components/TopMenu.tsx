@@ -8,6 +8,7 @@ import {
   UIState,
 } from "../../data/puppy_party/properties";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import spirites from "../spirite";
 
 interface Props {
   targetMemeIndex: number;
@@ -33,7 +34,8 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
       </div>
       <div className="top-menu-balance-text">balance: {balance}</div>
       <div className="top-menu-rank-text">
-        meme ({targetMemeIndex}): {targetMemeRank}
+        <img src = {spirites.memeImageList[targetMemeIndex]}></img>
+              Vote: {targetMemeRank}
       </div>
     </div>
   );

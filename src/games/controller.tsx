@@ -1,8 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState, memo } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
-import { Container, Row } from "react-bootstrap";
-import { ClipRect, Clip, getBeat } from "./draw";
-import { loadAudio2, loadAudio, AnalyserInfo, audioSystem } from "./audio";
 import { scenario } from "./scenario";
 import { getConfig, sendTransaction, queryState } from "./request";
 import {
