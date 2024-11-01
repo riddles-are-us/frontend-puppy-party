@@ -10,12 +10,12 @@ export enum UIState{
   WelcomePage,
   QueryState,
   CreatePlayer,
-  Idle,
+  ConnectionError,
+  Idle,  // from this point we have prepared all info for the main game stage
   QueryWithdraw,
   WithdrawPopup,
   QueryGiftbox,
   GiftboxPopup,
-  ConnectionError,
 }
 
 interface PlayerState {

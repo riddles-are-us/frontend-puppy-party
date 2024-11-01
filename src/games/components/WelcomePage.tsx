@@ -23,6 +23,8 @@ const WelcomePage = ({ progress }: Props) => {
 
   if (uIState == UIState.Init) {
     return <WelcomePageConnecting />;
+  } else if (uIState == UIState.ConnectionError) {
+    return <WelcomePageConnecting />;
   } else if (uIState == UIState.Preloading) {
     return <WelcomePageProgressBar progress={progress} />;
   } else if (uIState == UIState.QueryConfig) {
