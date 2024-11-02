@@ -93,7 +93,10 @@ export const propertiesSlice = createSlice({
         if (state.uIState == UIState.CreatePlayer){
           state.uIState = UIState.QueryState;
         }
-        state.lastTxResult = action.payload;
+        state.memeList = action.payload.memeList;
+        state.globalTimer = action.payload.globalTimer;
+        state.player = action.payload.player;
+        state.lastTxResult = action.payload.globalTimer;
         console.log("send transaction fulfilled. The command processed at:", action.payload);
       })
       .addCase(sendTransaction.rejected, (state, action) => {

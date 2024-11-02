@@ -35,7 +35,7 @@ export const getConfig = createAsyncThunk(
 )
 
 export const sendTransaction = createAsyncThunk<
-    number,
+    QueryStateRes,
     SendTransactionParams,
     { rejectValue: SendTransactionError }
     >(
@@ -57,7 +57,16 @@ export const sendTransaction = createAsyncThunk<
                     }
                     if (jobStatus) {
                         if (jobStatus.finishedOn != undefined && jobStatus.failedReason == undefined ) {
-                            return jobStatus.finishedOn;
+                          const datas = jobStatus.returnvalue;
+                          const player = datas.player;
+                          const memeList= datas.state.meme_list;
+                          const counter = datas.state.counter;
+                          return {
+                            player,
+                            memeList,
+                            globalTimer: counter,
+                          };
+
                         } else {
                             throw Error(jobStatus.failedReason)
                         }
