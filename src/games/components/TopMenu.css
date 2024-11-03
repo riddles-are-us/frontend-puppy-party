@@ -16,20 +16,20 @@
 .top-menu-withdraw-button{
     position: absolute;
     top: 50%;
-    right: -2%;
+    right: 0px;
     transform: translate(-50%, -50%);
 }
 
 .top-menu-balance-text {
     position: absolute;
     top: 50%;
-    right: 2%;
+    right: 60px;
     transform: translate(-50%, -50%);
-    text-align: right;
+    text-align: left;
     line-height: 30px;
     margin: 0px;
     color: white;
-    width: 200px;
+    width: 120px;
     height: 30px;
     font-family: "Allerta";
     pointer-events: none;
@@ -40,12 +40,13 @@
     position: absolute;
     top: 50%;
     right: 12%;
+    right: 200px;
     transform: translate(-50%, -50%);
-    text-align: right;
+    text-align: left;
     line-height: 30px;
     margin: 0px;
     color: white;
-    width: 200px;
+    width: 80px;
     height: 30px;
     font-family: "Allerta";
     pointer-events: none;
@@ -55,4 +56,13 @@
       height: 30px;
       margin-right: 10px;
     }
+}
+
+.top-menu-rank-icon {
+    position: absolute;
+    top: 50%;
+    right: 310px;
+    width: 30px;
+  height: 30px;
+    transform: translate(-50%, -50%);
 }

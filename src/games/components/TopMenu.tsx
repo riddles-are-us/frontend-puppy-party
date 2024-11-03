@@ -35,10 +35,8 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
         <WithdrawButton onClick={onClickWithdraw} />
       </div>
       <div className="top-menu-balance-text">balance: {balance}</div>
-      <div className="top-menu-rank-text">
-        <img src = {getCover(targetMemeIndex)}></img>
-              Vote: {targetMemeRank}
-      </div>
+      <div className="top-menu-rank-text">Vote: {targetMemeRank}</div>
+      <img src={getCover(targetMemeIndex)} className="top-menu-rank-icon"></img>
     </div>
   );
 }
