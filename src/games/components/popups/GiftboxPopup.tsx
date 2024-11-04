@@ -32,69 +32,91 @@ interface GiftboxNoteProps {
   startPosition: { x: number; y: number };
   popupAnimationDelay: number;
   rewardAnimationDelay: number;
+  shakeAnimationDelay: number;
+  opacity: number;
   noteImagePath: string;
 }
 
 const giftboxNotesProps: GiftboxNoteProps[] = [
   {
-    startPosition: { x: 15, y: 26 },
+    startPosition: { x: 17, y: 39 },
     popupAnimationDelay: 0.0,
     rewardAnimationDelay: 0.0,
-    noteImagePath: note1,
-  },
-  {
-    startPosition: { x: 11, y: 38 },
-    popupAnimationDelay: 0.05,
-    rewardAnimationDelay: 0.1,
-    noteImagePath: note2,
-  },
-  {
-    startPosition: { x: 32, y: 30 },
-    popupAnimationDelay: 0.1,
-    rewardAnimationDelay: 0.2,
-    noteImagePath: note3,
-  },
-  {
-    startPosition: { x: 10, y: 36 },
-    popupAnimationDelay: 0.15,
-    rewardAnimationDelay: 0.3,
-    noteImagePath: note4,
-  },
-  {
-    startPosition: { x: 0, y: 29 },
-    popupAnimationDelay: 0.2,
-    rewardAnimationDelay: 0.4,
+    shakeAnimationDelay: 0.88,
+    opacity: 0.5,
     noteImagePath: note5,
   },
   {
-    startPosition: { x: 4, y: 21 },
-    popupAnimationDelay: 0.25,
-    rewardAnimationDelay: 0.5,
+    startPosition: { x: 14, y: 30 },
+    popupAnimationDelay: 0.05,
+    rewardAnimationDelay: 0.1,
+    shakeAnimationDelay: 0.79,
+    opacity: 0.54,
     noteImagePath: note6,
   },
   {
-    startPosition: { x: 20, y: 30 },
-    popupAnimationDelay: 0.3,
-    rewardAnimationDelay: 0.6,
-    noteImagePath: note7,
+    startPosition: { x: 31, y: 40 },
+    popupAnimationDelay: 0.1,
+    rewardAnimationDelay: 0.2,
+    shakeAnimationDelay: 0.75,
+    opacity: 0.61,
+    noteImagePath: note4,
   },
   {
-    startPosition: { x: 15, y: 26 },
-    popupAnimationDelay: 0.35,
-    rewardAnimationDelay: 0.7,
-    noteImagePath: note8,
-  },
-  {
-    startPosition: { x: 32, y: 38 },
-    popupAnimationDelay: 0.4,
-    rewardAnimationDelay: 0.8,
+    startPosition: { x: 0, y: 28 },
+    popupAnimationDelay: 0.15,
+    rewardAnimationDelay: 0.3,
+    shakeAnimationDelay: 0.51,
+    opacity: 0.76,
     noteImagePath: note9,
   },
   {
-    startPosition: { x: 6, y: 37 },
+    startPosition: { x: 40, y: 34 },
+    popupAnimationDelay: 0.2,
+    rewardAnimationDelay: 0.4,
+    shakeAnimationDelay: 0.25,
+    opacity: 0.8,
+    noteImagePath: note3,
+  },
+  {
+    startPosition: { x: 37, y: 33 },
+    popupAnimationDelay: 0.25,
+    rewardAnimationDelay: 0.5,
+    shakeAnimationDelay: 0.75,
+    opacity: 0.52,
+    noteImagePath: note1,
+  },
+  {
+    startPosition: { x: 20, y: 39 },
+    popupAnimationDelay: 0.3,
+    rewardAnimationDelay: 0.6,
+    shakeAnimationDelay: 0.69,
+    opacity: 0.51,
+    noteImagePath: note2,
+  },
+  {
+    startPosition: { x: 10, y: 20 },
+    popupAnimationDelay: 0.35,
+    rewardAnimationDelay: 0.7,
+    shakeAnimationDelay: 0.05,
+    opacity: 0.77,
+    noteImagePath: note10,
+  },
+  {
+    startPosition: { x: 34, y: 34 },
+    popupAnimationDelay: 0.4,
+    rewardAnimationDelay: 0.8,
+    shakeAnimationDelay: 0.03,
+    opacity: 0.77,
+    noteImagePath: note7,
+  },
+  {
+    startPosition: { x: 7, y: 32 },
     popupAnimationDelay: 0.45,
     rewardAnimationDelay: 0.9,
-    noteImagePath: note10,
+    shakeAnimationDelay: 0.89,
+    opacity: 0.52,
+    noteImagePath: note8,
   },
 ];
 
@@ -180,6 +202,8 @@ const GiftboxPopup = () => {
                 endPosition={endPosition}
                 popupAnimationDelay={prop.popupAnimationDelay}
                 rewardAnimationDelay={prop.rewardAnimationDelay}
+                shakeAnimationDelay={prop.shakeAnimationDelay}
+                opacity={prop.opacity}
                 noteImagePath={prop.noteImagePath}
               />
             ))}

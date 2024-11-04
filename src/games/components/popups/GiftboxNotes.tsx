@@ -8,7 +8,9 @@ interface Props {
   endPosition: { x: number; y: number };
   popupAnimationDelay: number;
   rewardAnimationDelay: number;
+  shakeAnimationDelay: number;
   noteImagePath: string;
+  opacity: number;
   onAnimationEnd: () => void;
 }
 
@@ -19,6 +21,8 @@ const GiftboxNotes = ({
   endPosition,
   popupAnimationDelay,
   rewardAnimationDelay,
+  shakeAnimationDelay,
+  opacity,
   noteImagePath,
   onAnimationEnd,
 }: Props) => {
@@ -38,8 +42,10 @@ const GiftboxNotes = ({
     return `translate(0px, ${endPosition.y - startPosition.y}px)`;
   };
 
+  const popUpRef = useRef<HTMLDivElement | null>(null);
   const parabolaXRef = useRef<HTMLDivElement | null>(null);
   const parabolaYRef = useRef<HTMLDivElement | null>(null);
+  const popUpAnimationName = `GiftboxNotePopUp-${animationIndex}`;
   const parabolaXAnimationName = `GiftboxNoteParabolaX-${animationIndex}`;
   const parabolaYAnimationName = `GiftboxNoteParabolaY-${animationIndex}`;
 
@@ -53,7 +59,8 @@ const GiftboxNotes = ({
     for (let i = 0; i < styleSheet.cssRules.length; i++) {
       const rule = styleSheet.cssRules[i] as CSSKeyframesRule;
       if (
-        rule.name == parabolaXAnimationName ||
+        rule.name == popUpAnimationName ||
+        rule.name == parabolaYAnimationName ||
         rule.name == parabolaYAnimationName
       ) {
         styleSheet.deleteRule(i);
@@ -61,7 +68,33 @@ const GiftboxNotes = ({
     }
   };
 
-  const InitAnimation = () => {
+  const InitPopupAnimation = () => {
+    const popUpContainer = popUpRef.current;
+    if (popUpContainer) {
+      const styleSheet = document.styleSheets[0] as CSSStyleSheet;
+      const popUpkeyframes = `
+        @keyframes ${popUpAnimationName} {
+            0% {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            50% {
+                opacity: ${opacity / 2};
+                transform: translateY(-15px);
+            }
+            100% {
+                opacity: ${opacity};
+                transform: translateY(0);
+            }
+        }
+        `;
+      popUpContainer.style.animation = `${popUpAnimationName} 1s ease forwards`;
+      popUpContainer.style.animationDelay = `${popupAnimationDelay}s`;
+      styleSheet.insertRule(popUpkeyframes, styleSheet.cssRules.length);
+    }
+  };
+
+  const InitRewardAnimation = () => {
     const parabolaXContainer = parabolaXRef.current;
     const parabolaYContainer = parabolaYRef.current;
     if (parabolaXContainer && parabolaYContainer) {
@@ -78,7 +111,8 @@ const GiftboxNotes = ({
           }
         `;
       parabolaXContainer.style.transform = parabolaXStartPositionString;
-      parabolaXContainer.style.animation = `${parabolaXAnimationName} 0.5s linear ${rewardAnimationDelay}s`;
+      parabolaXContainer.style.animation = `${parabolaXAnimationName} 0.5s linear`;
+      parabolaXContainer.style.animationDelay = `${rewardAnimationDelay}s`;
       const parabolaYKeyframes = `
           @keyframes ${parabolaYAnimationName} {
             0% { transform: ${parabolaYStartPositionString}; }
@@ -87,7 +121,8 @@ const GiftboxNotes = ({
           }
         `;
       parabolaYContainer.style.transform = parabolaYStartPositionString;
-      parabolaYContainer.style.animation = `${parabolaYAnimationName} 0.5s cubic-bezier(.5,0,.8,.5) ${rewardAnimationDelay}s`;
+      parabolaYContainer.style.animation = `${parabolaYAnimationName} 0.5s cubic-bezier(.5,0,.8,.5)`;
+      parabolaYContainer.style.animationDelay = `${rewardAnimationDelay}s`;
 
       styleSheet.insertRule(parabolaXKeyframes, styleSheet.cssRules.length);
       styleSheet.insertRule(parabolaYKeyframes, styleSheet.cssRules.length);
@@ -107,8 +142,12 @@ const GiftboxNotes = ({
   };
 
   useEffect(() => {
+    InitPopupAnimation();
+  }, []);
+
+  useEffect(() => {
     if (rewardAnimation) {
-      InitAnimation();
+      InitRewardAnimation();
     }
   }, [rewardAnimation]);
 
@@ -130,11 +169,12 @@ const GiftboxNotes = ({
           ref={parabolaYRef}
           className={"giftbox-popup-note-animation-container"}
         >
-          <div
-            className="giftbox-popup-note-pop-up-animation"
-            style={{ animationDelay: `${popupAnimationDelay}s` }}
-          >
-            <img src={noteImagePath} className="giftbox-popup-note-image" />
+          <div ref={popUpRef} className="giftbox-popup-note-pop-up-animation">
+            <img
+              src={noteImagePath}
+              className="giftbox-popup-note-shake-animation"
+              style={{ animationDelay: `${shakeAnimationDelay}s` }}
+            />
           </div>
         </div>
       </div>
