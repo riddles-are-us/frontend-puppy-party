@@ -8,7 +8,8 @@ import GiftboxPopup from "./popups/GiftboxPopup";
 const Popups = () => {
   const uIState = useAppSelector(selectUIState);
   const showWithdrawPopup = uIState == UIState.WithdrawPopup;
-  const showGiftboxPopup = uIState == UIState.GiftboxPopup;
+  const showGiftboxPopup =
+    uIState == UIState.GiftboxPopup || uIState == UIState.QueryGiftbox;
 
   return (
     <>
