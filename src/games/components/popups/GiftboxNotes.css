@@ -7,13 +7,13 @@
 
 @keyframes NoteShakeAnimation {
     0%, 100% {
-        transform: translate(-50%, -50%) rotate(0deg);
+        transform: rotate(0deg);
     }
     25% {
-        transform: translate(-50%, -50%) rotate(-10deg);
+        transform: rotate(-10deg);
     }
     75% {
-        transform: translate(-50%, -50%) rotate(10deg);
+        transform: rotate(10deg);
     }
 }
 
@@ -25,12 +25,19 @@
 
 .giftbox-popup-note-pop-up-animation {
     position: absolute;
-    width: 45px;
-    height: 55px;
+    width: 100%;
+    height: 100%;
     opacity: 0;
 }
 
 .giftbox-popup-note-shake-animation {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    animation: NoteShakeAnimation 0.5s ease-in-out infinite;
+}
+
+.giftbox-popup-note-image {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -38,6 +45,7 @@
     height: 55px;
     pointer-events: none;
     user-select: none;
-    animation: NoteShakeAnimation 0.5s ease-in-out infinite;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%)  scale(100%, 100%);
+    background-image: url("../../images/note/note1.png");
+    background-size: cover;
 }

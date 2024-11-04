@@ -45,9 +45,11 @@ const GiftboxNotes = ({
   const popUpRef = useRef<HTMLDivElement | null>(null);
   const parabolaXRef = useRef<HTMLDivElement | null>(null);
   const parabolaYRef = useRef<HTMLDivElement | null>(null);
+  const imageRef = useRef<HTMLDivElement | null>(null);
   const popUpAnimationName = `GiftboxNotePopUp-${animationIndex}`;
   const parabolaXAnimationName = `GiftboxNoteParabolaX-${animationIndex}`;
   const parabolaYAnimationName = `GiftboxNoteParabolaY-${animationIndex}`;
+  const enlargeAnimationName = `GiftboxNoteEnlarge-${animationIndex}`;
 
   const onIconAnimationEnd = (setEndPosition: () => void) => {
     removeAnimation();
@@ -61,7 +63,8 @@ const GiftboxNotes = ({
       if (
         rule.name == popUpAnimationName ||
         rule.name == parabolaYAnimationName ||
-        rule.name == parabolaYAnimationName
+        rule.name == parabolaYAnimationName ||
+        rule.name == enlargeAnimationName
       ) {
         styleSheet.deleteRule(i);
       }
@@ -97,7 +100,8 @@ const GiftboxNotes = ({
   const InitRewardAnimation = () => {
     const parabolaXContainer = parabolaXRef.current;
     const parabolaYContainer = parabolaYRef.current;
-    if (parabolaXContainer && parabolaYContainer) {
+    const imageRefContainer = imageRef.current;
+    if (parabolaXContainer && parabolaYContainer && imageRefContainer) {
       const parabolaXStartPositionString = getParabolaXStartPositionString();
       const parabolaXEndPositionString = getParabolaXEndPositionString();
       const parabolaYStartPositionString = getParabolaYStartPositionString();
@@ -110,7 +114,6 @@ const GiftboxNotes = ({
             100% { transform: ${parabolaXEndPositionString}; }
           }
         `;
-      parabolaXContainer.style.transform = parabolaXStartPositionString;
       parabolaXContainer.style.animation = `${parabolaXAnimationName} 0.5s linear`;
       parabolaXContainer.style.animationDelay = `${rewardAnimationDelay}s`;
       const parabolaYKeyframes = `
@@ -120,12 +123,21 @@ const GiftboxNotes = ({
             100% { transform: ${parabolaYEndPositionString}; }
           }
         `;
-      parabolaYContainer.style.transform = parabolaYStartPositionString;
       parabolaYContainer.style.animation = `${parabolaYAnimationName} 0.5s cubic-bezier(.5,0,.8,.5)`;
       parabolaYContainer.style.animationDelay = `${rewardAnimationDelay}s`;
+      const enlargeKeyframes = `
+          @keyframes ${enlargeAnimationName} {
+            0% { transform: translate(-50%, -50%) scale(100%, 100%); }
+            50% { transform: translate(-50%, -50%) scale(100%, 100%); }
+            100% { transform: translate(-50%, -50%) scale(150%, 150%); }
+          }
+        `;
+      imageRefContainer.style.animation = `${enlargeAnimationName} 0.5s linear`;
+      imageRefContainer.style.animationDelay = `${rewardAnimationDelay}s`;
 
       styleSheet.insertRule(parabolaXKeyframes, styleSheet.cssRules.length);
       styleSheet.insertRule(parabolaYKeyframes, styleSheet.cssRules.length);
+      styleSheet.insertRule(enlargeKeyframes, styleSheet.cssRules.length);
 
       const setEndPosition = () => {
         parabolaXContainer.style.transform = parabolaXEndPositionString;
@@ -170,11 +182,18 @@ const GiftboxNotes = ({
           className={"giftbox-popup-note-animation-container"}
         >
           <div ref={popUpRef} className="giftbox-popup-note-pop-up-animation">
-            <img
-              src={noteImagePath}
-              className="giftbox-popup-note-shake-animation"
+            <div
+              className={"giftbox-popup-note-shake-animation"}
               style={{ animationDelay: `${shakeAnimationDelay}s` }}
-            />
+            >
+              <div
+                ref={imageRef}
+                className="giftbox-popup-note-image"
+                style={{
+                  backgroundImage: `url(${noteImagePath})`,
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
