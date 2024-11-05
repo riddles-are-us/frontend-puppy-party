@@ -136,7 +136,7 @@ const GiftboxPopup = () => {
           y: 0,
         }
       : {
-          x: parentContainer.clientWidth / 2 - 340,
+          x: parentContainer.clientWidth / 2 - 390,
           y: -(parentContainer.clientHeight / 2 + 30),
         };
   };
