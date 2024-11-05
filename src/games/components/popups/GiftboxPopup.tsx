@@ -149,6 +149,7 @@ const GiftboxPopup = () => {
       setFinishQuery(false);
       setRewardAnimation(true);
       dispatch(setUIState({ uIState: UIState.QueryGiftbox }));
+      dispatch(setGiftboxShake({ giftboxShake: true }));
 
       dispatch(
         sendTransaction({
@@ -170,8 +171,9 @@ const GiftboxPopup = () => {
   };
 
   const onAnimationEnd = () => {
-    setRewardAnimation(false);
-    dispatch(setGiftboxShake({ giftboxShake: true }));
+    if (rewardAnimation) {
+      setRewardAnimation(false);
+    }
   };
 
   useEffect(() => {
@@ -199,7 +201,7 @@ const GiftboxPopup = () => {
                 animationIndex={index}
                 rewardAnimation={rewardAnimation}
                 onAnimationEnd={
-                  index == giftboxNotesProps.length - 1
+                  index == 0
                     ? onAnimationEnd
                     : () => {
                         /* */
