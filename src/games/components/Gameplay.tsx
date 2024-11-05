@@ -15,6 +15,8 @@ import {
   selectMemeList,
   selectLastLotteryTimestamp,
   selectTargetMemeIndex,
+  selectGiftboxShake,
+  setGiftboxShake,
 } from "../../data/puppy_party/properties";
 import { selectL2Account } from "../../data/accountSlice";
 import { getBeat } from "../draw";
@@ -43,9 +45,11 @@ const Gameplay = () => {
   const lastLotteryTimestamp = useAppSelector(selectLastLotteryTimestamp);
   const globalTimer = useAppSelector(selectGlobalTimer);
   const memeList = useAppSelector(selectMemeList);
+  const giftboxShake = useAppSelector(selectGiftboxShake);
   const targetMemeIndex = useAppSelector(selectTargetMemeIndex);
   const [targetMemeRank, setTargetMemeRank] = useState(0);
   const [cooldown, setCooldown] = useState(false);
+  const giftboxShakeRef = useRef(false);
 
   useEffect(() => {
     const draw = (): void => {
@@ -57,7 +61,11 @@ const Gameplay = () => {
           progress,
           l2account,
           memeList,
+          giftboxShake: giftboxShakeRef.current,
         });
+        if (giftboxShakeRef.current) {
+          dispatch(setGiftboxShake({ giftboxShake: false }));
+        }
         scenario.step(ratioArray);
       }
     };
@@ -70,6 +78,10 @@ const Gameplay = () => {
       clearInterval(intervalId);
     };
   }, []);
+
+  useEffect(() => {
+    giftboxShakeRef.current = giftboxShake;
+  }, [giftboxShake]);
 
   // Update the ref value whenever `progress` changes
   useEffect(() => {

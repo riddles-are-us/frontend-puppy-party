@@ -7,6 +7,7 @@ import { selectL1Account, selectL2Account } from "../../../data/accountSlice";
 import {
   selectNonce,
   selectUIState,
+  setGiftboxShake,
   setUIState,
   UIState,
 } from "../../../data/puppy_party/properties";
@@ -170,6 +171,7 @@ const GiftboxPopup = () => {
 
   const onAnimationEnd = () => {
     setRewardAnimation(false);
+    dispatch(setGiftboxShake({ giftboxShake: true }));
   };
 
   useEffect(() => {
@@ -177,6 +179,10 @@ const GiftboxPopup = () => {
       dispatch(setUIState({ uIState: UIState.Idle }));
     }
   }, [rewardAnimation, finishQuery]);
+
+  useEffect(() => {
+    dispatch(setGiftboxShake({ giftboxShake: true }));
+  }, []);
 
   return (
     <>
@@ -189,6 +195,7 @@ const GiftboxPopup = () => {
           <div className="giftbox-popup-notes-animation-container">
             {giftboxNotesProps.map((prop, index) => (
               <GiftboxNotes
+                key={index}
                 animationIndex={index}
                 rewardAnimation={rewardAnimation}
                 onAnimationEnd={
