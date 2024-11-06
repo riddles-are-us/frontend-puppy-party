@@ -116,7 +116,7 @@ class Scenario {
     context.globalCompositeOperation = 'source-over';
     */
 
-    drawHorn(ratioArray, context);
+  drawHorn(ratioArray, context, state.giftboxShake);
     for (const light of this.fixedLights) {
       light.drawLight(ratioArray, context);
     }

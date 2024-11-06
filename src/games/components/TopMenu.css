@@ -29,7 +29,7 @@
     line-height: 30px;
     margin: 0px;
     color: white;
-    width: 120px;
+    width: 140px;
     height: 30px;
     font-family: "Allerta";
     pointer-events: none;
@@ -40,13 +40,13 @@
     position: absolute;
     top: 50%;
     right: 12%;
-    right: 200px;
+    right: 220px;
     transform: translate(-50%, -50%);
     text-align: left;
     line-height: 30px;
     margin: 0px;
     color: white;
-    width: 80px;
+    width: 100px;
     height: 30px;
     font-family: "Allerta";
     pointer-events: none;
@@ -61,7 +61,7 @@
 .top-menu-rank-icon {
     position: absolute;
     top: 50%;
-    right: 310px;
+    right: 370px;
     width: 30px;
   height: 30px;
     transform: translate(-50%, -50%);

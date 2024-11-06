@@ -7,11 +7,13 @@ import { selectL1Account, selectL2Account } from "../../../data/accountSlice";
 import {
   selectNonce,
   selectUIState,
+  setGiftboxShake,
   setUIState,
   UIState,
 } from "../../../data/puppy_party/properties";
 import GiftboxConfirmButton from "../buttons/GiftboxConfirmButton";
 import giftbox_image from "../../images/animations/giftbox.png";
+import giftbox_bonus from "../../images/bonus.png";
 import giftbox_title from "../../images/giftbox_title.png";
 import note1 from "../../images/note/note1.png";
 import note2 from "../../images/note/note2.png";
@@ -136,7 +138,7 @@ const GiftboxPopup = () => {
           y: 0,
         }
       : {
-          x: parentContainer.clientWidth / 2 - 340,
+          x: parentContainer.clientWidth / 2 - 390,
           y: -(parentContainer.clientHeight / 2 + 30),
         };
   };
@@ -169,7 +171,10 @@ const GiftboxPopup = () => {
   };
 
   const onAnimationEnd = () => {
-    setRewardAnimation(false);
+    if (rewardAnimation) {
+      dispatch(setGiftboxShake({ giftboxShake: true }));
+      setRewardAnimation(false);
+    }
   };
 
   useEffect(() => {
@@ -178,21 +183,27 @@ const GiftboxPopup = () => {
     }
   }, [rewardAnimation, finishQuery]);
 
+  useEffect(() => {
+    dispatch(setGiftboxShake({ giftboxShake: true }));
+  }, []);
+
   return (
     <>
       <link rel="preload" href={giftbox_image} as="image" />
       <div ref={parentRef} className="giftbox-popup-container">
         <div className="giftbox-popup-main-container">
           <div className="giftbox-popup-main-animation" />
+          <img src={giftbox_bonus} className="giftbox-popup-bonus-image" />
           <img src={giftbox_title} className="giftbox-popup-title-image" />
 
           <div className="giftbox-popup-notes-animation-container">
             {giftboxNotesProps.map((prop, index) => (
               <GiftboxNotes
+                key={index}
                 animationIndex={index}
                 rewardAnimation={rewardAnimation}
                 onAnimationEnd={
-                  index == giftboxNotesProps.length - 1
+                  index == 0
                     ? onAnimationEnd
                     : () => {
                         /* */

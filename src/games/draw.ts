@@ -227,7 +227,7 @@ function maxRatio(ratioArray: Array<Beat>) {
 }
 
 let freeze = 0;
-export function drawHorn(ratioArray: Array<Beat>, ctx: CanvasRenderingContext2D) {
+export function drawHorn(ratioArray: Array<Beat>, ctx: CanvasRenderingContext2D, giftboxShake: boolean) {
   // 900 width
   const top = 80;
   const left = 60;
@@ -262,6 +262,41 @@ export function drawHorn(ratioArray: Array<Beat>, ctx: CanvasRenderingContext2D)
   const r = Math.min(Math.floor(height/(HEIGHT / 100))/100, Math.floor(width/(WIDTH / 100))/100);
   const transform = `translate(50%, -45%) scale(${r})`;
 
+  // console.log("r", r)
+
+  if (giftboxShake){
+
+    const animationName = "GiftboxShakeAnimation";
+    const styleSheet = document.styleSheets[0] as CSSStyleSheet;
+    for (let i = 0; i < styleSheet.cssRules.length; i++) {
+      const rule = styleSheet.cssRules[i] as CSSKeyframesRule;
+      if ( rule.name == animationName ) {
+        styleSheet.deleteRule(i);
+      }
+    }
+
+    const keyframes = `
+      @keyframes ${animationName} {
+        0%, 100% {
+            transform: translate(50%, -45%) scale(${r}));
+        }
+        16% {
+            transform: translate(50%, -45%) scale(${r * 1.02}) rotate(5deg);
+        }
+        50% {
+            transform: translate(50%, -45%) scale(${r * 1.06}) rotate(-4deg);
+        }
+        83% {
+            transform: translate(50%, -45%) scale(${r * 1.02}) rotate(2deg);
+        }
+      }
+    `;
+    styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
+    ele!.style.animation = `${animationName} 0.1s ease-in-out`;
+  } else {
+    ele!.style.animation = "";
+  }
+  
   if (freeze==0 && (ratio > 1.08 && avg > 130)) {
     ele!.style.transition = 'transform 0.1s ease';
     ele!.style.transform = "translate(50%, -45%)" + " " + `scale(${r + 0.02})` + " " + "rotate(0.25deg)";

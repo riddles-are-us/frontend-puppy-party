@@ -59,6 +59,30 @@
     pointer-events: none;
     user-select: none;
 }
+@keyframes GiftboxBonusFadeIn {
+    0%, 100% {
+        opacity: 0;
+    }
+    5% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+.giftbox-popup-bonus-image {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 70%;
+    left: 50%;
+    width: 211px;
+    height: 98px;
+    opacity: 0;
+    animation: GiftboxBonusFadeIn 2s ease-in forwards ;
+    pointer-events: none;
+    user-select: none;
+}
 
 .giftbox-popup-confirm-button {
     position: absolute;

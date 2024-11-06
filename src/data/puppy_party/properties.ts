@@ -40,6 +40,7 @@ interface PropertiesState {
   globalTimer: number;
   targetMemeIndex: number;
   memeList: MemeListElement[];
+  giftboxShake: boolean;
 }
 
 const SWAY = 0n;
@@ -59,8 +60,9 @@ const initialState: PropertiesState = {
     lastTxResult: "",
     globalTimer: 0,
     targetMemeIndex: 0,
-    memeList: []
-};
+    memeList: [],
+    giftboxShake: false,
+  };
 
 export const propertiesSlice = createSlice({
   name: 'properties',
@@ -76,7 +78,10 @@ export const propertiesSlice = createSlice({
     },
     setLastTxResult: (state, action) => {
       state.lastTxResult = action.payload.lastTxResult;
-    }
+    },
+    setGiftboxShake: (state, action) => {
+      state.giftboxShake = action.payload.giftboxShake;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -137,5 +142,6 @@ export const selectLastActionTimestamp = (state: RootState) => state.puppyParty.
 export const selectProgress = (state: RootState) => state.puppyParty.properties.player.data.progress;
 export const selectLastTxResult = (state: RootState) => state.puppyParty.properties.lastTxResult;
 export const selectTargetMemeIndex = (state: RootState) => state.puppyParty.properties.targetMemeIndex;
-export const { setTargetMemeIndex, setUIState, setLastTxResult } = propertiesSlice.actions;
+export const selectGiftboxShake = (state: RootState) => state.puppyParty.properties.giftboxShake;
+export const { setTargetMemeIndex, setUIState, setLastTxResult, setGiftboxShake } = propertiesSlice.actions;
 export default propertiesSlice.reducer;
