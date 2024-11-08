@@ -5,8 +5,8 @@ import {
   Light, FixedLight,
   HEIGHT, WIDTH, Beat, drawScreen,
 }  from "./draw";
-import {ShapeBuilder, Shape, Effect} from "./effects";
-
+import { ShapeBuilder, Shape, Effect} from "./effects";
+import { memeInfoList } from "./config";
 import spirits from "./spirite";
 
 function getRandomNumber(range: number): number {
@@ -67,7 +67,12 @@ class Scenario {
   }
 
   setSelectedMeme(index: number) {
-    this.actor.setAnimationClip(0, index, 220 + getRandomNumber(80), 50 + getRandomNumber(800), 0);
+    const memeinfo:any = memeInfoList[index];
+    if (memeinfo.animationIndex != null) {
+      this.actor.setAnimationClip(0, index, 220 + getRandomNumber(80), 50 + getRandomNumber(800), 0);
+    } else {
+      this.actor.name = memeinfo.name;
+    }
   }
 
   focusActor(left: number, top: number) {

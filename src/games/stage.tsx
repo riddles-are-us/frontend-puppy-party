@@ -144,7 +144,7 @@ export function GameLanding(prop: { memeList: Array<any> }) {
               key={installedDiv.length}
               style={style}
               onClick={() => startGame(memeInfoList[l!.index].index)}
-            >{l!.index}</div>
+            ></div>
           );
           return {
             divs: installedDiv,
@@ -166,7 +166,7 @@ export function GameLanding(prop: { memeList: Array<any> }) {
 
   function startGame(index: number) {
     console.log(index);
-    if (index < 3) {
+    if (index < memeInfoList.length) {
       dispatch(setTargetMemeIndex(index));
       dispatch(loginL2AccountAsync(account!));
       loadAudio((ele) => {
