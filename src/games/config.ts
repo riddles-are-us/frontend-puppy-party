@@ -8,36 +8,36 @@ import BLAZEFIN from "./images/meme-icons/blazefin.jpg";
 import BUFF from "./images/meme-icons/buff.jpg";
 import BULL from "./images/meme-icons/bull.png";
 import BURGER from "./images/meme-icons/burger.png";
-import CAPTAINFIN from "./images/meme-icons/captainfin.jpg";
-import CAT from "./images/meme-icons/cat.jpg";
+import ZKJ from "./images/meme-icons/zkj.jpg";
 import DALP from "./images/meme-icons/dalp.jpg";
 import DOKUAN from "./images/meme-icons/dokuan.jpg";
-import DONA from "./images/meme-icons/dona.jpg";
+import YOME from "./images/meme-icons/yome.jpg";
 import EDDY from "./images/meme-icons/eddy.jpg";
 import FLIX from "./images/meme-icons/flix.jpg";
 import HMC from "./images/meme-icons/hmc.jpg";
 import PSD from "./images/meme-icons/psd.jpg";
-import PUFF from "./images/meme-icons/puff.jpg";
-import YOME from "./images/meme-icons/yome.jpg";
-import ZKJ from "./images/meme-icons/zkj.jpg";
 import ZKSHARK from "./images/meme-icons/zkshark.jpg";
 
 export const MemeInfo = {
   "hippo": {
+    name: "hippo",
     cover: HIPPO,
     animationIndex: 0,
     index: 0,
   },
   "sundog": {
+    name: "sundog",
     cover: SUNDOG,
     animationIndex: 1,
     index: 1,
   },
   "frog": {
+    name: "frog",
     cover: FROG,
     animationIndex: 2,
     index: 2,
   },
+
   "ami": {
     name: "ami",
     cover: AMI,
@@ -55,96 +55,72 @@ export const MemeInfo = {
     cover: BUFF,
     index: 5,
   },
-
+  
   "bull": {
     name: "bull",
     cover: BULL,
     index: 6,
   },
-
+  
   "burger": {
     name: "burger",
     cover: BURGER,
     index: 7,
   },
-
-  "captainfin": {
-    name: "captainfin",
-    cover: CAPTAINFIN,
-    index: 8,
-  },
-
-  "cat": {
-    name: "cat",
-    cover: CAT,
-    index: 9,
-  },
-
-  "dalp": {
-    name: "dalp",
-    cover: DALP,
-    index: 10,
-  },
-
-  "dokuan": {
-    name: "dokuan",
-    cover: DOKUAN,
-    index: 11,
-  },
-
-  "dona": {
-    name: "dona",
-    cover: DONA,
-    index: 12,
-  },
-
-  "eddy": {
-    name: "eddy",
-    cover: EDDY,
-    index: 13,
-  },
-
-  "flix": {
-    name: "flix",
-    cover: FLIX,
-    index: 14,
-  },
-
-  "hmc": {
-    name: "hmc",
-    cover: HMC,
-    index: 15,
-  },
-
-  "psd": {
-    name: "psd",
-    cover: PSD,
-    animationIndex: 16,
-    index: 16,
-  },
-
-  "puff": {
-    name: "psd",
-    cover: PUFF,
-    index: 17,
-  },
-
-  "yome": {
-    name: "yome",
-    cover: YOME,
-    index: 18,
-  },
-
+  
   "zkj": {
     name: "zkj",
     cover: ZKJ,
-    index: 19,
+    index: 8,
   },
-
+  
+  "dalp": {
+    name: "dalp",
+    cover: DALP,
+    index: 9,
+  },
+  
+  "dokuan": {
+    name: "dokuan",
+    animationIndex: 3,
+    cover: DOKUAN,
+    index: 10,
+  },
+  
+  "yome": {
+    name: "yome",
+    cover: YOME,
+    index: 11,
+  },
+  
+  "eddy": {
+    name: "eddy",
+    cover: EDDY,
+    index: 12,
+  },
+  
+  "flix": {
+    name: "flix",
+    cover: FLIX,
+    index: 13,
+  },
+  
+  "hmc": {
+    name: "hmc",
+    cover: HMC,
+    index: 14,
+  },
+  
+  "psd": {
+    name: "psd",
+    cover: PSD,
+    index: 15,
+  },
+  
   "zkshark": {
     name: "zkshark",
     cover: ZKSHARK,
-    index: 20,
+    index: 16,
   },
 
   "default": {
@@ -161,18 +137,14 @@ const coverList = [
   MemeInfo["buff"],
   MemeInfo["bull"],
   MemeInfo["burger"],
-  MemeInfo["captainfin"],
-  MemeInfo["cat"],
+  MemeInfo["zkj"],
   MemeInfo["dalp"],
   MemeInfo["dokuan"],
-  MemeInfo["dona"],
+  MemeInfo["yome"],
   MemeInfo["eddy"],
   MemeInfo["flix"],
   MemeInfo["hmc"],
   MemeInfo["psd"],
-  MemeInfo["puff"],
-  MemeInfo["yome"],
-  MemeInfo["zkj"],
   MemeInfo["zkshark"],
 ];
 
@@ -190,18 +162,14 @@ export const memeInfoList = [
   MemeInfo["buff"],
   MemeInfo["bull"],
   MemeInfo["burger"],
-  MemeInfo["captainfin"],
-  MemeInfo["cat"],
+  MemeInfo["zkj"],
   MemeInfo["dalp"],
   MemeInfo["dokuan"],
-  MemeInfo["dona"],
+  MemeInfo["yome"],
   MemeInfo["eddy"],
   MemeInfo["flix"],
   MemeInfo["hmc"],
   MemeInfo["psd"],
-  MemeInfo["puff"],
-  MemeInfo["yome"],
-  MemeInfo["zkj"],
   MemeInfo["zkshark"],
 ]
 

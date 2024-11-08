@@ -69,7 +69,7 @@ class Scenario {
   setSelectedMeme(index: number) {
     const memeinfo:any = memeInfoList[index];
     if (memeinfo.animationIndex != null) {
-      this.actor.setAnimationClip(0, index, 220 + getRandomNumber(80), 50 + getRandomNumber(800), 0);
+      this.actor.setAnimationClip(0, memeinfo.animationIndex, 220 + getRandomNumber(80), 50 + getRandomNumber(800), 0);
     } else {
       this.actor.name = memeinfo.name;
     }

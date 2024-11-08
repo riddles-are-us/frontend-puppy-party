@@ -79,7 +79,7 @@ export class Clip {
         ctx.fillStyle = "orange";  // Red color
       }
       if (this.name != "NPC") {
-        ctx.fillRect(this.left+30, this.top - 13, 40, 15);
+        ctx.fillRect(this.left+30, this.top - 13, this.name.length * 6 + 10, 15);
         ctx.fillStyle = "white";  // Red color
         ctx.font = "12px Arial";
         ctx.fillText(this.name, this.left+35, this.top); // text, x, y
