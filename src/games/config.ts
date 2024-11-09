@@ -66,6 +66,7 @@ export const MemeInfo = {
   "burger": {
     name: "burger",
     cover: BURGER,
+    animationIndex: 4,
     index: 7,
   },
   
