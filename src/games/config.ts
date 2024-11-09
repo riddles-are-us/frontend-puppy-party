@@ -17,6 +17,7 @@ import FLIX from "./images/meme-icons/flix.jpg";
 import HMC from "./images/meme-icons/hmc.jpg";
 import PSD from "./images/meme-icons/psd.jpg";
 import ZKSHARK from "./images/meme-icons/zkshark.jpg";
+import DC from "./images/meme-icons/deadchu.jpg";
 
 export const MemeInfo = {
   "hippo": {
@@ -49,10 +50,10 @@ export const MemeInfo = {
     cover: BLAZEFIN,
     index: 4,
   },
-  
-  "buff": {
-    name: "buff",
-    cover: BUFF,
+
+  "deadchu": {
+    name: "DeadChu",
+    cover: DC,
     index: 5,
   },
   
@@ -123,6 +124,14 @@ export const MemeInfo = {
     index: 16,
   },
 
+  "buff": {
+    name: "buff",
+    cover: BUFF,
+    index: 17,
+  },
+
+
+
   "default": {
     cover: MemeDefault,
   }
@@ -134,7 +143,7 @@ const coverList = [
   MemeInfo["frog"],
   MemeInfo["ami"],
   MemeInfo["blazefin"],
-  MemeInfo["buff"],
+  MemeInfo["deadchu"],
   MemeInfo["bull"],
   MemeInfo["burger"],
   MemeInfo["zkj"],
@@ -146,6 +155,7 @@ const coverList = [
   MemeInfo["hmc"],
   MemeInfo["psd"],
   MemeInfo["zkshark"],
+  MemeInfo["buff"],
 ];
 
 export function getCover(index: number) {
@@ -159,7 +169,7 @@ export const memeInfoList = [
 
   MemeInfo["ami"],
   MemeInfo["blazefin"],
-  MemeInfo["buff"],
+  MemeInfo["deadchu"],
   MemeInfo["bull"],
   MemeInfo["burger"],
   MemeInfo["zkj"],
@@ -171,7 +181,5 @@ export const memeInfoList = [
   MemeInfo["hmc"],
   MemeInfo["psd"],
   MemeInfo["zkshark"],
+  MemeInfo["buff"],
 ]
-
-
-

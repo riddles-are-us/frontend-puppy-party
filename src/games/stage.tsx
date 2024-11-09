@@ -108,7 +108,7 @@ interface LayoutInfo {
 }
 
 // We start with only 12 top nodes
-const shuffled = sortLayout(divLayout, 17);
+const shuffled = sortLayout(divLayout, 18);
 
 const installedDiv: JSX.Element[] = [];
 
