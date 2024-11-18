@@ -34,6 +34,9 @@ const LOTTERY = 6n;
 const CANCELL_LOTTERY = 7n;
 const WITHDRAW = 8n;
 const COOL_DOWN = 2;
+const PROGRESS_LOTTERY_THRESHOLD = 1000;
+const MIN_PROGRESS_UPDATE = 10;
+const PROGRESS_UPDATE_RATE = 0.1;
 
 const Gameplay = () => {
   const dispatch = useAppDispatch();
@@ -43,6 +46,7 @@ const Gameplay = () => {
   const nonce = useAppSelector(selectNonce);
   const progress = useAppSelector(selectProgress);
   const progressRef = useRef(progress);
+  const displayProgressRef = useRef(progress);
   const [lastDanceActionTimeCache, setLastDanceActionTimeCache] = useState(0);
   const lastLotteryTimestamp = useAppSelector(selectLastLotteryTimestamp);
   const memeList = useAppSelector(selectMemeList);
@@ -130,7 +134,23 @@ const Gameplay = () => {
       const analyserInfo = audioSystem.play();
       if (scenario.status === "play" && analyserInfo != null) {
         const ratioArray = getBeat(analyserInfo!);
-        const progress = progressRef.current / 1000;
+
+        if (progressRef.current == 0) {
+          displayProgressRef.current = 0;
+        } else if (progressRef.current > displayProgressRef.current) {
+          const progressStep =
+            (progressRef.current - displayProgressRef.current) *
+            PROGRESS_UPDATE_RATE;
+          displayProgressRef.current = Math.min(
+            displayProgressRef.current +
+              Math.max(progressStep, MIN_PROGRESS_UPDATE),
+            PROGRESS_LOTTERY_THRESHOLD
+          );
+        }
+
+        const progress =
+          displayProgressRef.current / PROGRESS_LOTTERY_THRESHOLD;
+
         scenario.draw(ratioArray, {
           progress,
           l2account,
@@ -167,7 +187,7 @@ const Gameplay = () => {
     }
 
     // Reset to false
-    if (progress == 1000) {
+    if (progress == PROGRESS_LOTTERY_THRESHOLD) {
       dispatch(setUIState({ uIState: UIState.GiftboxPopup }));
     }
   }, [progress]);
@@ -180,8 +200,8 @@ const Gameplay = () => {
 
   useEffect(() => {
     const delta = localTimer - lastDanceActionTimeCache;
-    const progress = Math.min(Math.max(delta / COOL_DOWN, 0), 1);
-    setDanceButtonProgress(progress);
+    const danceButtonProgress = Math.min(Math.max(delta / COOL_DOWN, 0), 1);
+    setDanceButtonProgress(danceButtonProgress);
     setIsDanceButtonCoolDown(delta < COOL_DOWN);
     if (lastLotteryTimestamp != 0 && 10 < localTimer - lastLotteryTimestamp) {
       handleCancelRewards();
