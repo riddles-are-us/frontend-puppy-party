@@ -37,6 +37,7 @@ const COOL_DOWN = 2;
 const PROGRESS_LOTTERY_THRESHOLD = 1000;
 const MIN_PROGRESS_UPDATE = 30;
 const PROGRESS_UPDATE_RATE = 0.2;
+const PROGRESS_COUNTING_DOWN_SPEED = 20;
 
 const Gameplay = () => {
   const dispatch = useAppDispatch();
@@ -47,6 +48,7 @@ const Gameplay = () => {
   const progress = useAppSelector(selectProgress);
   const progressRef = useRef(progress);
   const displayProgressRef = useRef(progress);
+  const isCountingDownRef = useRef(false);
   const [lastDanceActionTimeCache, setLastDanceActionTimeCache] = useState(0);
   const lastLotteryTimestamp = useAppSelector(selectLastLotteryTimestamp);
   const memeList = useAppSelector(selectMemeList);
@@ -129,27 +131,45 @@ const Gameplay = () => {
 
   // end localTimer region
 
+  const updateDisplayProgressRef = () => {
+    if (progressRef.current == 0) {
+      displayProgressRef.current = 0;
+      return;
+    }
+
+    if (isCountingDownRef.current) {
+      displayProgressRef.current -= PROGRESS_COUNTING_DOWN_SPEED;
+      if (displayProgressRef.current <= 0) {
+        displayProgressRef.current = 0;
+        progressRef.current = 0;
+        isCountingDownRef.current = false;
+        dispatch(setUIState({ uIState: UIState.Idle }));
+      }
+    } else {
+      if (progressRef.current > displayProgressRef.current) {
+        const progressStep =
+          (progressRef.current - displayProgressRef.current) *
+          PROGRESS_UPDATE_RATE;
+        displayProgressRef.current = Math.min(
+          displayProgressRef.current +
+            Math.max(progressStep, MIN_PROGRESS_UPDATE),
+          PROGRESS_LOTTERY_THRESHOLD
+        );
+      }
+    }
+  };
+
   useEffect(() => {
     const draw = (): void => {
       const analyserInfo = audioSystem.play();
       if (scenario.status === "play" && analyserInfo != null) {
         const ratioArray = getBeat(analyserInfo!);
 
-        if (progressRef.current == 0) {
-          displayProgressRef.current = 0;
-        } else if (progressRef.current > displayProgressRef.current) {
-          const progressStep =
-            (progressRef.current - displayProgressRef.current) *
-            PROGRESS_UPDATE_RATE;
-          displayProgressRef.current = Math.min(
-            displayProgressRef.current +
-              Math.max(progressStep, MIN_PROGRESS_UPDATE),
-            PROGRESS_LOTTERY_THRESHOLD
-          );
-        }
+        updateDisplayProgressRef();
 
         // Reset to false
         if (displayProgressRef.current == PROGRESS_LOTTERY_THRESHOLD) {
+          isCountingDownRef.current = true;
           dispatch(setUIState({ uIState: UIState.GiftboxPopup }));
         }
 
