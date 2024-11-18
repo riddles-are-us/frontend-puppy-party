@@ -43,7 +43,7 @@ const Gameplay = () => {
   const nonce = useAppSelector(selectNonce);
   const progress = useAppSelector(selectProgress);
   const progressRef = useRef(progress);
-  const lastActionTimestamp = useAppSelector(selectLastActionTimestamp);
+  const [lastDanceActionTimeCache, setLastDanceActionTimeCache] = useState(0);
   const lastLotteryTimestamp = useAppSelector(selectLastLotteryTimestamp);
   const memeList = useAppSelector(selectMemeList);
   const giftboxShake = useAppSelector(selectGiftboxShake);
@@ -67,9 +67,8 @@ const Gameplay = () => {
   const resetStartTimeRef = () => {
     startTimeRef.current = 0;
     lastLocalTimerRef.current =
-      Math.abs(globalTimerCache - SERVER_TICK_TO_SECOND - localTimer) >
-      SERVER_TICK_TO_SECOND
-        ? globalTimerCache - SERVER_TICK_TO_SECOND
+      Math.abs(globalTimerCache - localTimer) > SERVER_TICK_TO_SECOND
+        ? globalTimerCache
         : localTimer;
   };
 
@@ -96,7 +95,8 @@ const Gameplay = () => {
     resetStartTimeRef();
     elapsedTimeMultiplierRef.current = Math.max(
       Math.min(
-        (globalTimerCache - lastLocalTimerRef.current) / SERVER_TICK_TO_SECOND,
+        (globalTimerCache - lastLocalTimerRef.current + SERVER_TICK_TO_SECOND) /
+          SERVER_TICK_TO_SECOND,
         1.2
       ),
       0.8
@@ -122,8 +122,6 @@ const Gameplay = () => {
   useEffect(() => {
     setGlobalTimerCache(globalTimer);
   }, [globalTimer]);
-
-  console.log("TIME", localTimer);
 
   // end localTimer region
 
@@ -163,6 +161,11 @@ const Gameplay = () => {
   useEffect(() => {
     progressRef.current = progress;
 
+    // assume that whenever the dance button is clicked, the progress will be updated and return a non-zero positive value
+    if (progress > 0) {
+      setLastDanceActionTimeCache(localTimer);
+    }
+
     // Reset to false
     if (progress == 1000) {
       dispatch(setUIState({ uIState: UIState.GiftboxPopup }));
@@ -176,18 +179,26 @@ const Gameplay = () => {
   }, [targetMemeIndex, memeList]);
 
   useEffect(() => {
-    const delta = localTimer - lastActionTimestamp;
+    const delta = localTimer - lastDanceActionTimeCache;
     const progress = Math.min(Math.max(delta / COOL_DOWN, 0), 1);
     setDanceButtonProgress(progress);
     setIsDanceButtonCoolDown(delta < COOL_DOWN);
-    console.log("(TEST):", localTimer, globalTimer, lastActionTimestamp);
     if (lastLotteryTimestamp != 0 && 10 < localTimer - lastLotteryTimestamp) {
-      //   handleCancelRewards();
+      handleCancelRewards();
     }
-  }, [lastActionTimestamp, localTimer]);
+  }, [lastDanceActionTimeCache, localTimer]);
+
+  function handleCancelRewards() {
+    dispatch(
+      sendTransaction({
+        cmd: getTransactionCommandArray(CANCELL_LOTTERY, nonce, [0n, 0n, 0n]),
+        prikey: l2account!.address,
+      })
+    );
+    dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+  }
 
   function handleDiscoShakeFeet() {
-    console.log("TEST", isDanceButtonCoolDown);
     if (isDanceButtonCoolDown == false) {
       scenario.focusActor(440, 190);
       dispatch(
@@ -200,6 +211,7 @@ const Gameplay = () => {
           prikey: l2account!.address,
         })
       );
+
       dispatch(queryState({ cmd: [], prikey: l2account!.address }));
       setTimeout(() => {
         scenario.restoreActor();

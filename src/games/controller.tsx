@@ -144,26 +144,6 @@ export function GameController() {
     }, 5000);
   }, [inc]);
 
-  function handleRedeemRewards() {
-    dispatch(
-      sendTransaction({
-        cmd: getTransactionCommandArray(LOTTERY, nonce, [0n, 0n, 0n]),
-        prikey: l2account!.address,
-      })
-    );
-    dispatch(queryState({ cmd: [], prikey: l2account!.address }));
-  }
-
-  function handleCancelRewards() {
-    dispatch(
-      sendTransaction({
-        cmd: getTransactionCommandArray(CANCELL_LOTTERY, nonce, [0n, 0n, 0n]),
-        prikey: l2account!.address,
-      })
-    );
-    dispatch(queryState({ cmd: [], prikey: l2account!.address }));
-  }
-
   if (uIState >= UIState.Idle) {
     return <Gameplay />;
   } else {

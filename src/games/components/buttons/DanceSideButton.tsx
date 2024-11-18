@@ -28,15 +28,13 @@ const DanceSideButton = ({ progress, isDisabled, onClick }: Props) => {
           onClick={onClick}
         />
       </div>
-      {progress < 1 && (
-        <img
-          src={progressImage}
-          className="dance-side-image"
-          style={{
-            clipPath: `polygon(0 ${filterPercentage}%, 100% ${filterPercentage}%, 100% 100%, 0 100%)`,
-          }}
-        />
-      )}
+      <img
+        src={progressImage}
+        className="dance-side-image"
+        style={{
+          clipPath: `polygon(0 ${filterPercentage}%, 100% ${filterPercentage}%, 100% 100%, 0 100%)`,
+        }}
+      />
     </>
   );
 };
