@@ -7,38 +7,47 @@ import DanceUpButton from "./buttons/DanceUpButton";
 
 interface Props {
   danceButtonProgress: number;
-  handleDiscoShakeFeet: () => void;
+  onClickMusicButton: () => void;
+  onClickSideButton: () => void;
+  onClickTurnButton: () => void;
+  onClickUpButton: () => void;
 }
 
-const StageButtons = ({ danceButtonProgress, handleDiscoShakeFeet }: Props) => {
+const StageButtons = ({
+  danceButtonProgress,
+  onClickMusicButton,
+  onClickSideButton,
+  onClickTurnButton,
+  onClickUpButton,
+}: Props) => {
   return (
     <div className="stage-buttons-container">
       <div className="stage-buttons-music-container">
         <DanceMusicButton
           progress={danceButtonProgress}
           isDisabled={false}
-          onClick={handleDiscoShakeFeet}
+          onClick={onClickMusicButton}
         />
       </div>
       <div className="stage-buttons-side-container">
         <DanceSideButton
           progress={danceButtonProgress}
           isDisabled={false}
-          onClick={handleDiscoShakeFeet}
+          onClick={onClickSideButton}
         />
       </div>
       <div className="stage-buttons-turn-container">
         <DanceTurnButton
           progress={danceButtonProgress}
           isDisabled={false}
-          onClick={handleDiscoShakeFeet}
+          onClick={onClickTurnButton}
         />
       </div>
       <div className="stage-buttons-up-container">
         <DanceUpButton
           progress={danceButtonProgress}
           isDisabled={false}
-          onClick={handleDiscoShakeFeet}
+          onClick={onClickUpButton}
         />
       </div>
     </div>

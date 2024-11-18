@@ -26,10 +26,10 @@ import "./Gameplay.css";
 import StageButtons from "./StageButtons";
 
 const CREATE_PLAYER = 1n;
-const SHAKE_FEET = 2n;
-const JUMP = 3n;
-const SHAKE_HEADS = 4n;
-const POST_COMMENTS = 5n;
+const DANCE_MUSIC = 2n;
+const DANCE_SIDE = 3n;
+const DANCE_TURN = 4n;
+const DANCE_UP = 5n;
 const LOTTERY = 6n;
 const CANCELL_LOTTERY = 7n;
 const WITHDRAW = 8n;
@@ -238,12 +238,12 @@ const Gameplay = () => {
     dispatch(queryState({ cmd: [], prikey: l2account!.address }));
   }
 
-  function handleDiscoShakeFeet() {
+  function onClickMusicButton() {
     if (isDanceButtonCoolDown == false) {
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
-          cmd: getTransactionCommandArray(SHAKE_FEET, nonce, [
+          cmd: getTransactionCommandArray(DANCE_MUSIC, nonce, [
             BigInt(targetMemeIndex),
             0n,
             0n,
@@ -259,12 +259,12 @@ const Gameplay = () => {
     }
   }
 
-  function handleDiscoJump() {
+  function onClickSideButton() {
     if (isDanceButtonCoolDown == false) {
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
-          cmd: getTransactionCommandArray(JUMP, nonce, [
+          cmd: getTransactionCommandArray(DANCE_SIDE, nonce, [
             BigInt(targetMemeIndex),
             0n,
             0n,
@@ -279,12 +279,12 @@ const Gameplay = () => {
     }
   }
 
-  function handleDiscoShakeHeads() {
+  function onClickTurnButton() {
     if (isDanceButtonCoolDown == false) {
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
-          cmd: getTransactionCommandArray(SHAKE_HEADS, nonce, [
+          cmd: getTransactionCommandArray(DANCE_TURN, nonce, [
             BigInt(targetMemeIndex),
             0n,
             0n,
@@ -299,12 +299,12 @@ const Gameplay = () => {
     }
   }
 
-  function handleDiscoPostComments() {
+  function onClickUpButton() {
     if (isDanceButtonCoolDown == false) {
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
-          cmd: getTransactionCommandArray(POST_COMMENTS, nonce, [
+          cmd: getTransactionCommandArray(DANCE_UP, nonce, [
             BigInt(targetMemeIndex),
             0n,
             0n,
@@ -331,7 +331,10 @@ const Gameplay = () => {
         <canvas id="canvas"></canvas>
         <StageButtons
           danceButtonProgress={danceButtonProgress}
-          handleDiscoShakeFeet={handleDiscoShakeFeet}
+          onClickMusicButton={onClickMusicButton}
+          onClickSideButton={onClickSideButton}
+          onClickTurnButton={onClickTurnButton}
+          onClickUpButton={onClickUpButton}
         />
       </div>
     </>
