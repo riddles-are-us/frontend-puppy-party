@@ -20,7 +20,7 @@ import {
 } from "../../data/puppy_party/properties";
 import { selectL2Account } from "../../data/accountSlice";
 import { getBeat } from "../draw";
-import { queryState, sendTransaction } from "../request";
+import { queryState, sendTransaction, SERVER_TICK_TO_SECOND } from "../request";
 import { getTransactionCommandArray } from "../rpc";
 import "./Gameplay.css";
 import StageButtons from "./StageButtons";
@@ -45,7 +45,6 @@ const Gameplay = () => {
   const progressRef = useRef(progress);
   const lastActionTimestamp = useAppSelector(selectLastActionTimestamp);
   const lastLotteryTimestamp = useAppSelector(selectLastLotteryTimestamp);
-  const globalTimer = useAppSelector(selectGlobalTimer);
   const memeList = useAppSelector(selectMemeList);
   const giftboxShake = useAppSelector(selectGiftboxShake);
   const targetMemeIndex = useAppSelector(selectTargetMemeIndex);
@@ -53,6 +52,80 @@ const Gameplay = () => {
   const [danceButtonProgress, setDanceButtonProgress] = useState(0);
   const [isDanceButtonCoolDown, setIsDanceButtonCoolDown] = useState(false);
   const giftboxShakeRef = useRef(false);
+
+  // start localTimer region
+
+  const globalTimer = useAppSelector(selectGlobalTimer);
+  const [globalTimerCache, setGlobalTimerCache] = useState(globalTimer);
+  const [localTimer, setLocalTimer] = useState(globalTimer);
+  const [visibilityChange, setVisibilityChange] = useState(false);
+  const startTimeRef = useRef<number>(0);
+  const animationFrameIdRef = useRef<number | null>(null);
+  const elapsedTimeMultiplierRef = useRef<number>(1);
+  const lastLocalTimerRef = useRef<number>(globalTimer);
+
+  const resetStartTimeRef = () => {
+    startTimeRef.current = 0;
+    lastLocalTimerRef.current =
+      Math.abs(globalTimerCache - SERVER_TICK_TO_SECOND - localTimer) >
+      SERVER_TICK_TO_SECOND
+        ? globalTimerCache - SERVER_TICK_TO_SECOND
+        : localTimer;
+  };
+
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === "visible") {
+      setVisibilityChange(true);
+    }
+  };
+
+  useEffect(() => {
+    const updateProgress = (timestamp: DOMHighResTimeStamp) => {
+      if (startTimeRef.current === 0) {
+        startTimeRef.current = timestamp;
+      }
+
+      setLocalTimer(
+        lastLocalTimerRef.current +
+          ((timestamp - startTimeRef.current) / 1000) *
+            elapsedTimeMultiplierRef.current
+      );
+      animationFrameIdRef.current = requestAnimationFrame(updateProgress);
+    };
+
+    resetStartTimeRef();
+    elapsedTimeMultiplierRef.current = Math.max(
+      Math.min(
+        (globalTimerCache - lastLocalTimerRef.current) / SERVER_TICK_TO_SECOND,
+        1.2
+      ),
+      0.8
+    );
+
+    if (animationFrameIdRef.current !== null) {
+      cancelAnimationFrame(animationFrameIdRef.current);
+    }
+    animationFrameIdRef.current = requestAnimationFrame(updateProgress);
+
+    setVisibilityChange(false);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      if (animationFrameIdRef.current !== null) {
+        cancelAnimationFrame(animationFrameIdRef.current);
+      }
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      resetStartTimeRef();
+    };
+  }, [uIState, globalTimerCache, visibilityChange]);
+
+  useEffect(() => {
+    setGlobalTimerCache(globalTimer);
+  }, [globalTimer]);
+
+  console.log("TIME", localTimer);
+
+  // end localTimer region
 
   useEffect(() => {
     const draw = (): void => {
@@ -103,16 +176,18 @@ const Gameplay = () => {
   }, [targetMemeIndex, memeList]);
 
   useEffect(() => {
-    const delta = globalTimer - lastActionTimestamp;
+    const delta = localTimer - lastActionTimestamp;
     const progress = Math.min(Math.max(delta / COOL_DOWN, 0), 1);
     setDanceButtonProgress(progress);
-    setIsDanceButtonCoolDown(delta >= COOL_DOWN);
-    if (lastLotteryTimestamp != 0 && 10 < globalTimer - lastLotteryTimestamp) {
+    setIsDanceButtonCoolDown(delta < COOL_DOWN);
+    console.log("(TEST):", localTimer, globalTimer, lastActionTimestamp);
+    if (lastLotteryTimestamp != 0 && 10 < localTimer - lastLotteryTimestamp) {
       //   handleCancelRewards();
     }
-  }, [lastActionTimestamp, globalTimer]);
+  }, [lastActionTimestamp, localTimer]);
 
   function handleDiscoShakeFeet() {
+    console.log("TEST", isDanceButtonCoolDown);
     if (isDanceButtonCoolDown == false) {
       scenario.focusActor(440, 190);
       dispatch(
@@ -203,29 +278,9 @@ const Gameplay = () => {
       <div className="center" id="stage">
         <canvas id="canvas"></canvas>
         <StageButtons
-          //   danceButtonProgress={danceButtonProgress}
-          danceButtonProgress={0.8}
+          danceButtonProgress={danceButtonProgress}
           handleDiscoShakeFeet={handleDiscoShakeFeet}
         />
-        {/* <div className="stage-buttons"> */}
-        {/* <DanceMusicButton isDisabled={false} onClick={handleDiscoShakeFeet} /> */}
-        {/* <div
-            className={`button1 cd-${cooldown}`}
-            onClick={handleDiscoShakeFeet}
-          ></div> */}
-        {/* <div
-            className={`button2 cd-${cooldown}`}
-            onClick={handleDiscoJump}
-          ></div>
-          <div
-            className={`button3 cd-${cooldown}`}
-            onClick={handleDiscoShakeHeads}
-          ></div>
-          <div
-            className={`button4 cd-${cooldown}`}
-            onClick={handleDiscoPostComments}
-          ></div> */}
-        {/* </div> */}
       </div>
     </>
   );

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
-import { getConfig, sendTransaction, queryState } from "../../games/request"
+import { getConfig, sendTransaction, queryState, SERVER_TICK_TO_SECOND } from "../../games/request"
 import {scenario} from '../../games/scenario';
 
 export enum UIState{
@@ -132,13 +132,13 @@ export const propertiesSlice = createSlice({
 });
 
 export const selectUIState = (state: RootState) => state.puppyParty.properties.uIState;
-export const selectGlobalTimer = (state: RootState) => state.puppyParty.properties.globalTimer;
+export const selectGlobalTimer = (state: RootState) => state.puppyParty.properties.globalTimer * SERVER_TICK_TO_SECOND;
 export const selectNonce = (state: RootState) => BigInt(state.puppyParty.properties.player.nonce);
 export const selectMemeList = (state: RootState) => state.puppyParty.properties.memeList;
 export const selectBalance = (state: RootState) => state.puppyParty.properties.player.data.balance;
 export const selectAction = (state: RootState) => state.puppyParty.properties.player.data.action;
-export const selectLastLotteryTimestamp = (state: RootState) => state.puppyParty.properties.player.data.last_lottery_timestamp;
-export const selectLastActionTimestamp = (state: RootState) => state.puppyParty.properties.player.data.last_action_timestamp;
+export const selectLastLotteryTimestamp = (state: RootState) => state.puppyParty.properties.player.data.last_lottery_timestamp * SERVER_TICK_TO_SECOND;
+export const selectLastActionTimestamp = (state: RootState) => state.puppyParty.properties.player.data.last_action_timestamp * SERVER_TICK_TO_SECOND;
 export const selectProgress = (state: RootState) => state.puppyParty.properties.player.data.progress;
 export const selectLastTxResult = (state: RootState) => state.puppyParty.properties.lastTxResult;
 export const selectTargetMemeIndex = (state: RootState) => state.puppyParty.properties.targetMemeIndex;
