@@ -35,8 +35,8 @@ const CANCELL_LOTTERY = 7n;
 const WITHDRAW = 8n;
 const COOL_DOWN = 2;
 const PROGRESS_LOTTERY_THRESHOLD = 1000;
-const MIN_PROGRESS_UPDATE = 10;
-const PROGRESS_UPDATE_RATE = 0.1;
+const MIN_PROGRESS_UPDATE = 30;
+const PROGRESS_UPDATE_RATE = 0.2;
 
 const Gameplay = () => {
   const dispatch = useAppDispatch();
@@ -148,11 +148,16 @@ const Gameplay = () => {
           );
         }
 
-        const progress =
+        // Reset to false
+        if (displayProgressRef.current == PROGRESS_LOTTERY_THRESHOLD) {
+          dispatch(setUIState({ uIState: UIState.GiftboxPopup }));
+        }
+
+        const progressRatio =
           displayProgressRef.current / PROGRESS_LOTTERY_THRESHOLD;
 
         scenario.draw(ratioArray, {
-          progress,
+          progressRatio,
           l2account,
           memeList,
           giftboxShake: giftboxShakeRef.current,
@@ -184,11 +189,6 @@ const Gameplay = () => {
     // assume that whenever the dance button is clicked, the progress will be updated and return a non-zero positive value
     if (progress > 0) {
       setLastDanceActionTimeCache(localTimer);
-    }
-
-    // Reset to false
-    if (progress == PROGRESS_LOTTERY_THRESHOLD) {
-      dispatch(setUIState({ uIState: UIState.GiftboxPopup }));
     }
   }, [progress]);
 

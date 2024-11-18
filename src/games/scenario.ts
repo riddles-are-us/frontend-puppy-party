@@ -127,7 +127,7 @@ class Scenario {
       light.drawLight(ratioArray, context);
     }
     this.audience.drawBeat(ratioArray, context);
-    drawProgress(state.progress, context);
+    drawProgress(state.progressRatio, context);
   }
 
   step(ratioArray: Array<Beat>) {
