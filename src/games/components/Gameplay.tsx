@@ -23,6 +23,7 @@ import { getBeat } from "../draw";
 import { queryState, sendTransaction } from "../request";
 import { getTransactionCommandArray } from "../rpc";
 import "./Gameplay.css";
+import StageButtons from "./StageButtons";
 
 const CREATE_PLAYER = 1n;
 const SHAKE_FEET = 2n;
@@ -32,6 +33,7 @@ const POST_COMMENTS = 5n;
 const LOTTERY = 6n;
 const CANCELL_LOTTERY = 7n;
 const WITHDRAW = 8n;
+const COOL_DOWN = 2;
 
 const Gameplay = () => {
   const dispatch = useAppDispatch();
@@ -48,7 +50,8 @@ const Gameplay = () => {
   const giftboxShake = useAppSelector(selectGiftboxShake);
   const targetMemeIndex = useAppSelector(selectTargetMemeIndex);
   const [targetMemeRank, setTargetMemeRank] = useState(0);
-  const [cooldown, setCooldown] = useState(false);
+  const [danceButtonProgress, setDanceButtonProgress] = useState(0);
+  const [isDanceButtonCoolDown, setIsDanceButtonCoolDown] = useState(false);
   const giftboxShakeRef = useRef(false);
 
   useEffect(() => {
@@ -101,23 +104,16 @@ const Gameplay = () => {
 
   useEffect(() => {
     const delta = globalTimer - lastActionTimestamp;
-    if (delta > 2) {
-      setCooldown(false);
-    } else {
-      setCooldown(true);
-    }
-    let rc = 0;
-    if (lastLotteryTimestamp != 0) {
-      rc = 10 - (globalTimer - lastLotteryTimestamp);
-
-      if (rc < 0) {
-        //   handleCancelRewards();
-      }
+    const progress = Math.min(Math.max(delta / COOL_DOWN, 0), 1);
+    setDanceButtonProgress(progress);
+    setIsDanceButtonCoolDown(delta >= COOL_DOWN);
+    if (lastLotteryTimestamp != 0 && 10 < globalTimer - lastLotteryTimestamp) {
+      //   handleCancelRewards();
     }
   }, [lastActionTimestamp, globalTimer]);
 
   function handleDiscoShakeFeet() {
-    if (cooldown == false) {
+    if (isDanceButtonCoolDown == false) {
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
@@ -137,7 +133,7 @@ const Gameplay = () => {
   }
 
   function handleDiscoJump() {
-    if (cooldown == false) {
+    if (isDanceButtonCoolDown == false) {
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
@@ -157,7 +153,7 @@ const Gameplay = () => {
   }
 
   function handleDiscoShakeHeads() {
-    if (cooldown == false) {
+    if (isDanceButtonCoolDown == false) {
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
@@ -177,7 +173,7 @@ const Gameplay = () => {
   }
 
   function handleDiscoPostComments() {
-    if (cooldown == false) {
+    if (isDanceButtonCoolDown == false) {
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
@@ -206,12 +202,18 @@ const Gameplay = () => {
 
       <div className="center" id="stage">
         <canvas id="canvas"></canvas>
-        <div className="stage-buttons">
-          <div
+        <StageButtons
+          //   danceButtonProgress={danceButtonProgress}
+          danceButtonProgress={0.8}
+          handleDiscoShakeFeet={handleDiscoShakeFeet}
+        />
+        {/* <div className="stage-buttons"> */}
+        {/* <DanceMusicButton isDisabled={false} onClick={handleDiscoShakeFeet} /> */}
+        {/* <div
             className={`button1 cd-${cooldown}`}
             onClick={handleDiscoShakeFeet}
-          ></div>
-          <div
+          ></div> */}
+        {/* <div
             className={`button2 cd-${cooldown}`}
             onClick={handleDiscoJump}
           ></div>
@@ -222,8 +224,8 @@ const Gameplay = () => {
           <div
             className={`button4 cd-${cooldown}`}
             onClick={handleDiscoPostComments}
-          ></div>
-        </div>
+          ></div> */}
+        {/* </div> */}
       </div>
     </>
   );
