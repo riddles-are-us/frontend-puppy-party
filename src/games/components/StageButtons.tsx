@@ -4,9 +4,11 @@ import "./StageButtons.css";
 import DanceSideButton from "./buttons/DanceSideButton";
 import DanceTurnButton from "./buttons/DanceTurnButton";
 import DanceUpButton from "./buttons/DanceUpButton";
+import { DanceType } from "./Gameplay";
 
 interface Props {
   danceButtonProgress: number;
+  danceType: DanceType;
   onClickMusicButton: () => void;
   onClickSideButton: () => void;
   onClickTurnButton: () => void;
@@ -15,6 +17,7 @@ interface Props {
 
 const StageButtons = ({
   danceButtonProgress,
+  danceType,
   onClickMusicButton,
   onClickSideButton,
   onClickTurnButton,
@@ -25,28 +28,28 @@ const StageButtons = ({
       <div className="stage-buttons-music-container">
         <DanceMusicButton
           progress={danceButtonProgress}
-          isDisabled={false}
+          isDancing={danceType == DanceType.Music}
           onClick={onClickMusicButton}
         />
       </div>
       <div className="stage-buttons-side-container">
         <DanceSideButton
           progress={danceButtonProgress}
-          isDisabled={false}
+          isDancing={danceType == DanceType.Side}
           onClick={onClickSideButton}
         />
       </div>
       <div className="stage-buttons-turn-container">
         <DanceTurnButton
           progress={danceButtonProgress}
-          isDisabled={false}
+          isDancing={danceType == DanceType.Turn}
           onClick={onClickTurnButton}
         />
       </div>
       <div className="stage-buttons-up-container">
         <DanceUpButton
           progress={danceButtonProgress}
-          isDisabled={false}
+          isDancing={danceType == DanceType.Up}
           onClick={onClickUpButton}
         />
       </div>

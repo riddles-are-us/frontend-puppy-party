@@ -35,6 +35,14 @@ const CANCELL_LOTTERY = 7n;
 const WITHDRAW = 8n;
 const COOL_DOWN = 2;
 
+export enum DanceType {
+  None,
+  Music,
+  Side,
+  Turn,
+  Up,
+}
+
 const Gameplay = () => {
   const dispatch = useAppDispatch();
   const l2account = useAppSelector(selectL2Account);
@@ -51,6 +59,8 @@ const Gameplay = () => {
   const [targetMemeRank, setTargetMemeRank] = useState(0);
   const [danceButtonProgress, setDanceButtonProgress] = useState(0);
   const [isDanceButtonCoolDown, setIsDanceButtonCoolDown] = useState(false);
+  const [danceType, setDanceType] = useState(DanceType.None);
+
   const giftboxShakeRef = useRef(false);
 
   // start localTimer region
@@ -200,6 +210,7 @@ const Gameplay = () => {
 
   function onClickMusicButton() {
     if (isDanceButtonCoolDown == false) {
+      setDanceType(DanceType.Music);
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
@@ -221,6 +232,7 @@ const Gameplay = () => {
 
   function onClickSideButton() {
     if (isDanceButtonCoolDown == false) {
+      setDanceType(DanceType.Side);
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
@@ -241,6 +253,7 @@ const Gameplay = () => {
 
   function onClickTurnButton() {
     if (isDanceButtonCoolDown == false) {
+      setDanceType(DanceType.Turn);
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
@@ -261,6 +274,7 @@ const Gameplay = () => {
 
   function onClickUpButton() {
     if (isDanceButtonCoolDown == false) {
+      setDanceType(DanceType.Up);
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
@@ -291,6 +305,7 @@ const Gameplay = () => {
         <canvas id="canvas"></canvas>
         <StageButtons
           danceButtonProgress={danceButtonProgress}
+          danceType={danceType}
           onClickMusicButton={onClickMusicButton}
           onClickSideButton={onClickSideButton}
           onClickTurnButton={onClickTurnButton}
