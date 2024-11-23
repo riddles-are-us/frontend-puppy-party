@@ -1,11 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState, memo } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
-import {
-  selectL2Account,
-  selectL1Account,
-  loginL2AccountAsync,
-  loginL1AccountAsync,
-} from "../data/accountSlice";
+import { AccountSlice } from "zkwasm-minirollup-rpc";
 
 import spirites  from "./spirite";
 import { loadAudio } from "./audio";
@@ -162,13 +157,13 @@ export function GameLanding(prop: { memeList: Array<any> }) {
     return;
   }, []);
 
-  const account = useAppSelector(selectL1Account);
+  const account = useAppSelector(AccountSlice.selectL1Account);
 
   function startGame(index: number) {
     console.log(index);
     if (index < memeInfoList.length) {
       dispatch(setTargetMemeIndex(index));
-      dispatch(loginL2AccountAsync(account!));
+      dispatch(AccountSlice.loginL2AccountAsync(account!));
       loadAudio((ele) => {
         return ele;
       });

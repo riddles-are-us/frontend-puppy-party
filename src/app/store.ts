@@ -1,5 +1,5 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import accountReducer from '../data/accountSlice';
+import { AccountSliceReducer } from 'zkwasm-minirollup-rpc';
 import endpointReducer from "../data/endpoint";
 import puppyPartyReducer from "../data/puppy_party/puppy_party";
 
@@ -20,7 +20,7 @@ export const store = configureStore({
       },
     }),
   reducer: {
-    account: accountReducer,
+    account: AccountSliceReducer,
     endpoint: endpointReducer,
     puppyParty: puppyPartyReducer
   },

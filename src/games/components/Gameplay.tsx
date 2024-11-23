@@ -18,7 +18,7 @@ import {
   selectGiftboxShake,
   setGiftboxShake,
 } from "../../data/puppy_party/properties";
-import { selectL2Account } from "../../data/accountSlice";
+import { AccountSlice } from "zkwasm-minirollup-rpc";
 import { getBeat } from "../draw";
 import { queryState, sendTransaction } from "../request";
 import { getTransactionCommandArray } from "../rpc";
@@ -35,7 +35,7 @@ const WITHDRAW = 8n;
 
 const Gameplay = () => {
   const dispatch = useAppDispatch();
-  const l2account = useAppSelector(selectL2Account);
+  const l2account = useAppSelector(AccountSlice.selectL2Account);
   const uIState = useAppSelector(selectUIState);
   const [inc, setInc] = useState(0);
   const nonce = useAppSelector(selectNonce);

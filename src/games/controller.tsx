@@ -17,12 +17,7 @@ import {
   selectTargetMemeIndex,
 } from "../data/puppy_party/properties";
 import { getTransactionCommandArray } from "./rpc";
-import {
-  selectL2Account,
-  selectL1Account,
-  loginL2AccountAsync,
-  loginL1AccountAsync,
-} from "../data/accountSlice";
+import { AccountSlice } from "zkwasm-minirollup-rpc";
 import "./style.scss";
 import BN from "bn.js";
 import Gameplay from "./components/Gameplay";
@@ -41,8 +36,8 @@ const WITHDRAW = 8n;
 
 export function GameController() {
   const dispatch = useAppDispatch();
-  const account = useAppSelector(selectL1Account);
-  const l2account = useAppSelector(selectL2Account);
+  const account = useAppSelector(AccountSlice.selectL1Account);
+  const l2account = useAppSelector(AccountSlice.selectL2Account);
   const uIState = useAppSelector(selectUIState);
   const [inc, setInc] = useState(0);
   const nonce = useAppSelector(selectNonce);
@@ -73,7 +68,7 @@ export function GameController() {
   };
 
   useEffect(() => {
-    dispatch(loginL1AccountAsync());
+    dispatch(AccountSlice.loginL1AccountAsync());
   }, []);
 
   useEffect(() => {
@@ -143,26 +138,6 @@ export function GameController() {
       updateState();
     }, 5000);
   }, [inc]);
-
-  function handleRedeemRewards() {
-    dispatch(
-      sendTransaction({
-        cmd: getTransactionCommandArray(LOTTERY, nonce, [0n, 0n, 0n]),
-        prikey: l2account!.address,
-      })
-    );
-    dispatch(queryState({ cmd: [], prikey: l2account!.address }));
-  }
-
-  function handleCancelRewards() {
-    dispatch(
-      sendTransaction({
-        cmd: getTransactionCommandArray(CANCELL_LOTTERY, nonce, [0n, 0n, 0n]),
-        prikey: l2account!.address,
-      })
-    );
-    dispatch(queryState({ cmd: [], prikey: l2account!.address }));
-  }
 
   if (uIState >= UIState.Idle) {
     return <Gameplay />;

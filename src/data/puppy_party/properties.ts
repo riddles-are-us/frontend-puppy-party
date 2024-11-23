@@ -22,6 +22,7 @@ interface PlayerState {
   nonce: number;
   data: {
     balance: number;
+    ticket: number;
     action: bigint;
     last_lottery_timestamp: number;
     last_action_timestamp: number;
@@ -51,6 +52,7 @@ const initialState: PropertiesState = {
       nonce: 0,
       data: {
         balance: 0,
+        ticket: 0,
         action: SWAY,
         last_lottery_timestamp: 0,
         last_action_timestamp: 0,
@@ -136,6 +138,7 @@ export const selectGlobalTimer = (state: RootState) => state.puppyParty.properti
 export const selectNonce = (state: RootState) => BigInt(state.puppyParty.properties.player.nonce);
 export const selectMemeList = (state: RootState) => state.puppyParty.properties.memeList;
 export const selectBalance = (state: RootState) => state.puppyParty.properties.player.data.balance;
+export const selectTicket = (state: RootState) => state.puppyParty.properties.player.data.ticket;
 export const selectAction = (state: RootState) => state.puppyParty.properties.player.data.action;
 export const selectLastLotteryTimestamp = (state: RootState) => state.puppyParty.properties.player.data.last_lottery_timestamp;
 export const selectLastActionTimestamp = (state: RootState) => state.puppyParty.properties.player.data.last_action_timestamp;

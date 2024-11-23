@@ -3,7 +3,7 @@ import background from "../../images/withdraw_frame.png";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import "./WithdrawPopup.css";
 import { sendTransaction } from "../../request";
-import { selectL1Account, selectL2Account } from "../../../data/accountSlice";
+import { AccountSlice } from "zkwasm-minirollup-rpc";
 import {
   selectBalance,
   selectNonce,
@@ -27,8 +27,8 @@ const WithdrawPopup = () => {
   const dispatch = useAppDispatch();
   const uIState = useAppSelector(selectUIState);
   const nonce = useAppSelector(selectNonce);
-  const l2account = useAppSelector(selectL2Account);
-  const l1account = useAppSelector(selectL1Account);
+  const l2account = useAppSelector(AccountSlice.selectL2Account);
+  const l1account = useAppSelector(AccountSlice.selectL1Account);
   const balance = useAppSelector(selectBalance);
   const [amountString, setAmountString] = useState("");
 

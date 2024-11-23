@@ -1,7 +1,6 @@
 import React from "react";
 import { GameConnecting, GameLanding } from "../stage";
 import { useAppSelector } from "../../app/hooks";
-import { selectL1Account, selectL2Account } from "../../data/accountSlice";
 import {
   selectMemeList,
   selectUIState,
@@ -17,8 +16,6 @@ interface Props {
 
 const WelcomePage = ({ progress }: Props) => {
   const memeList = useAppSelector(selectMemeList);
-  const account = useAppSelector(selectL1Account);
-  const l2account = useAppSelector(selectL2Account);
   const uIState = useAppSelector(selectUIState);
 
   if (uIState == UIState.Init) {

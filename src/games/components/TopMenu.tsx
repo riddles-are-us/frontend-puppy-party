@@ -3,6 +3,7 @@ import "./TopMenu.css";
 import WithdrawButton from "./buttons/WithdrawButton";
 import {
   selectBalance,
+  selectTicket,
   selectUIState,
   setUIState,
   UIState,
@@ -19,6 +20,7 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
   const dispatch = useAppDispatch();
   const uiState = useAppSelector(selectUIState);
   const balance = useAppSelector(selectBalance);
+  const ticket = useAppSelector(selectTicket);
   console.log(memeInfoList);
   const cover = memeInfoList[targetMemeIndex].cover;
 
@@ -34,7 +36,7 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
       <div className="top-menu-withdraw-button">
         <WithdrawButton onClick={onClickWithdraw} />
       </div>
-      <div className="top-menu-balance-text">balance: {balance}</div>
+      <div className="top-menu-balance-text">balance: {balance} ticket: {ticket}</div>
       <div className="top-menu-rank-text">Vote: {targetMemeRank}</div>
       <img src={getCover(targetMemeIndex)} className="top-menu-rank-icon"></img>
     </div>

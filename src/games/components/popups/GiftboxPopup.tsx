@@ -3,7 +3,7 @@ import background from "../../images/withdraw_frame.png";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import "./GiftboxPopup.css";
 import { queryState, sendTransaction } from "../../request";
-import { selectL1Account, selectL2Account } from "../../../data/accountSlice";
+import { AccountSlice } from "zkwasm-minirollup-rpc";
 import {
   selectNonce,
   selectUIState,
@@ -126,7 +126,7 @@ const GiftboxPopup = () => {
   const dispatch = useAppDispatch();
   const uIState = useAppSelector(selectUIState);
   const nonce = useAppSelector(selectNonce);
-  const l2account = useAppSelector(selectL2Account);
+  const l2account = useAppSelector(AccountSlice.selectL2Account);
   const [rewardAnimation, setRewardAnimation] = useState(false);
   const [finishQuery, setFinishQuery] = useState(false);
   const parentRef = useRef<HTMLDivElement | null>(null);
