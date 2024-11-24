@@ -21,14 +21,20 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
   const uiState = useAppSelector(selectUIState);
   const balance = useAppSelector(selectBalance);
   const ticket = useAppSelector(selectTicket);
-  console.log(memeInfoList);
-  const cover = memeInfoList[targetMemeIndex].cover;
-
   const onClickWithdraw = () => {
     if (uiState == UIState.Idle) {
       dispatch(setUIState({ uIState: UIState.WithdrawPopup }));
     }
   };
+
+  /*
+  const onClickDeposit = () => {
+    if (uiState == UIState.Idle) {
+      dispatch(setUIState({ uIState: UIState.DepositPopup }));
+    }
+  };
+  */
+
 
   return (
     <div className="top-menu-container">
