@@ -15,7 +15,6 @@ function getRandomNumber(range: number): number {
 
 class Scenario {
   status: string;
-  progress: number;
   clips: Array<Clip>;
   lights: Array<Light>;
   fixedLights: Array<FixedLight>;
@@ -57,7 +56,6 @@ class Scenario {
     this.actor = this.clips[0];
     this.fixedLights = [new FixedLight(0,0)];
     this.torch = new Torch(100, 100, 40, 4, 4);
-    this.progress = 0;
     this.actorState = "restore";
     this.shapeBuilder = new ShapeBuilder();
     this.toggleText = ["MEME", "DISCO", "LFGGGG", "ROCK"];
@@ -134,22 +132,7 @@ class Scenario {
       light.drawLight(ratioArray, context);
     }
     this.audience.drawBeat(ratioArray, context);
-    if (state.progress > this.progress) {
-      let modifier = 1;
-      if (state.progress - this.progress > 0.01) {
-        modifier = (state.progress - this.progress) / 0.01;
-      }
-      const effectiveProgress = this.progress + 0.001 * modifier;
-      if (effectiveProgress > state.progress) {
-        this.progress = state.progress;
-      } else {
-        this.progress = effectiveProgress;
-      }
-    }
-    if(state.progress == 0) {
-      this.progress = 0;
-    }
-    drawProgress(this.progress, context);
+    drawProgress(state.progressRatio, context);
   }
 
   step(ratioArray: Array<Beat>) {
