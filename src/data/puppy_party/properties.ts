@@ -14,6 +14,7 @@ export enum UIState{
   Idle,  // from this point we have prepared all info for the main game stage
   QueryWithdraw,
   WithdrawPopup,
+  DepositPopup,
   QueryGiftbox,
   GiftboxPopup,
 }
