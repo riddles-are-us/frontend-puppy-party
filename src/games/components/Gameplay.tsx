@@ -20,18 +20,28 @@ import {
 } from "../../data/puppy_party/properties";
 import { AccountSlice } from "zkwasm-minirollup-rpc";
 import { getBeat } from "../draw";
-import { queryState, sendTransaction } from "../request";
+import { queryState, sendTransaction, SERVER_TICK_TO_SECOND } from "../request";
 import { getTransactionCommandArray } from "../rpc";
 import "./Gameplay.css";
+import StageButtons from "./StageButtons";
 
 const CREATE_PLAYER = 1n;
-const SHAKE_FEET = 2n;
-const JUMP = 3n;
-const SHAKE_HEADS = 4n;
-const POST_COMMENTS = 5n;
+const DANCE_MUSIC = 2n;
+const DANCE_SIDE = 3n;
+const DANCE_TURN = 4n;
+const DANCE_UP = 5n;
 const LOTTERY = 6n;
 const CANCELL_LOTTERY = 7n;
 const WITHDRAW = 8n;
+const COOL_DOWN = 2;
+
+export enum DanceType {
+  None,
+  Music,
+  Side,
+  Turn,
+  Up,
+}
 
 const Gameplay = () => {
   const dispatch = useAppDispatch();
@@ -41,15 +51,89 @@ const Gameplay = () => {
   const nonce = useAppSelector(selectNonce);
   const progress = useAppSelector(selectProgress);
   const progressRef = useRef(progress);
-  const lastActionTimestamp = useAppSelector(selectLastActionTimestamp);
+  const [lastDanceActionTimeCache, setLastDanceActionTimeCache] = useState(0);
   const lastLotteryTimestamp = useAppSelector(selectLastLotteryTimestamp);
-  const globalTimer = useAppSelector(selectGlobalTimer);
   const memeList = useAppSelector(selectMemeList);
   const giftboxShake = useAppSelector(selectGiftboxShake);
   const targetMemeIndex = useAppSelector(selectTargetMemeIndex);
   const [targetMemeRank, setTargetMemeRank] = useState(0);
-  const [cooldown, setCooldown] = useState(false);
+  const [danceButtonProgress, setDanceButtonProgress] = useState(0);
+  const [isDanceButtonCoolDown, setIsDanceButtonCoolDown] = useState(false);
+  const [danceType, setDanceType] = useState(DanceType.None);
+
   const giftboxShakeRef = useRef(false);
+
+  // start localTimer region
+
+  const globalTimer = useAppSelector(selectGlobalTimer);
+  const [globalTimerCache, setGlobalTimerCache] = useState(globalTimer);
+  const [localTimer, setLocalTimer] = useState(globalTimer);
+  const [visibilityChange, setVisibilityChange] = useState(false);
+  const startTimeRef = useRef<number>(0);
+  const animationFrameIdRef = useRef<number | null>(null);
+  const elapsedTimeMultiplierRef = useRef<number>(1);
+  const lastLocalTimerRef = useRef<number>(globalTimer);
+
+  const resetStartTimeRef = () => {
+    startTimeRef.current = 0;
+    lastLocalTimerRef.current =
+      Math.abs(globalTimerCache - localTimer) > SERVER_TICK_TO_SECOND
+        ? globalTimerCache
+        : localTimer;
+  };
+
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === "visible") {
+      setVisibilityChange(true);
+    }
+  };
+
+  useEffect(() => {
+    const updateProgress = (timestamp: DOMHighResTimeStamp) => {
+      if (startTimeRef.current === 0) {
+        startTimeRef.current = timestamp;
+      }
+
+      setLocalTimer(
+        lastLocalTimerRef.current +
+          ((timestamp - startTimeRef.current) / 1000) *
+            elapsedTimeMultiplierRef.current
+      );
+      animationFrameIdRef.current = requestAnimationFrame(updateProgress);
+    };
+
+    resetStartTimeRef();
+    elapsedTimeMultiplierRef.current = Math.max(
+      Math.min(
+        (globalTimerCache - lastLocalTimerRef.current + SERVER_TICK_TO_SECOND) /
+          SERVER_TICK_TO_SECOND,
+        1.2
+      ),
+      0.8
+    );
+
+    if (animationFrameIdRef.current !== null) {
+      cancelAnimationFrame(animationFrameIdRef.current);
+    }
+    animationFrameIdRef.current = requestAnimationFrame(updateProgress);
+
+    setVisibilityChange(false);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      if (animationFrameIdRef.current !== null) {
+        cancelAnimationFrame(animationFrameIdRef.current);
+      }
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      resetStartTimeRef();
+    };
+  }, [uIState, globalTimerCache, visibilityChange]);
+
+  useEffect(() => {
+    setGlobalTimerCache(globalTimer);
+  }, [globalTimer]);
+
+  // end localTimer region
 
   useEffect(() => {
     const draw = (): void => {
@@ -87,6 +171,11 @@ const Gameplay = () => {
   useEffect(() => {
     progressRef.current = progress;
 
+    // assume that whenever the dance button is clicked, the progress will be updated and return a non-zero positive value
+    if (progress > 0) {
+      setLastDanceActionTimeCache(localTimer);
+    }
+
     // Reset to false
     if (progress == 1000) {
       dispatch(setUIState({ uIState: UIState.GiftboxPopup }));
@@ -100,28 +189,54 @@ const Gameplay = () => {
   }, [targetMemeIndex, memeList]);
 
   useEffect(() => {
-    const delta = globalTimer - lastActionTimestamp;
-    if (delta > 2) {
-      setCooldown(false);
-    } else {
-      setCooldown(true);
+    const delta = localTimer - lastDanceActionTimeCache;
+    const progress = Math.min(Math.max(delta / COOL_DOWN, 0), 1);
+    setDanceButtonProgress(progress);
+    setIsDanceButtonCoolDown(delta < COOL_DOWN);
+    if (lastLotteryTimestamp != 0 && 10 < localTimer - lastLotteryTimestamp) {
+      handleCancelRewards();
     }
-    let rc = 0;
-    if (lastLotteryTimestamp != 0) {
-      rc = 10 - (globalTimer - lastLotteryTimestamp);
+  }, [lastDanceActionTimeCache, localTimer]);
 
-      if (rc < 0) {
-        //   handleCancelRewards();
-      }
-    }
-  }, [lastActionTimestamp, globalTimer]);
+  function handleCancelRewards() {
+    dispatch(
+      sendTransaction({
+        cmd: getTransactionCommandArray(CANCELL_LOTTERY, nonce, [0n, 0n, 0n]),
+        prikey: l2account!.address,
+      })
+    );
+    dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+  }
 
-  function handleDiscoShakeFeet() {
-    if (cooldown == false) {
+  function onClickMusicButton() {
+    if (isDanceButtonCoolDown == false) {
+      setDanceType(DanceType.Music);
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
-          cmd: getTransactionCommandArray(SHAKE_FEET, nonce, [
+          cmd: getTransactionCommandArray(DANCE_MUSIC, nonce, [
+            BigInt(targetMemeIndex),
+            0n,
+            0n,
+          ]),
+          prikey: l2account!.address,
+        })
+      );
+
+      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+      setTimeout(() => {
+        scenario.restoreActor();
+      }, 5000);
+    }
+  }
+
+  function onClickSideButton() {
+    if (isDanceButtonCoolDown == false) {
+      setDanceType(DanceType.Side);
+      scenario.focusActor(440, 190);
+      dispatch(
+        sendTransaction({
+          cmd: getTransactionCommandArray(DANCE_SIDE, nonce, [
             BigInt(targetMemeIndex),
             0n,
             0n,
@@ -136,12 +251,13 @@ const Gameplay = () => {
     }
   }
 
-  function handleDiscoJump() {
-    if (cooldown == false) {
+  function onClickTurnButton() {
+    if (isDanceButtonCoolDown == false) {
+      setDanceType(DanceType.Turn);
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
-          cmd: getTransactionCommandArray(JUMP, nonce, [
+          cmd: getTransactionCommandArray(DANCE_TURN, nonce, [
             BigInt(targetMemeIndex),
             0n,
             0n,
@@ -156,32 +272,13 @@ const Gameplay = () => {
     }
   }
 
-  function handleDiscoShakeHeads() {
-    if (cooldown == false) {
+  function onClickUpButton() {
+    if (isDanceButtonCoolDown == false) {
+      setDanceType(DanceType.Up);
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
-          cmd: getTransactionCommandArray(SHAKE_HEADS, nonce, [
-            BigInt(targetMemeIndex),
-            0n,
-            0n,
-          ]),
-          prikey: l2account!.address,
-        })
-      );
-      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
-      setTimeout(() => {
-        scenario.restoreActor();
-      }, 5000);
-    }
-  }
-
-  function handleDiscoPostComments() {
-    if (cooldown == false) {
-      scenario.focusActor(440, 190);
-      dispatch(
-        sendTransaction({
-          cmd: getTransactionCommandArray(POST_COMMENTS, nonce, [
+          cmd: getTransactionCommandArray(DANCE_UP, nonce, [
             BigInt(targetMemeIndex),
             0n,
             0n,
@@ -206,24 +303,14 @@ const Gameplay = () => {
 
       <div className="center" id="stage">
         <canvas id="canvas"></canvas>
-        <div className="stage-buttons">
-          <div
-            className={`button1 cd-${cooldown}`}
-            onClick={handleDiscoShakeFeet}
-          ></div>
-          <div
-            className={`button2 cd-${cooldown}`}
-            onClick={handleDiscoJump}
-          ></div>
-          <div
-            className={`button3 cd-${cooldown}`}
-            onClick={handleDiscoShakeHeads}
-          ></div>
-          <div
-            className={`button4 cd-${cooldown}`}
-            onClick={handleDiscoPostComments}
-          ></div>
-        </div>
+        <StageButtons
+          danceButtonProgress={danceButtonProgress}
+          danceType={danceType}
+          onClickMusicButton={onClickMusicButton}
+          onClickSideButton={onClickSideButton}
+          onClickTurnButton={onClickTurnButton}
+          onClickUpButton={onClickUpButton}
+        />
       </div>
     </>
   );

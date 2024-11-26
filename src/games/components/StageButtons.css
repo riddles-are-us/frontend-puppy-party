@@ -1,0 +1,33 @@
+
+.stage-buttons-container {
+    position: absolute;
+    width: 320px;
+    height: 60px;
+    top: 92%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.stage-buttons-music-container, .stage-buttons-side-container, .stage-buttons-turn-container, .stage-buttons-up-container{
+    position: absolute;
+    height: 60px;
+    width: 60px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.stage-buttons-music-container{
+    left: 20%;
+}
+
+.stage-buttons-side-container{
+    left: 40%;
+}
+
+.stage-buttons-turn-container{
+    left: 60%;
+}
+
+.stage-buttons-up-container{
+    left: 80%;
+}
