@@ -139,7 +139,7 @@ export const selectGlobalTimer = (state: RootState) => state.puppyParty.properti
 export const selectNonce = (state: RootState) => BigInt(state.puppyParty.properties.player.nonce);
 export const selectMemeList = (state: RootState) => state.puppyParty.properties.memeList;
 export const selectBalance = (state: RootState) => state.puppyParty.properties.player.data.balance;
-export const selectTicket = (state: RootState) => state.puppyParty.properties.player.data.ticket;
+export const selectTicket = (state: RootState) => state.puppyParty.properties.player.data.ticket ?? 0;
 export const selectAction = (state: RootState) => state.puppyParty.properties.player.data.action;
 export const selectLastLotteryTimestamp = (state: RootState) => state.puppyParty.properties.player.data.last_lottery_timestamp * SERVER_TICK_TO_SECOND;
 export const selectLastActionTimestamp = (state: RootState) => state.puppyParty.properties.player.data.last_action_timestamp * SERVER_TICK_TO_SECOND;
