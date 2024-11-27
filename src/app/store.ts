@@ -1,5 +1,5 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import { AccountSliceReducer } from 'zkwasm-minirollup-rpc';
+import { AccountSliceReducer } from 'zkwasm-minirollup-browser';
 import endpointReducer from "../data/endpoint";
 import puppyPartyReducer from "../data/puppy_party/puppy_party";
 

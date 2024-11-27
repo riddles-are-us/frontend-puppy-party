@@ -3,7 +3,7 @@ import background from "../../images/withdraw_frame.png";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import "./WithdrawPopup.css";
 import { sendTransaction } from "../../request";
-import { AccountSlice } from "zkwasm-minirollup-rpc";
+import { AccountSlice } from "zkwasm-minirollup-browser";
 import {
   selectBalance,
   selectNonce,

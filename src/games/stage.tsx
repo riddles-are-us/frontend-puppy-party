@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState, memo } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
-import { AccountSlice } from "zkwasm-minirollup-rpc";
+import { AccountSlice } from "zkwasm-minirollup-browser";
 
 import spirites  from "./spirite";
 import { loadAudio } from "./audio";
