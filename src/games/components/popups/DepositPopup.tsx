@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import background from "../../images/withdraw_frame.png";
+import background from "../../images/deposit_frame.png";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import "./WithdrawPopup.css";
+import "./DepositPopup.css";
 import { sendTransaction } from "../../request";
 import { AccountSlice } from "zkwasm-minirollup-rpc";
 import {
@@ -23,7 +23,7 @@ function bytesToHex(bytes: Array<number>): string {
   );
 }
 
-const WithdrawPopup = () => {
+const DepositPopup = () => {
   const dispatch = useAppDispatch();
   const uIState = useAppSelector(selectUIState);
   const nonce = useAppSelector(selectNonce);
@@ -32,7 +32,7 @@ const WithdrawPopup = () => {
   const balance = useAppSelector(selectBalance);
   const [amountString, setAmountString] = useState("");
 
-  async function withdrawRewards(amount: bigint, nonce: bigint) {
+  async function depositRewards(amount: bigint, nonce: bigint) {
     const address = l1account!.address.slice(2);
     const addressBN = new BN(address, 16);
     const addressBE = addressBN.toArray("be", 20); // 20 bytes = 160 bits and split into 4, 8, 8
@@ -72,46 +72,46 @@ const WithdrawPopup = () => {
     });
   }
 
-  const withdraw = (amount: string) => {
+  const deposit = (amount: string) => {
     try {
-      dispatch(setUIState({ uIState: UIState.QueryWithdraw }));
-      withdrawRewards(BigInt(amount), nonce);
+      dispatch(setUIState({ uIState: UIState.QueryDeposit }));
+      depositRewards(BigInt(amount), nonce);
     } catch (e) {
-      console.log("Error at withdraw " + e);
+      console.log("Error at deposit " + e);
     }
   };
 
   const onClickConfirm = () => {
-    if (uIState == UIState.WithdrawPopup) {
-      withdraw(amountString);
+    if (uIState == UIState.DepositPopup) {
+      deposit(amountString);
     }
   };
 
   const onClickCancel = () => {
-    if (uIState == UIState.WithdrawPopup) {
+    if (uIState == UIState.DepositPopup) {
       dispatch(setUIState({ uIState: UIState.Idle }));
     }
   };
 
   return (
-    <div className="withdraw-popup-container">
-      <div onClick={onClickCancel} className="withdraw-popup-mask" />
-      <div className="withdraw-popup-main-container">
-        <img src={background} className="withdraw-popup-main-background" />
-        <p className="withdraw-popup-amount-text">
+    <div className="deposit-popup-container">
+      <div onClick={onClickCancel} className="deposit-popup-mask" />
+      <div className="deposit-popup-main-container">
+        <img src={background} className="deposit-popup-main-background" />
+        <p className="deposit-popup-amount-text">
           Please enter a number between 0 and {balance}.
         </p>
         <input
           type="number"
-          className="withdraw-popup-amount-input"
+          className="deposit-popup-amount-input"
           value={amountString}
           onChange={(e) => setAmountString(e.target.value)}
           placeholder="Enter amount"
         />
-        <div className="withdraw-popup-confirm-button">
+        <div className="deposit-popup-confirm-button">
           <ConfirmButton onClick={onClickConfirm} />
         </div>
-        <div className="withdraw-popup-cancel-button">
+        <div className="deposit-popup-cancel-button">
           <CancelButton onClick={onClickCancel} />
         </div>
       </div>
@@ -119,4 +119,4 @@ const WithdrawPopup = () => {
   );
 };
 
-export default WithdrawPopup;
+export default DepositPopup;
