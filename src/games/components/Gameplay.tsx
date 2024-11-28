@@ -18,7 +18,7 @@ import {
   selectGiftboxShake,
   setGiftboxShake,
 } from "../../data/puppy_party/properties";
-import { AccountSlice } from "zkwasm-minirollup-rpc";
+import { AccountSlice } from "zkwasm-minirollup-browser";
 import { getBeat } from "../draw";
 import { queryState, sendTransaction, SERVER_TICK_TO_SECOND } from "../request";
 import { getTransactionCommandArray } from "../rpc";

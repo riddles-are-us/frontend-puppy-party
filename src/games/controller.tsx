@@ -17,7 +17,7 @@ import {
   selectTargetMemeIndex,
 } from "../data/puppy_party/properties";
 import { getTransactionCommandArray } from "./rpc";
-import { AccountSlice } from "zkwasm-minirollup-rpc";
+import { AccountSlice } from "zkwasm-minirollup-browser";
 import "./style.scss";
 import BN from "bn.js";
 import Gameplay from "./components/Gameplay";

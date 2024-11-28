@@ -3,7 +3,7 @@ import background from "../../images/withdraw_frame.png";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import "./WithdrawPopup.css";
 import { sendTransaction } from "../../request";
-import { AccountSlice } from "zkwasm-minirollup-rpc";
+import { AccountSlice } from "zkwasm-minirollup-browser";
 import {
   selectBalance,
   selectNonce,
@@ -12,9 +12,9 @@ import {
   UIState,
 } from "../../../data/puppy_party/properties";
 import BN from "bn.js";
-import WithdrawConfirmButton from "../buttons/WithdrawConfirmButton";
+import ConfirmButton from "../buttons/WithdrawConfirmButton";
 import { getTransactionCommandArray } from "../../rpc";
-import WithdrawCancelButton from "../buttons/WithdrawCancelButton";
+import CancelButton from "../buttons/WithdrawCancelButton";
 
 const WITHDRAW = 8n;
 function bytesToHex(bytes: Array<number>): string {
@@ -109,10 +109,10 @@ const WithdrawPopup = () => {
           placeholder="Enter amount"
         />
         <div className="withdraw-popup-confirm-button">
-          <WithdrawConfirmButton onClick={onClickConfirm} />
+          <ConfirmButton onClick={onClickConfirm} />
         </div>
         <div className="withdraw-popup-cancel-button">
-          <WithdrawCancelButton onClick={onClickCancel} />
+          <CancelButton onClick={onClickCancel} />
         </div>
       </div>
     </div>
