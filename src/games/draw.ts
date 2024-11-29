@@ -17,6 +17,7 @@ export class Torch {
     this.vy = vy;
     this.speed = speed;
   }
+
   incFrame() {
     if (this.top < 50) {
       this.vy = Math.abs(this.vy);

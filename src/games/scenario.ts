@@ -6,7 +6,7 @@ import {
   HEIGHT, WIDTH, Beat, drawScreen,
 }  from "./draw";
 import { ShapeBuilder, Shape, Effect} from "./effects";
-import { memeInfoList } from "./config";
+import { MemeInfo, memeInfoList } from "./config";
 import spirits from "./spirite";
 
 function getRandomNumber(range: number): number {
@@ -32,18 +32,18 @@ class Scenario {
     this.audience = new Audience();
     this.status = "pause";
     this.clips = [];
-    for (let i = 0; i<20; i++) {
-      if (i % 2 == 0) {
-        this.clips.push(
-          createDefaultAnimationClip(getRandomNumber(4), 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24),
-        );
+    for (let i = 0; i<memeInfoList.length; i++) {
+      const info:any = memeInfoList[i];
+      if (info.animationIndex) {
+        const clip = createAnimationClip(0, info.animationIndex, 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24);
+        this.clips.push(clip);
+        clip.name = info.name;
       } else {
-        this.clips.push(
-          createAnimationClip(0, getRandomNumber(3), 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24),
-        );
+        const clip = createDefaultAnimationClip(getRandomNumber(4), 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24);
+        clip.name = info.name;
+        this.clips.push(clip);
       }
     }
-    this.clips[0].name = "ME";
     this.clips[0].focus = true;
     this.lights = [
       new Light(0,115,90, 200, 70, 6, 2),
@@ -64,13 +64,42 @@ class Scenario {
     this.toggleShapeIndex = this.toggleText.length;
   }
 
-  setSelectedMeme(index: number) {
-    const memeinfo:any = memeInfoList[index];
-    if (memeinfo.animationIndex != null) {
-      this.actor.setAnimationClip(0, memeinfo.animationIndex, 220 + getRandomNumber(80), 50 + getRandomNumber(800), 0);
-    } else {
-      this.actor.name = memeinfo.name;
+  selectMeme(cursorLeft: number, cursorTop: number) {
+    const clips = this.clips.sort((a, b) => b.getBottom() - a.getBottom()); // front first
+    for (const clip of clips) {
+      if (clip.inRect(cursorLeft, cursorTop)) {
+        this.actor.focus = false;
+        clip.focus = true;
+        this.actor = clip;
+        const info:any = (MemeInfo as any)[clip.name];
+        if (info && info.index) {
+          return info.index;
+        } else {
+          return null
+        }
+      }
     }
+    return null
+  }
+
+  hoverMeme(cursorLeft: number, cursorTop: number) {
+    const clips = this.clips.sort((a, b) => b.getBottom() - a.getBottom()); // front first
+    let picked = false;
+    for (const clip of clips) {
+      if (picked) {
+        clip.hover = false;
+        picked = true;
+      } else if (clip.inRect(cursorLeft, cursorTop)) {
+        clip.hover = true;
+      } else {
+        clip.hover = false;
+      }
+    }
+  }
+
+
+  setSelectedMeme(index: number) {
+    return;
   }
 
   focusActor(left: number, top: number) {

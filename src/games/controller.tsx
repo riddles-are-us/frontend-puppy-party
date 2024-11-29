@@ -7,14 +7,6 @@ import {
   selectUIState,
   setUIState,
   selectNonce,
-  selectProgress,
-  selectLastActionTimestamp,
-  selectGlobalTimer,
-  selectMemeList,
-  selectLastLotteryTimestamp,
-  selectBalance,
-  selectLastTxResult,
-  selectTargetMemeIndex,
 } from "../data/puppy_party/properties";
 import { getTransactionCommandArray } from "./rpc";
 import { AccountSlice } from "zkwasm-minirollup-browser";

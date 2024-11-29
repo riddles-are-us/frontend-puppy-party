@@ -34,6 +34,7 @@ export class Clip {
   currentClip: string | null;
   ratio: number;
   focus: boolean;
+  hover: boolean;
   target: [number, number] | null;
   constructor(src: HTMLImageElement, boundry: ClipRect, ratio: number) {
     this.name = "NPC";
@@ -48,7 +49,32 @@ export class Clip {
     this.clips = new Map<string, Array<ClipRect>>();
     this.ratio = ratio;
     this.focus = false;
+    this.hover = false;
     this.target = null;
+  }
+
+  inRect(cursorLeft: number, cursorTop: number): boolean {
+    const rect = this.clips.get(this.currentClip!)![this.currentFrame!];
+    const w = rect.right-rect.left;
+    const bottom = this.top + w * this.ratio;
+    const right = this.left + w * this.ratio;
+    const margin = w * this.ratio / 4;
+    console.log(this.left + margin, this.top + margin, right-margin, bottom-margin);
+    if (cursorLeft > this.left + margin
+      && cursorLeft < right - margin
+      && cursorTop > this.top + margin
+      && cursorTop < bottom) {
+      return true;
+    }
+    return false;
+  }
+
+  select() {
+    this.focus = true;
+  }
+
+  disSelect() {
+    this.focus = false;
   }
 
   getBottom() {
@@ -60,6 +86,7 @@ export class Clip {
       return 0;
     }
   }
+
   setSpeed(vx: number, vy: number) {
     this.vx = vx;
     this.vy = vy;
@@ -73,16 +100,27 @@ export class Clip {
       const h = rect.bottom - rect.top;
       ctx.drawImage(this.src, rect.left, rect.top, w, h, this.left, this.top, w * this.ratio, w * this.ratio);
 
-      if (this.focus == false) {
-        ctx.fillStyle = "black";  // Red color
-      } else {
+      if (this.focus == true) {
         ctx.fillStyle = "orange";  // Red color
+      } else {
+        ctx.fillStyle = "black";  // Red color
       }
-      if (this.name != "NPC") {
+      {
         ctx.fillRect(this.left+30, this.top - 13, this.name.length * 6 + 10, 15);
         ctx.fillStyle = "white";  // Red color
         ctx.font = "12px Arial";
         ctx.fillText(this.name, this.left+35, this.top); // text, x, y
+      }
+      if (this.hover == true) {
+        //ctx.fillStyle = 'hsl(20%, 100%, 15%)'; // Use 50% gray to desaturate
+        //ctx.globalCompositeOperation = "saturation";
+        ctx.beginPath();
+        ctx.arc(this.left + 50, this.top + 50, 50, 0, 2 * Math.PI);
+        ctx.closePath();
+        ctx.setLineDash([10, 5]); // Dash of 10px and gap of 5px
+        ctx.strokeStyle = 'purple'; // Color of the dashed circle
+        ctx.lineWidth = 2;        // Thickness of the dashed line
+        ctx.stroke();
       }
       /*
       ctx.fillText(this.currentClip, this.left+10, this.top); // text, x, y

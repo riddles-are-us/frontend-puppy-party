@@ -44,7 +44,7 @@ export const MemeInfo = {
     cover: AMI,
     index: 3,
   },
-  
+
   "blazefin": {
     name: "blazefin",
     cover: BLAZEFIN,
@@ -56,69 +56,69 @@ export const MemeInfo = {
     cover: DC,
     index: 5,
   },
-  
+
   "bull": {
     name: "bull",
     cover: BULL,
     index: 6,
   },
-  
+
   "burger": {
     name: "burger",
     cover: BURGER,
     animationIndex: 4,
     index: 7,
   },
-  
+
   "zkj": {
     name: "zkj",
     cover: ZKJ,
     index: 8,
   },
-  
+
   "dalp": {
     name: "dalp",
     cover: DALP,
     index: 9,
   },
-  
+
   "dokuan": {
     name: "dokuan",
     animationIndex: 3,
     cover: DOKUAN,
     index: 10,
   },
-  
+
   "yome": {
     name: "yome",
     cover: YOME,
     index: 11,
   },
-  
+
   "eddy": {
     name: "eddy",
     cover: EDDY,
     index: 12,
   },
-  
+
   "flix": {
     name: "flix",
     cover: FLIX,
     index: 13,
   },
-  
+
   "hmc": {
     name: "hmc",
     cover: HMC,
     index: 14,
   },
-  
+
   "psd": {
     name: "psd",
     cover: PSD,
     index: 15,
   },
-  
+
   "zkshark": {
     name: "zkshark",
     cover: ZKSHARK,

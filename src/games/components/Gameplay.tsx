@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, MouseEvent } from "react";
 import Popups from "./Popups";
 import TopMenu from "./TopMenu";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -17,6 +17,7 @@ import {
   selectTargetMemeIndex,
   selectGiftboxShake,
   setGiftboxShake,
+  setTargetMemeIndex,
 } from "../../data/puppy_party/properties";
 import { AccountSlice } from "zkwasm-minirollup-browser";
 import { getBeat } from "../draw";
@@ -68,6 +69,8 @@ const Gameplay = () => {
   const [danceType, setDanceType] = useState(DanceType.None);
 
   const giftboxShakeRef = useRef(false);
+
+  const canvasRef = React.createRef<HTMLCanvasElement>();
 
   // start localTimer region
 
@@ -333,6 +336,36 @@ const Gameplay = () => {
     }
   }
 
+  function onHoverCanvas(e: MouseEvent<HTMLCanvasElement>) {
+    const target = e.currentTarget;
+    const rect = target.getBoundingClientRect();
+    const ratio = rect.width / 960;
+    //const left = (e.clientX - rect.left) * rect.width / 960;
+    //const top = (e.clientY - rect.top) * rect.width / 960;
+    const left = (e.clientX - rect.left) * 960 / rect.width;
+    const top = (e.clientY - rect.top) * 960 / rect.width;
+    console.log("canvas click:", left, top, ratio);
+    scenario.hoverMeme(left, top);
+    return;
+
+  }
+
+  function onClickCanvas(e: MouseEvent<HTMLCanvasElement>) {
+    const target = e.currentTarget;
+    const rect = target.getBoundingClientRect();
+    const ratio = rect.width / 960;
+    //const left = (e.clientX - rect.left) * rect.width / 960;
+    //const top = (e.clientY - rect.top) * rect.width / 960;
+    const left = (e.clientX - rect.left) * 960 / rect.width;
+    const top = (e.clientY - rect.top) * 960 / rect.width;
+    console.log("canvas click:", left, top, ratio);
+    const memeIndex = scenario.selectMeme(left, top);
+    if (memeIndex != null) {
+        dispatch(setTargetMemeIndex(memeIndex));
+    }
+    return;
+  }
+
   return (
     <>
       <Popups />
@@ -342,7 +375,7 @@ const Gameplay = () => {
       />
 
       <div className="center" id="stage">
-        <canvas id="canvas"></canvas>
+        <canvas id="canvas" onMouseMove={onHoverCanvas} onClick={onClickCanvas} ref={canvasRef}></canvas>
         <StageButtons
           danceButtonProgress={danceButtonProgress}
           danceType={danceType}
