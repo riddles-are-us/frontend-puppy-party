@@ -1,15 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState, memo } from "react";
-import { useAppSelector, useAppDispatch } from "../app/hooks";
+import React, { useEffect, useRef, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { AccountSlice } from "zkwasm-minirollup-browser";
-
-import spirites  from "./spirite";
-import { loadAudio } from "./audio";
-
-import {
-  selectMemeList,
-  setTargetMemeIndex,
-} from "../data/puppy_party/properties";
-import {MemeInfo, memeInfoList} from "./config";
+import { setTargetMemeIndex } from "../../data/puppy_party/properties";
+import { loadAudio } from "../audio";
+import { memeInfoList } from "../config";
+import "./LandingPage.css";
 
 const divLayout = [
   [-693, -343, 80],
@@ -50,21 +45,10 @@ const divLayout = [
   [617, 132, 80],
 ];
 
-/*
-function shuffleArray<T>(array: T[]): T[] {
-  //Loop through the array from the last element to the first
-  const retArray: T[] = [];
-  const sourceArray = [...array];
-  while (sourceArray.length > 0) {
-    const j = Math.floor(Math.random() * sourceArray.length);
-    const ele = sourceArray.splice(j, 1);
-    retArray.push(ele[0]);
-  }
-  return retArray;
-}
-*/
-
-function sortLayout<T>(array: Array<T>, sz: number): Array<{ index: number; value: T }> {
+function sortLayout<T>(
+  array: Array<T>,
+  sz: number
+): Array<{ index: number; value: T }> {
   let retArray: Array<T> = [...array];
 
   retArray.sort((a: any, b: any) => {
@@ -98,16 +82,18 @@ function stageDivStyle(layout: Array<number>, index: number) {
   return divStyle;
 }
 
+const shuffled = sortLayout(divLayout, 18);
+const installedDiv: JSX.Element[] = [];
+
+interface Props {
+  memeList: Array<any>;
+}
+
 interface LayoutInfo {
   divs: JSX.Element[];
 }
 
-// We start with only 12 top nodes
-const shuffled = sortLayout(divLayout, 18);
-
-const installedDiv: JSX.Element[] = [];
-
-export function GameLanding(prop: { memeList: Array<any> }) {
+const LandingPage = ({ memeList }: Props) => {
   const dispatch = useAppDispatch();
   const layoutRef = useRef<LayoutInfo | null>(null);
   const [memelayout, setMemeLayout] = useState<LayoutInfo>({
@@ -115,17 +101,17 @@ export function GameLanding(prop: { memeList: Array<any> }) {
   });
 
   /* Not sorting now
-  let indexedMemeList = prop.memeList.map((v, index) => {
-    return {
-      index: index,
-      value: v,
-    };
-  });
-
-  indexedMemeList.sort((a: any, b: any) => {
-    return b.value.rank - a.value.rank;
-  });
-   */
+    let indexedMemeList = prop.memeList.map((v, index) => {
+      return {
+        index: index,
+        value: v,
+      };
+    });
+  
+    indexedMemeList.sort((a: any, b: any) => {
+      return b.value.rank - a.value.rank;
+    });
+     */
 
   useEffect(() => {
     // Set up an interval that adds a new div every 1 second
@@ -171,16 +157,10 @@ export function GameLanding(prop: { memeList: Array<any> }) {
   }
 
   return (
-    <div className="loading" id="stage">
+    <div className="landing-page-loading" id="stage">
       {memelayout.divs}
     </div>
   );
-}
+};
 
-export function GameConnecting(prop: { hint: string }) {
-  return (
-    <div className="loading" id="stage">
-      {prop.hint}
-    </div>
-  );
-}
+export default LandingPage;

@@ -1,5 +1,4 @@
 import React from "react";
-import { GameConnecting, GameLanding } from "../stage";
 import { useAppSelector } from "../../app/hooks";
 import {
   selectMemeList,
@@ -9,6 +8,7 @@ import {
 import WelcomePageConnecting from "./WelcomePageConnecting";
 import WelcomePageProgressBar from "./WelcomePageProgressBar";
 import "./WelcomePage.css";
+import LandingPage from "./LandingPage";
 
 interface Props {
   progress: number;
@@ -29,7 +29,7 @@ const WelcomePage = ({ progress }: Props) => {
   } else if (uIState == UIState.QueryState) {
     return <WelcomePageProgressBar progress={90} />;
   } else if (uIState == UIState.WelcomePage) {
-    return <GameLanding memeList={memeList} />;
+    return <LandingPage memeList={memeList} />;
   } else {
     return null;
   }
