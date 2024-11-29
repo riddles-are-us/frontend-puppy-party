@@ -3,7 +3,7 @@ import {
   Torch, Audience, drawHorn,
   drawBackground, drawProgress,
   Light, FixedLight,
-  HEIGHT, WIDTH, Beat, drawScreen,
+  HEIGHT, WIDTH, Beat, drawScreen, FocusTorch,
 }  from "./draw";
 import { ShapeBuilder, Shape, Effect} from "./effects";
 import { MemeInfo, memeInfoList } from "./config";
@@ -19,6 +19,7 @@ class Scenario {
   lights: Array<Light>;
   fixedLights: Array<FixedLight>;
   torch: Torch;
+  focusTorch: FocusTorch;
   audience: Audience;
   actor: Clip;
   actorState: "focus" | "restore";
@@ -56,6 +57,7 @@ class Scenario {
     this.actor = this.clips[0];
     this.fixedLights = [new FixedLight(0,0)];
     this.torch = new Torch(100, 100, 40, 4, 4);
+    this.focusTorch = new FocusTorch();
     this.actorState = "restore";
     this.shapeBuilder = new ShapeBuilder();
     this.toggleText = ["MEME", "DISCO", "LFGGGG", "ROCK"];
@@ -73,6 +75,7 @@ class Scenario {
         this.actor = clip;
         const info:any = (MemeInfo as any)[clip.name];
         if (info && info.index) {
+          this.focusTorch.resetFrame();
           return info.index;
         } else {
           return null
@@ -139,6 +142,8 @@ class Scenario {
     context.drawImage(spirits.leftEcoImage, 0, 0, 1700 * 0.5, 1076*0.5);
     context.drawImage(spirits.rightEcoImage, WIDTH - 1324 * 0.5, 0, 1324*0.5, 798*0.5);
 
+    const [bLeft, bTop] = this.actor.getZCenter()!;
+    this.focusTorch.drawLight(bLeft, bTop, context);
 
 
     /*
@@ -146,22 +151,23 @@ class Scenario {
     context.fillStyle = `hsl(120, 100%, 20%)`;
     context.fillRect(0, 0, WIDTH, HEIGHT);
     context.globalCompositeOperation = 'source-over';
-    */
+     */
 
-  drawHorn(ratioArray, context, state.giftboxShake);
+    drawHorn(ratioArray, context, state.giftboxShake);
     for (const light of this.fixedLights) {
       light.drawLight(ratioArray, context);
     }
     this.torch.drawLight(ratioArray, context);
     const clips = this.clips.sort((a, b) => a.getBottom() - b.getBottom());
     for (const obj of clips) {
-        obj.draw(context);
+      obj.draw(context);
     }
     for (const light of this.lights) {
       light.drawLight(ratioArray, context);
     }
     this.audience.drawBeat(ratioArray, context);
     drawProgress(state.progressRatio, context);
+
   }
 
   step(ratioArray: Array<Beat>) {

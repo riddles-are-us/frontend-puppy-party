@@ -4,6 +4,33 @@ import spirites from "./spirite";
 export const HEIGHT = 540;
 export const WIDTH = 960;
 
+export class FocusTorch {
+  radis: number;
+  constructor() {
+    this.radis = 0;
+  }
+
+  incFrame() {
+    if (this.radis < 50) {
+      this.radis += 10;
+    }
+  }
+
+  resetFrame() {
+    this.radis = 0;
+  }
+
+  drawLight(bLeft: number, bTop: number, ctx: CanvasRenderingContext2D) {
+    const style = ctx.fillStyle;
+    ctx.fillStyle = 'hsl(60, 100%, 90%, 40%)';
+    ctx.beginPath();
+    ctx.ellipse(bLeft, bTop, this.radis, this.radis/2.5, 0, 0, 2*Math.PI);
+    ctx.fill();                // Fill the ellipse
+    ctx.fillStyle = style;
+    this.incFrame();
+  }
+}
+
 export class Torch {
   top: number;
   left: number;

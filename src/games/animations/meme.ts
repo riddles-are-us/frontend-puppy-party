@@ -87,6 +87,18 @@ export class Clip {
     }
   }
 
+  getZCenter() {
+    if (this.currentClip != null && this.currentFrame != null) {
+      const rect = this.clips.get(this.currentClip)![this.currentFrame];
+      const w = rect.right-rect.left;
+      return [this.left + this.ratio * w/2, this.top + this.ratio*w]
+    }
+    else {
+      return null;
+    }
+  }
+
+
   setSpeed(vx: number, vy: number) {
     this.vx = vx;
     this.vy = vy;
