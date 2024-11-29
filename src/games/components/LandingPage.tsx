@@ -4,7 +4,12 @@ import { AccountSlice } from "zkwasm-minirollup-browser";
 import { setTargetMemeIndex } from "../../data/puppy_party/properties";
 import { loadAudio } from "../audio";
 import { memeInfoList } from "../config";
+import background from "../images/landing/landing_bg.png";
+import titleImage from "../images/landing/landing_title.png";
+import stageBackground from "../images/landing/stage_bg.png";
 import "./LandingPage.css";
+import PlayButton from "./buttons/PlayButton";
+import JoinButton from "./buttons/JoinButton";
 
 const divLayout = [
   [-693, -343, 80],
@@ -156,9 +161,32 @@ const LandingPage = ({ memeList }: Props) => {
     }
   }
 
+  const onClickPlay = () => {
+    /**/
+  };
+
+  const onClickJoin = () => {
+    /**/
+  };
+
   return (
-    <div className="landing-page-loading" id="stage">
-      {memelayout.divs}
+    <div className="landing-page-container">
+      <img className="landing-page-background" src={background} />
+      <img className="landing-page-title" src={titleImage} />
+      <img className="landing-page-stage-background" src={stageBackground} />
+      <div className="landing-page-panel-container">
+        <p className="landing-page-panel-text">
+          Current Season Ends in {"00:00:00"}
+        </p>
+        <div className="landing-page-panel-play-button">
+          <PlayButton onClick={onClickPlay} />
+        </div>
+        <div className="landing-page-panel-join-button">
+          <JoinButton onClick={onClickJoin} />
+        </div>
+      </div>
+
+      {/* <div className="landing-page-meme-container">{memelayout.divs}</div> */}
     </div>
   );
 };
