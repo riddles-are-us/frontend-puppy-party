@@ -52,7 +52,7 @@ export const MemeInfo = {
   },
 
   "deadchu": {
-    name: "DeadChu",
+    name: "deadchu",
     cover: DC,
     index: 5,
   },
@@ -130,12 +130,6 @@ export const MemeInfo = {
     cover: BUFF,
     index: 17,
   },
-
-
-
-  "default": {
-    cover: MemeDefault,
-  }
 }
 
 const coverList = [
@@ -184,3 +178,8 @@ export const memeInfoList = [
   MemeInfo["zkshark"],
   MemeInfo["buff"],
 ]
+
+export function getMemeIndex(name: string): number {
+  const info = (MemeInfo as any)[name];
+  return info.index;
+}

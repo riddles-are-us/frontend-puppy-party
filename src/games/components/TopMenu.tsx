@@ -3,6 +3,7 @@ import "./TopMenu.css";
 import WithdrawButton from "./buttons/WithdrawButton";
 import {
   selectBalance,
+  selectLotteryInfo,
   selectTicket,
   selectUIState,
   setUIState,
@@ -24,6 +25,7 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
   const uiState = useAppSelector(selectUIState);
   const balance = useAppSelector(selectBalance);
   const ticket = useAppSelector(selectTicket);
+  const lotteryInfo = useAppSelector(selectLotteryInfo);
   const onClickWithdraw = () => {
     if (uiState == UIState.Idle) {
       dispatch(setUIState({ uIState: UIState.WithdrawPopup }));
@@ -45,12 +47,13 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
       <div className="top-menu-deposit-button">
         <DepositButton onClick={onClickDeposit} />
       </div>
-      <div className="top-menu-ticket-text">ticket: {ticket}</div>
+      <div className="top-menu-ticket-text">Ticket: {ticket}</div>
       <img src={ticketIcon} className="top-menu-ticket-icon"></img>
-      <div className="top-menu-balance-text">balance: {balance}</div>
+      <div className="top-menu-balance-text">DiscoNote: {balance}</div>
       <img src={balanceIcon} className="top-menu-balance-icon"></img>
       <div className="top-menu-vote-text">Vote: {targetMemeRank}</div>
       <img src={getCover(targetMemeIndex)} className="top-menu-vote-icon"></img>
+      <div className="top-menu-lottery-text">Lottery Heat: {lotteryInfo}</div>
     </div>
   );
 }

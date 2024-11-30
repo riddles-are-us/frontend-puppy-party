@@ -25,6 +25,7 @@ interface PlayerState {
   data: {
     balance: number;
     ticket: number;
+    lottery_info: number;
     action: bigint;
     last_lottery_timestamp: number;
     last_action_timestamp: number;
@@ -32,7 +33,7 @@ interface PlayerState {
   }
 }
 
-interface MemeListElement {
+export interface MemeListElement {
   rank: number,
 }
 
@@ -54,6 +55,7 @@ const initialState: PropertiesState = {
       nonce: 0,
       data: {
         balance: 0,
+        lottery_info: 0,
         ticket: 0,
         action: SWAY,
         last_lottery_timestamp: 0,
@@ -141,6 +143,7 @@ export const selectNonce = (state: RootState) => BigInt(state.puppyParty.propert
 export const selectMemeList = (state: RootState) => state.puppyParty.properties.memeList;
 export const selectBalance = (state: RootState) => state.puppyParty.properties.player.data.balance;
 export const selectTicket = (state: RootState) => state.puppyParty.properties.player.data.ticket ?? 0;
+export const selectLotteryInfo = (state: RootState) => state.puppyParty.properties.player.data.lottery_info;
 export const selectAction = (state: RootState) => state.puppyParty.properties.player.data.action;
 export const selectLastLotteryTimestamp = (state: RootState) => state.puppyParty.properties.player.data.last_lottery_timestamp * SERVER_TICK_TO_SECOND;
 export const selectLastActionTimestamp = (state: RootState) => state.puppyParty.properties.player.data.last_action_timestamp * SERVER_TICK_TO_SECOND;

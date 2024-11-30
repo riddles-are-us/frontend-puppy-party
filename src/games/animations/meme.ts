@@ -1,3 +1,5 @@
+import {MemeListElement} from "../../data/puppy_party/properties";
+import {getMemeIndex} from "../config";
 import {
   HEIGHT, WIDTH,
 }  from "../draw";
@@ -104,7 +106,7 @@ export class Clip {
     this.vy = vy;
   }
 
-  draw(ctx: CanvasRenderingContext2D) {
+  draw(ctx: CanvasRenderingContext2D, memeinfos: MemeListElement[]) {
     if (this.currentClip != null && this.currentFrame != null) {
       //Set the fill color
       const rect = this.clips.get(this.currentClip)![this.currentFrame];
@@ -117,11 +119,14 @@ export class Clip {
       } else {
         ctx.fillStyle = "black";  // Red color
       }
+
+      const rank = memeinfos[getMemeIndex(this.name)].rank;
+      const fullname = `${this.name}:${rank}`;
       {
-        ctx.fillRect(this.left+30, this.top - 13, this.name.length * 6 + 10, 15);
+        ctx.fillRect(this.left + 30, this.top - 13, fullname.length * 7 + 5, 15);
         ctx.fillStyle = "white";  // Red color
         ctx.font = "12px Arial";
-        ctx.fillText(this.name, this.left+35, this.top); // text, x, y
+        ctx.fillText(fullname, this.left+35, this.top); // text, x, y
       }
       if (this.hover == true) {
         //ctx.fillStyle = 'hsl(20%, 100%, 15%)'; // Use 50% gray to desaturate

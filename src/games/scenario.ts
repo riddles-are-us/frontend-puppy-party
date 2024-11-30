@@ -160,7 +160,7 @@ class Scenario {
     this.torch.drawLight(ratioArray, context);
     const clips = this.clips.sort((a, b) => a.getBottom() - b.getBottom());
     for (const obj of clips) {
-      obj.draw(context);
+      obj.draw(context, state.memeList);
     }
     for (const light of this.lights) {
       light.drawLight(ratioArray, context);
