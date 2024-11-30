@@ -1,6 +1,17 @@
 .landing-page-container {
-    width: 100vw;
+    width: max(100vw, 100vh * 2560 / 1600);
     height: 100vh;
+    position: relative;
+}
+
+.landing-page-stage-container {
+    position: absolute;
+    width: auto;
+    height: 100%;
+    aspect-ratio: 2560 / 1600;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .landing-page-background {
@@ -56,6 +67,17 @@
 .landing-page-panel-play-button{
     position: absolute;
     top: 70%;
+    left: 50%;
+    height: 40%;
+    width: auto;
+    aspect-ratio: 142 / 42;
+    transform: translate(-50%, -50%);
+}
+
+/* disable join meme temporary  */
+/* .landing-page-panel-play-button{
+    position: absolute;
+    top: 70%;
     left: 35%;
     height: 40%;
     width: auto;
@@ -71,11 +93,11 @@
     width: auto;
     aspect-ratio: 206 / 45;
     transform: translate(-50%, -50%);
-}
+} */
 
 .landing-page-ranking-container {
     position: absolute;
-    left: 40.5%;
+    left: 41.7%;
     bottom: 10%;
     height: 30%;
     width: auto;
@@ -139,7 +161,7 @@
 
 .landing-page-next-season-container {
     position: absolute;
-    left: 67.5%;
+    left: 65.5%;
     bottom: 10%;
     height: 30%;
     width: auto;
@@ -165,7 +187,7 @@
 
 .landing-page-speaker-green-left-image {
     position: absolute;
-    left: 12.5%;
+    left: 17%;
     bottom: 21.5%;
     height: 17.19%;
     width: auto;
@@ -175,7 +197,7 @@
 
 .landing-page-speaker-green-right-image {
     position: absolute;
-    left: 79.5%;
+    left: 76%;
     bottom: 21.7%;
     height: 16.68%;
     width: auto;
@@ -185,7 +207,7 @@
 
 .landing-page-speaker-pink-left-image {
     position: absolute;
-    left: 14%;
+    left: 18%;
     bottom: 52.2%;
     height: 13.56%;
     width: auto;
@@ -195,7 +217,7 @@
 
 .landing-page-speaker-pink-right-image {
     position: absolute;
-    left: 79%;
+    left: 76%;
     bottom: 52.2%;
     height: 13.56%;
     width: auto;
@@ -205,7 +227,7 @@
 
 .landing-page-speaker-yellow-left-image {
     position: absolute;
-    left: 17%;
+    left: 21%;
     bottom: 68%;
     height: 4.94%;
     width: auto;
@@ -215,17 +237,7 @@
 
 .landing-page-speaker-yellow-right-image {
     position: absolute;
-    left: 81%;
-    bottom: 68%;
-    height: 4.94%;
-    width: auto;
-    aspect-ratio: 79 / 79;
-    animation: speaker-animation 0.5s infinite;
-}
-
-.landing-page-speaker-yellow-right-image {
-    position: absolute;
-    left: 81%;
+    left: 77.3%;
     bottom: 68%;
     height: 4.94%;
     width: auto;
@@ -240,8 +252,8 @@
 
 .landing-page-left-white-light-animation {
     position: absolute;
-    left: 4.5%;
-    bottom: 25.5%;
+    left: 10.4%;
+    bottom: 25%;
     height: 300px;
     width: 300px;
     aspect-ratio: 1 / 1;

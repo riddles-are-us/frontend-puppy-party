@@ -181,53 +181,56 @@ const LandingPage = ({ memeList }: Props) => {
   return (
     <div className="landing-page-container">
       <img className="landing-page-background" src={background} />
-      <img className="landing-page-title" src={titleImage} />
-      <img className="landing-page-stage-background" src={stageBackground} />
-      <div className="landing-page-panel-container">
-        <p className="landing-page-panel-text">
-          Current Season Ends in {"00:00:00"}
-        </p>
-        <div className="landing-page-panel-play-button">
-          <PlayButton onClick={onClickPlay} />
+      <div className="landing-page-stage-container">
+        <img className="landing-page-title" src={titleImage} />
+        <img className="landing-page-stage-background" src={stageBackground} />
+        <div className="landing-page-panel-container">
+          <p className="landing-page-panel-text">
+            Current Season Ends in {"00:00:00"}
+          </p>
+          <div className="landing-page-panel-play-button">
+            <PlayButton onClick={onClickPlay} />
+          </div>
+          {/* disable join meme temporary  */}
+          {/* <div className="landing-page-panel-join-button">
+            <JoinButton onClick={onClickJoin} />
+          </div> */}
         </div>
-        <div className="landing-page-panel-join-button">
-          <JoinButton onClick={onClickJoin} />
+        <div className="landing-page-ranking-container">
+          <p className="landing-page-ranking-text">Current Season Ranking</p>
+          <div className="landing-page-ranking-meme-container">
+            {memelayout.divs}
+          </div>
         </div>
-      </div>
-      <div className="landing-page-ranking-container">
-        <p className="landing-page-ranking-text">Current Season Ranking</p>
-        <div className="landing-page-ranking-meme-container">
-          {memelayout.divs}
+        <div className="landing-page-next-season-container">
+          <p className="landing-page-next-season-text">Next Season</p>
         </div>
+        <img
+          className="landing-page-speaker-green-left-image"
+          src={speakerGreenLeft}
+        />
+        <img
+          className="landing-page-speaker-green-right-image"
+          src={speakerGreenRight}
+        />
+        <img
+          className="landing-page-speaker-pink-left-image"
+          src={speakerPinkLeft}
+        />
+        <img
+          className="landing-page-speaker-pink-right-image"
+          src={speakerPinkRight}
+        />
+        <img
+          className="landing-page-speaker-yellow-left-image"
+          src={speakerYellowLeft}
+        />
+        <img
+          className="landing-page-speaker-yellow-right-image"
+          src={speakerYellowRight}
+        />
+        <div className="landing-page-left-white-light-animation" />
       </div>
-      <div className="landing-page-next-season-container">
-        <p className="landing-page-next-season-text">Next Season</p>
-      </div>
-      <img
-        className="landing-page-speaker-green-left-image"
-        src={speakerGreenLeft}
-      />
-      <img
-        className="landing-page-speaker-green-right-image"
-        src={speakerGreenRight}
-      />
-      <img
-        className="landing-page-speaker-pink-left-image"
-        src={speakerPinkLeft}
-      />
-      <img
-        className="landing-page-speaker-pink-right-image"
-        src={speakerPinkRight}
-      />
-      <img
-        className="landing-page-speaker-yellow-left-image"
-        src={speakerYellowLeft}
-      />
-      <img
-        className="landing-page-speaker-yellow-right-image"
-        src={speakerYellowRight}
-      />
-      <div className="landing-page-left-white-light-animation" />
     </div>
   );
 };
