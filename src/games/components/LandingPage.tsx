@@ -7,6 +7,12 @@ import { memeInfoList } from "../config";
 import background from "../images/landing/landing_bg.png";
 import titleImage from "../images/landing/landing_title.png";
 import stageBackground from "../images/landing/stage_bg.png";
+import speakerGreenLeft from "../images/animations/landing/green.png";
+import speakerGreenRight from "../images/animations/landing/green1.png";
+import speakerPinkLeft from "../images/animations/landing/pink.png";
+import speakerPinkRight from "../images/animations/landing/pink1.png";
+import speakerYellowLeft from "../images/animations/landing/yellow.png";
+import speakerYellowRight from "../images/animations/landing/yellow1.png";
 import "./LandingPage.css";
 import PlayButton from "./buttons/PlayButton";
 import JoinButton from "./buttons/JoinButton";
@@ -74,13 +80,16 @@ function sortLayout<T>(
 }
 
 function stageDivStyle(layout: Array<number>, index: number) {
+  const ratio = 0.25;
+  const left_shift = 0;
+  const top_shift = 0;
   const divStyle = {
     position: "absolute" as const, // ensures type is 'absolute' for TS
     backgroundImage: `url('${memeInfoList[index].cover}')`,
-    top: `${layout[1]}px`,
-    left: `${layout[0]}px`,
-    width: `${layout[2]}px`,
-    height: `${layout[2]}px`,
+    top: `${layout[1] * ratio + top_shift}px`,
+    left: `${layout[0] * ratio + left_shift}px`,
+    width: `${layout[2] * ratio}px`,
+    height: `${layout[2] * ratio}px`,
     backgroundColor: "gray",
     border: "1px solid black",
   };
@@ -185,8 +194,40 @@ const LandingPage = ({ memeList }: Props) => {
           <JoinButton onClick={onClickJoin} />
         </div>
       </div>
-
-      {/* <div className="landing-page-meme-container">{memelayout.divs}</div> */}
+      <div className="landing-page-ranking-container">
+        <p className="landing-page-ranking-text">Current Season Ranking</p>
+        <div className="landing-page-ranking-meme-container">
+          {memelayout.divs}
+        </div>
+      </div>
+      <div className="landing-page-next-season-container">
+        <p className="landing-page-next-season-text">Next Season</p>
+      </div>
+      <img
+        className="landing-page-speaker-green-left-image"
+        src={speakerGreenLeft}
+      />
+      <img
+        className="landing-page-speaker-green-right-image"
+        src={speakerGreenRight}
+      />
+      <img
+        className="landing-page-speaker-pink-left-image"
+        src={speakerPinkLeft}
+      />
+      <img
+        className="landing-page-speaker-pink-right-image"
+        src={speakerPinkRight}
+      />
+      <img
+        className="landing-page-speaker-yellow-left-image"
+        src={speakerYellowLeft}
+      />
+      <img
+        className="landing-page-speaker-yellow-right-image"
+        src={speakerYellowRight}
+      />
+      <div className="landing-page-left-white-light-animation" />
     </div>
   );
 };
