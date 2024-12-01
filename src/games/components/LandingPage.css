@@ -21,6 +21,28 @@
     object-fit: cover;
 }
 
+@keyframes people-animation {
+    0% {
+      bottom: -10%;
+    }
+    50% {
+      bottom: 0;
+    }
+    100% {
+      bottom: -10%;
+    }
+}
+
+.landing-page-people-background {
+    position: absolute;
+    height: auto;
+    width: 100%;
+    object-fit: cover;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    animation: people-animation 1.2s infinite steps(1);
+}
+
 .landing-page-title {
     position: absolute;
     left: 50%;

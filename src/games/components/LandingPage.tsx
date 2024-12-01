@@ -6,6 +6,7 @@ import { loadAudio } from "../audio";
 import { memeInfoList } from "../config";
 import background from "../images/landing/landing_bg.png";
 import titleImage from "../images/landing/landing_title.png";
+import peopleBackground from "../images/landing/people.png";
 import stageBackground from "../images/landing/stage_bg.png";
 import speakerGreenLeft from "../images/animations/landing/green.png";
 import speakerGreenRight from "../images/animations/landing/green1.png";
@@ -79,8 +80,8 @@ function sortLayout<T>(
   return ret;
 }
 
-function stageDivStyle(layout: Array<number>, index: number) {
-  const ratio = 0.25;
+function stageDivStyle(layout: Array<number>, index: number, height: number) {
+  const ratio = height / 1000;
   const left_shift = 0;
   const top_shift = 0;
   const divStyle = {
@@ -110,6 +111,8 @@ interface LayoutInfo {
 const LandingPage = ({ memeList }: Props) => {
   const dispatch = useAppDispatch();
   const layoutRef = useRef<LayoutInfo | null>(null);
+  const rankingContainerRef = useRef<HTMLDivElement>(null);
+  const rankingContainerHeightRef = useRef<number>(0);
   const [memelayout, setMemeLayout] = useState<LayoutInfo>({
     divs: [],
   });
@@ -133,7 +136,11 @@ const LandingPage = ({ memeList }: Props) => {
       setMemeLayout((m) => {
         if (shuffled.length > 0) {
           const l = shuffled.pop();
-          const style = stageDivStyle(l!.value, l!.index);
+          const style = stageDivStyle(
+            l!.value,
+            l!.index,
+            rankingContainerHeightRef.current
+          );
           installedDiv.push(
             <div
               key={installedDiv.length}
@@ -154,7 +161,19 @@ const LandingPage = ({ memeList }: Props) => {
   // Update the ref value whenever `progress` changes
   useEffect(() => {
     layoutRef.current = memelayout;
-    return;
+    const updateHeight = () => {
+      if (rankingContainerRef.current) {
+        rankingContainerHeightRef.current =
+          rankingContainerRef.current.offsetHeight;
+      }
+    };
+
+    window.addEventListener("resize", updateHeight);
+    updateHeight();
+
+    return () => {
+      window.removeEventListener("resize", updateHeight);
+    };
   }, []);
 
   const account = useAppSelector(AccountSlice.selectL1Account);
@@ -183,6 +202,10 @@ const LandingPage = ({ memeList }: Props) => {
       <img className="landing-page-background" src={background} />
       <div className="landing-page-stage-container">
         <img className="landing-page-title" src={titleImage} />
+        <img
+          className="landing-page-people-background"
+          src={peopleBackground}
+        />
         <img className="landing-page-stage-background" src={stageBackground} />
         <div className="landing-page-panel-container">
           <p className="landing-page-panel-text">
@@ -196,7 +219,10 @@ const LandingPage = ({ memeList }: Props) => {
             <JoinButton onClick={onClickJoin} />
           </div> */}
         </div>
-        <div className="landing-page-ranking-container">
+        <div
+          ref={rankingContainerRef}
+          className="landing-page-ranking-container"
+        >
           <p className="landing-page-ranking-text">Current Season Ranking</p>
           <div className="landing-page-ranking-meme-container">
             {memelayout.divs}
