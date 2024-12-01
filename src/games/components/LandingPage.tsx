@@ -17,6 +17,8 @@ import speakerYellowRight from "../images/animations/landing/yellow1.png";
 import "./LandingPage.css";
 import PlayButton from "./buttons/PlayButton";
 import JoinButton from "./buttons/JoinButton";
+import MemeIcon from "./MemeIcon";
+import Grid from "./Grid";
 
 const divLayout = [
   [-693, -343, 80],
@@ -112,7 +114,10 @@ const LandingPage = ({ memeList }: Props) => {
   const dispatch = useAppDispatch();
   const layoutRef = useRef<LayoutInfo | null>(null);
   const rankingContainerRef = useRef<HTMLDivElement>(null);
-  const rankingContainerHeightRef = useRef<number>(0);
+  const [rankingContainerHeight, setRankingContainerHeight] =
+    useState<number>(0);
+  const nextSeasonContainerRef = useRef<HTMLDivElement>(null);
+  const [memeIconElementWidth, setMemeIconElementWidth] = useState<number>(0);
   const [memelayout, setMemeLayout] = useState<LayoutInfo>({
     divs: [],
   });
@@ -139,7 +144,7 @@ const LandingPage = ({ memeList }: Props) => {
           const style = stageDivStyle(
             l!.value,
             l!.index,
-            rankingContainerHeightRef.current
+            rankingContainerHeight
           );
           installedDiv.push(
             <div
@@ -161,19 +166,12 @@ const LandingPage = ({ memeList }: Props) => {
   // Update the ref value whenever `progress` changes
   useEffect(() => {
     layoutRef.current = memelayout;
-    const updateHeight = () => {
-      if (rankingContainerRef.current) {
-        rankingContainerHeightRef.current =
-          rankingContainerRef.current.offsetHeight;
-      }
-    };
-
-    window.addEventListener("resize", updateHeight);
-    updateHeight();
-
-    return () => {
-      window.removeEventListener("resize", updateHeight);
-    };
+    if (rankingContainerRef.current) {
+      setRankingContainerHeight(rankingContainerRef.current.offsetHeight);
+    }
+    if (nextSeasonContainerRef.current) {
+      setMemeIconElementWidth(nextSeasonContainerRef.current.offsetWidth / 3);
+    }
   }, []);
 
   const account = useAppSelector(AccountSlice.selectL1Account);
@@ -228,8 +226,27 @@ const LandingPage = ({ memeList }: Props) => {
             {memelayout.divs}
           </div>
         </div>
-        <div className="landing-page-next-season-container">
+        <div
+          ref={nextSeasonContainerRef}
+          className="landing-page-next-season-container"
+        >
           <p className="landing-page-next-season-text">Next Season</p>
+          <div className="landing-page-next-season-grid">
+            <Grid
+              elementWidth={memeIconElementWidth}
+              elementHeight={memeIconElementWidth}
+              columnCount={3}
+              rowCount={4}
+              elements={memeInfoList.slice(0, 12).map((memeInfo, index) => (
+                <MemeIcon
+                  key={index}
+                  height={memeIconElementWidth}
+                  width={memeIconElementWidth}
+                  image={memeInfo.cover}
+                />
+              ))}
+            />
+          </div>
         </div>
         <img
           className="landing-page-speaker-green-left-image"
