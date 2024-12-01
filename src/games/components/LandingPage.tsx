@@ -93,8 +93,6 @@ function stageDivStyle(layout: Array<number>, index: number, height: number) {
     left: `${layout[0] * ratio + left_shift}px`,
     width: `${layout[2] * ratio}px`,
     height: `${layout[2] * ratio}px`,
-    backgroundColor: "gray",
-    border: "1px solid black",
   };
   return divStyle;
 }
@@ -135,6 +133,17 @@ const LandingPage = ({ memeList }: Props) => {
     });
      */
 
+  // Update the ref value whenever `progress` changes
+  useEffect(() => {
+    layoutRef.current = memelayout;
+    if (rankingContainerRef.current) {
+      setRankingContainerHeight(rankingContainerRef.current.offsetHeight);
+    }
+    if (nextSeasonContainerRef.current) {
+      setMemeIconElementWidth(nextSeasonContainerRef.current.offsetWidth / 3);
+    }
+  }, []);
+
   useEffect(() => {
     // Set up an interval that adds a new div every 1 second
     setTimeout(() => {
@@ -147,11 +156,7 @@ const LandingPage = ({ memeList }: Props) => {
             rankingContainerHeight
           );
           installedDiv.push(
-            <div
-              key={installedDiv.length}
-              style={style}
-              onClick={() => startGame(memeInfoList[l!.index].index)}
-            ></div>
+            <div key={installedDiv.length} style={style}></div>
           );
           return {
             divs: installedDiv,
@@ -162,17 +167,6 @@ const LandingPage = ({ memeList }: Props) => {
       });
     }, 100);
   }, [memelayout]);
-
-  // Update the ref value whenever `progress` changes
-  useEffect(() => {
-    layoutRef.current = memelayout;
-    if (rankingContainerRef.current) {
-      setRankingContainerHeight(rankingContainerRef.current.offsetHeight);
-    }
-    if (nextSeasonContainerRef.current) {
-      setMemeIconElementWidth(nextSeasonContainerRef.current.offsetWidth / 3);
-    }
-  }, []);
 
   const account = useAppSelector(AccountSlice.selectL1Account);
 
@@ -188,7 +182,7 @@ const LandingPage = ({ memeList }: Props) => {
   }
 
   const onClickPlay = () => {
-    /**/
+    startGame(0);
   };
 
   const onClickJoin = () => {
