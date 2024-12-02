@@ -19,6 +19,7 @@ import PlayButton from "./buttons/PlayButton";
 import JoinButton from "./buttons/JoinButton";
 import MemeIcon from "./MemeIcon";
 import Grid from "./Grid";
+import MemeRankingIcon from "./MemeRankingIcon";
 
 const divLayout = [
   [-693, -343, 80],
@@ -114,6 +115,8 @@ const LandingPage = ({ memeList }: Props) => {
   const rankingContainerRef = useRef<HTMLDivElement>(null);
   const [rankingContainerHeight, setRankingContainerHeight] =
     useState<number>(0);
+  const [memeRankingIconElementWidth, setMemeRankingIconElementWidth] =
+    useState<number>(0);
   const nextSeasonContainerRef = useRef<HTMLDivElement>(null);
   const [memeIconElementWidth, setMemeIconElementWidth] = useState<number>(0);
   const [memelayout, setMemeLayout] = useState<LayoutInfo>({
@@ -138,6 +141,9 @@ const LandingPage = ({ memeList }: Props) => {
     layoutRef.current = memelayout;
     if (rankingContainerRef.current) {
       setRankingContainerHeight(rankingContainerRef.current.offsetHeight);
+      setMemeRankingIconElementWidth(
+        rankingContainerRef.current.offsetWidth / 4
+      );
     }
     if (nextSeasonContainerRef.current) {
       setMemeIconElementWidth(nextSeasonContainerRef.current.offsetWidth / 3);
@@ -216,8 +222,21 @@ const LandingPage = ({ memeList }: Props) => {
           className="landing-page-ranking-container"
         >
           <p className="landing-page-ranking-text">Current Season Ranking</p>
-          <div className="landing-page-ranking-meme-container">
-            {memelayout.divs}
+          <div className="landing-page-ranking-grid">
+            <Grid
+              elementWidth={memeRankingIconElementWidth}
+              elementHeight={memeRankingIconElementWidth}
+              columnCount={4}
+              rowCount={3}
+              elements={memeInfoList.slice(0, 12).map((memeInfo, index) => (
+                <MemeRankingIcon
+                  key={index}
+                  height={memeRankingIconElementWidth}
+                  width={memeRankingIconElementWidth}
+                  image={memeInfo.cover}
+                />
+              ))}
+            />
           </div>
         </div>
         <div

@@ -1,0 +1,40 @@
+.meme-ranking-icon-container {
+    position: relative;
+}
+
+.meme-ranking-icon-margin-container {
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.meme-ranking-icon-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.meme-ranking-vote-container {
+    position: absolute;
+    width: 100%;
+    height: 30%;
+    bottom: 0;
+    background-color: #8f61aa96;
+}
+
+.meme-ranking-vote-text {
+    position: absolute;
+    width: 100%;
+    height: 30%;
+    top: -10%;
+    text-align: center;
+    font-size: 2vh;
+    margin: 0px;
+    color: white;
+    font-family: "Allerta";
+    pointer-events: none;
+    user-select: none;
+}
