@@ -6,7 +6,7 @@ import {
   HEIGHT, WIDTH, Beat, drawScreen, FocusTorch,
 }  from "./draw";
 import { ShapeBuilder, Shape, Effect} from "./effects";
-import { MemeInfo, memeInfoList } from "./config";
+import { MemeSeasonCurrent } from "./config";
 import spirits from "./spirite";
 
 function getRandomNumber(range: number): number {
@@ -33,8 +33,8 @@ class Scenario {
     this.audience = new Audience();
     this.status = "pause";
     this.clips = [];
-    for (let i = 0; i<memeInfoList.length; i++) {
-      const info:any = memeInfoList[i];
+    for (let i = 0; i< MemeSeasonCurrent.memeInfoList.length; i++) {
+      const info:any = MemeSeasonCurrent.memeInfoList[i];
       if (info.animationIndex) {
         const clip = createAnimationClip(0, info.animationIndex, 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24);
         this.clips.push(clip);
@@ -73,13 +73,9 @@ class Scenario {
         this.actor.focus = false;
         clip.focus = true;
         this.actor = clip;
-        const info:any = (MemeInfo as any)[clip.name];
-        if (info && info.index) {
-          this.focusTorch.resetFrame();
-          return info.index;
-        } else {
-          return null
-        }
+        const info:any = MemeSeasonCurrent.getMemeIndex(clip.name);
+        this.focusTorch.resetFrame();
+        return info.index;
       }
     }
     return null

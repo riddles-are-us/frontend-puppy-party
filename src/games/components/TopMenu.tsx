@@ -10,7 +10,7 @@ import {
   UIState,
 } from "../../data/puppy_party/properties";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { getCover, memeInfoList } from "../config";
+import { MemeSeasonCurrent } from "../config";
 import DepositButton from "./buttons/DepositButton";
 import ticketIcon from "../images/ticket_icon.png";
 import balanceIcon from "../images/balance_icon.png";
@@ -52,7 +52,7 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
       <div className="top-menu-balance-text">DiscoNote: {balance}</div>
       <img src={balanceIcon} className="top-menu-balance-icon"></img>
       <div className="top-menu-vote-text">Vote: {targetMemeRank}</div>
-      <img src={getCover(targetMemeIndex)} className="top-menu-vote-icon"></img>
+      <img src={MemeSeasonCurrent.getCover(targetMemeIndex)} className="top-menu-vote-icon"></img>
       <div className="top-menu-lottery-text">Lottery Heat: {lotteryInfo}</div>
     </div>
   );

@@ -1,10 +1,10 @@
-import {MemeListElement} from "../../data/puppy_party/properties";
-import {getMemeIndex} from "../config";
+import { MemeListElement } from "../../data/puppy_party/properties";
 import {
   HEIGHT, WIDTH,
 }  from "../draw";
 
 import spirites from "../spirite";
+import { MemeSeasonCurrent } from "../config";
 
 const MEME_DEFAULT_CATEGORY = spirites.spirites.length - 1; // the last animation are of default dogs
 
@@ -120,7 +120,7 @@ export class Clip {
         ctx.fillStyle = "black";  // Red color
       }
 
-      const rank = memeinfos[getMemeIndex(this.name)].rank;
+      const rank = memeinfos[MemeSeasonCurrent.getMemeIndex(this.name)].rank;
       const fullname = `${this.name}:${rank}`;
       {
         ctx.fillRect(this.left + 30, this.top - 13, fullname.length * 7 + 5, 15);

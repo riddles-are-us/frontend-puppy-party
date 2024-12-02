@@ -1,185 +1,214 @@
-import SUNDOG from "./images/memefront/sundog.jpg";
-import FROG from "./images/memefront/frog.jpg";
-import HIPPO from "./images/memefront/hippo.jpg";
-import MemeDefault from "./images/loading.png";
+import SUNDOG from "../images/season1/sundog.jpg";
+import FROG from "../images/season1/frog.jpg";
+import HIPPO from "../images/season1/hippo.jpg";
+import AMI from "../images/season1/ami.jpg";
+import BURGER from "../images/season1/burger.png";
+import ZKJ from "../images/season1/zkj.jpg";
+import DALP from "../images/season1/dalp.jpg";
+import DOKUAN from "../images/season1/dokuan.jpg";
+import EDDY from "../images/season1/eddy.jpg";
+import PSD from "../images/season1/psd.jpg";
+import ZKSHARK from "../images/season1/zkshark.jpg";
+import DC from "../images/season1/deadchu.jpg";
 
-import AMI from "./images/meme-icons/ami.jpg";
-import BLAZEFIN from "./images/meme-icons/blazefin.jpg";
-import BUFF from "./images/meme-icons/buff.jpg";
-import BULL from "./images/meme-icons/bull.png";
-import BURGER from "./images/meme-icons/burger.png";
-import ZKJ from "./images/meme-icons/zkj.jpg";
-import DALP from "./images/meme-icons/dalp.jpg";
-import DOKUAN from "./images/meme-icons/dokuan.jpg";
-import YOME from "./images/meme-icons/yome.jpg";
-import EDDY from "./images/meme-icons/eddy.jpg";
-import FLIX from "./images/meme-icons/flix.jpg";
-import HMC from "./images/meme-icons/hmc.jpg";
-import PSD from "./images/meme-icons/psd.jpg";
-import ZKSHARK from "./images/meme-icons/zkshark.jpg";
-import DC from "./images/meme-icons/deadchu.jpg";
+//import MemeDefault from "./images/loading.png";
+//
+import FWOG from "../images/season2/fwog.jpg";
+import BURGER2 from "../images/season2/burger.jpg";
+import DOKUAN2 from "../images/season2/dokuan.jpg";
+import GOCHUJANG from "../images/season2/gochujang.jpg";
+import SUNBEANS from "../images/season2/sunbeans.jpg";
+import KAWAII from "../images/season2/kawaii.jpg";
+import MOUTAI from "../images/season2/moutai.jpg";
+import ASTRO from "../images/season2/astro.jpg";
 
-export const MemeInfo = {
-  "hippo": {
+interface MemeInterface {
+  name: string,
+  cover: string,
+  animationIndex: number | null,
+  index: number,
+}
+
+class MemeSeasonInfo {
+  memeInfoMap: Map<string, MemeInterface>;
+  memeInfoList: Array<MemeInterface>;
+  constructor(memeInfoList: Array<MemeInterface>) {
+    this.memeInfoList = memeInfoList;
+    this.memeInfoMap = new Map();
+    for (const memeInfo of memeInfoList) {
+      this.memeInfoMap.set(memeInfo.name, memeInfo);
+    }
+  }
+
+  getCover(index: number) {
+    return this.memeInfoList[index].cover;
+  }
+
+  getMemeIndex(name: string): number {
+    const info = this.memeInfoMap.get(name);
+    return info!.index;
+  }
+}
+
+export const MemeSeasonPrevious = new MemeSeasonInfo([
+  {
     name: "hippo",
     cover: HIPPO,
     animationIndex: 0,
     index: 0,
   },
-  "sundog": {
+  {
     name: "sundog",
     cover: SUNDOG,
     animationIndex: 1,
     index: 1,
   },
-  "frog": {
+  {
     name: "frog",
     cover: FROG,
     animationIndex: 2,
     index: 2,
   },
 
-  "ami": {
+  {
     name: "ami",
     cover: AMI,
+    animationIndex: null,
     index: 3,
   },
 
-  "blazefin": {
-    name: "blazefin",
-    cover: BLAZEFIN,
-    index: 4,
-  },
-
-  "deadchu": {
-    name: "deadchu",
-    cover: DC,
-    index: 5,
-  },
-
-  "bull": {
-    name: "bull",
-    cover: BULL,
-    index: 6,
-  },
-
-  "burger": {
+  {
     name: "burger",
     cover: BURGER,
     animationIndex: 4,
-    index: 7,
+    index: 4,
   },
 
-  "zkj": {
+  {
     name: "zkj",
     cover: ZKJ,
-    index: 8,
+    index: 5,
+    animationIndex: null,
   },
 
-  "dalp": {
+  {
     name: "dalp",
     cover: DALP,
-    index: 9,
+    animationIndex: null,
+    index: 6,
   },
 
-  "dokuan": {
+  {
     name: "dokuan",
     animationIndex: 3,
     cover: DOKUAN,
+    index: 7,
+  },
+
+  {
+    name: "eddy",
+    cover: EDDY,
+    animationIndex: null,
+    index: 8,
+  },
+
+  {
+    name: "psd",
+    cover: PSD,
+    animationIndex: null,
+    index: 9,
+  },
+
+  {
+    name: "zkshark",
+    cover: ZKSHARK,
+    animationIndex: null,
     index: 10,
   },
 
-  "yome": {
-    name: "yome",
-    cover: YOME,
+  {
+    name: "deadchu",
+    cover: DC,
+    animationIndex: null,
     index: 11,
   },
+]);
 
-  "eddy": {
+export const MemeSeasonCurrent = new MemeSeasonInfo([
+  {
+    name: "fwog",
+    cover: FWOG,
+    animationIndex: 2,
+    index: 0,
+  },
+  {
+    name: "burger",
+    cover: BURGER2,
+    animationIndex: 4,
+    index: 1,
+  },
+  {
+    name: "dokuan",
+    cover: DOKUAN2,
+    animationIndex: 3,
+    index: 2,
+  },
+  {
+    name: "gochujang",
+    cover: GOCHUJANG,
+    animationIndex: null,
+    index: 3,
+  },
+  {
+    name: "sunbeans",
+    cover: SUNBEANS,
+    animationIndex: null,
+    index: 4,
+  },
+  {
+    name: "kawaii",
+    cover: KAWAII,
+    animationIndex: null,
+    index: 5,
+  },
+  {
+    name: "moutai",
+    cover: MOUTAI,
+    animationIndex: null,
+    index: 6,
+  },
+  {
+    name: "astro",
+    cover: ASTRO,
+    animationIndex: null,
+    index: 7,
+  },
+
+  {
     name: "eddy",
     cover: EDDY,
-    index: 12,
+    animationIndex: null,
+    index: 8,
   },
 
-  "flix": {
-    name: "flix",
-    cover: FLIX,
-    index: 13,
-  },
-
-  "hmc": {
-    name: "hmc",
-    cover: HMC,
-    index: 14,
-  },
-
-  "psd": {
+  {
     name: "psd",
     cover: PSD,
-    index: 15,
+    animationIndex: null,
+    index: 9,
   },
 
-  "zkshark": {
+  {
     name: "zkshark",
     cover: ZKSHARK,
-    index: 16,
+    animationIndex: null,
+    index: 10,
   },
 
-  "buff": {
-    name: "buff",
-    cover: BUFF,
-    index: 17,
+  {
+    name: "deadchu",
+    cover: DC,
+    animationIndex: null,
+    index: 11,
   },
-}
-
-const coverList = [
-  MemeInfo["hippo"],
-  MemeInfo["sundog"],
-  MemeInfo["frog"],
-  MemeInfo["ami"],
-  MemeInfo["blazefin"],
-  MemeInfo["deadchu"],
-  MemeInfo["bull"],
-  MemeInfo["burger"],
-  MemeInfo["zkj"],
-  MemeInfo["dalp"],
-  MemeInfo["dokuan"],
-  MemeInfo["yome"],
-  MemeInfo["eddy"],
-  MemeInfo["flix"],
-  MemeInfo["hmc"],
-  MemeInfo["psd"],
-  MemeInfo["zkshark"],
-  MemeInfo["buff"],
-];
-
-export function getCover(index: number) {
-  return coverList[index].cover;
-}
-
-export const memeInfoList = [
-  MemeInfo["frog"],
-  MemeInfo["sundog"],
-  MemeInfo["hippo"],
-
-  MemeInfo["ami"],
-  MemeInfo["blazefin"],
-  MemeInfo["deadchu"],
-  MemeInfo["bull"],
-  MemeInfo["burger"],
-  MemeInfo["zkj"],
-  MemeInfo["dalp"],
-  MemeInfo["dokuan"],
-  MemeInfo["yome"],
-  MemeInfo["eddy"],
-  MemeInfo["flix"],
-  MemeInfo["hmc"],
-  MemeInfo["psd"],
-  MemeInfo["zkshark"],
-  MemeInfo["buff"],
-]
-
-export function getMemeIndex(name: string): number {
-  const info = (MemeInfo as any)[name];
-  return info.index;
-}
+]);
