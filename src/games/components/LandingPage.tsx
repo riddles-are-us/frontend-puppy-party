@@ -249,7 +249,8 @@ const LandingPage = ({ memeList }: Props) => {
           className="landing-page-speaker-yellow-right-image"
           src={speakerYellowRight}
         />
-        <div className="landing-page-left-white-light-animation" />
+        <div className="landing-page-left-white-light-left-animation" />
+        <div className="landing-page-left-white-light-right-animation" />
       </div>
     </div>
   );

@@ -206,8 +206,8 @@
 
 .landing-page-speaker-green-left-image {
     position: absolute;
-    left: 17%;
-    bottom: 21.5%;
+    left: 17.3%;
+    bottom: 21.8%;
     height: 17.19%;
     width: auto;
     aspect-ratio: 228 / 275;
@@ -226,8 +226,8 @@
 
 .landing-page-speaker-pink-left-image {
     position: absolute;
-    left: 18%;
-    bottom: 52.2%;
+    left: 19%;
+    bottom: 52.5%;
     height: 13.56%;
     width: auto;
     aspect-ratio: 169 / 217;
@@ -269,18 +269,30 @@
     to { background-position: -3600px; }
 }
 
-.landing-page-left-white-light-animation {
+.landing-page-left-white-light-left-animation {
     position: absolute;
-    left: 10.4%;
-    bottom: 25%;
+    left: 10.45%;
+    bottom: 25.1%;
     height: 300px;
     width: 300px;
     aspect-ratio: 1 / 1;
-
     transform: scale(50%);
-
     animation: WhitelightAnimation 1s steps(12) forwards infinite;
-    background-image: url("../images/animations/whitelight.png");
+    background-image: url("../images/animations/whitelight_left.png");
+    background-size: cover;
+    user-select: none;
+}
+
+.landing-page-left-white-light-right-animation {
+    position: absolute;
+    left: 67.2%;
+    bottom: 25.1%;
+    height: 300px;
+    width: 300px;
+    aspect-ratio: 1 / 1;
+    transform: scale(50%);
+    animation: WhitelightAnimation 1s steps(12) forwards infinite;
+    background-image: url("../images/animations/whitelight_right.png");
     background-size: cover;
     user-select: none;
 }
