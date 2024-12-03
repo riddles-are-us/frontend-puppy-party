@@ -5,9 +5,10 @@ interface Props {
   width: number;
   height: number;
   image: string;
+  rank: number;
 }
 
-const MemeIcon = ({ width, height, image }: Props) => {
+const MemeRankingIcon = ({ width, height, image, rank }: Props) => {
   return (
     <div
       className="meme-ranking-icon-container"
@@ -19,11 +20,11 @@ const MemeIcon = ({ width, height, image }: Props) => {
       <div className="meme-ranking-icon-margin-container">
         <img className="meme-ranking-icon-image" src={image} />
         <div className="meme-ranking-vote-container">
-          <p className="meme-ranking-vote-text">1234</p>
+          <p className="meme-ranking-vote-text">{rank}</p>
         </div>
       </div>
     </div>
   );
 };
 
-export default MemeIcon;
+export default MemeRankingIcon;

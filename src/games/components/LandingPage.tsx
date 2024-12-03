@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { AccountSlice } from "zkwasm-minirollup-browser";
-import { setTargetMemeIndex } from "../../data/puppy_party/properties";
+import {
+  selectMemeList,
+  setTargetMemeIndex,
+} from "../../data/puppy_party/properties";
 import { loadAudio } from "../audio";
 import { MemeSeasonCurrent, MemeSeasonPrevious } from "../config";
 import background from "../images/landing/landing_bg.png";
@@ -63,16 +66,13 @@ function stageDivStyle(layout: Array<number>, index: number, height: number) {
 
 const installedDiv: JSX.Element[] = [];
 
-interface Props {
-  memeList: Array<any>;
-}
-
 interface LayoutInfo {
   divs: JSX.Element[];
 }
 
-const LandingPage = ({ memeList }: Props) => {
+const LandingPage = () => {
   const dispatch = useAppDispatch();
+  const memeList = useAppSelector(selectMemeList);
   const layoutRef = useRef<LayoutInfo | null>(null);
   const rankingContainerRef = useRef<HTMLDivElement>(null);
   const [rankingContainerHeight, setRankingContainerHeight] =
@@ -112,7 +112,7 @@ const LandingPage = ({ memeList }: Props) => {
     }
   }, []);
 
-        /*
+  /*
   useEffect(() => {
     // Set up an interval that adds a new div every 1 second
     setTimeout(() => {
@@ -192,14 +192,17 @@ const LandingPage = ({ memeList }: Props) => {
               elementHeight={memeRankingIconElementWidth}
               columnCount={4}
               rowCount={3}
-              elements={MemeSeasonCurrent.memeInfoList.slice(0, 12).map((memeInfo, index) => (
-                <MemeRankingIcon
-                  key={index}
-                  height={memeRankingIconElementWidth}
-                  width={memeRankingIconElementWidth}
-                  image={memeInfo.cover}
-                />
-              ))}
+              elements={MemeSeasonCurrent.memeInfoList
+                .slice(0, 12)
+                .map((memeInfo, index) => (
+                  <MemeRankingIcon
+                    key={index}
+                    height={memeRankingIconElementWidth}
+                    width={memeRankingIconElementWidth}
+                    image={memeInfo.cover}
+                    rank={memeList[memeInfo.index].rank}
+                  />
+                ))}
             />
           </div>
         </div>
@@ -214,14 +217,16 @@ const LandingPage = ({ memeList }: Props) => {
               elementHeight={memeIconElementWidth}
               columnCount={3}
               rowCount={4}
-              elements={MemeSeasonPrevious.memeInfoList.slice(0, 12).map((memeInfo, index) => (
-                <MemeIcon
-                  key={index}
-                  height={memeIconElementWidth}
-                  width={memeIconElementWidth}
-                  image={memeInfo.cover}
-                />
-              ))}
+              elements={MemeSeasonPrevious.memeInfoList
+                .slice(0, 12)
+                .map((memeInfo, index) => (
+                  <MemeIcon
+                    key={index}
+                    height={memeIconElementWidth}
+                    width={memeIconElementWidth}
+                    image={memeInfo.cover}
+                  />
+                ))}
             />
           </div>
         </div>

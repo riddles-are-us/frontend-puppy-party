@@ -1,10 +1,6 @@
 import React from "react";
 import { useAppSelector } from "../../app/hooks";
-import {
-  selectMemeList,
-  selectUIState,
-  UIState,
-} from "../../data/puppy_party/properties";
+import { selectUIState, UIState } from "../../data/puppy_party/properties";
 import WelcomePageConnecting from "./WelcomePageConnecting";
 import WelcomePageProgressBar from "./WelcomePageProgressBar";
 import "./WelcomePage.css";
@@ -15,7 +11,6 @@ interface Props {
 }
 
 const WelcomePage = ({ progress }: Props) => {
-  const memeList = useAppSelector(selectMemeList);
   const uIState = useAppSelector(selectUIState);
 
   if (uIState == UIState.Init) {
@@ -29,7 +24,7 @@ const WelcomePage = ({ progress }: Props) => {
   } else if (uIState == UIState.QueryState) {
     return <WelcomePageProgressBar progress={90} />;
   } else if (uIState == UIState.WelcomePage) {
-    return <LandingPage memeList={memeList} />;
+    return <LandingPage />;
   } else {
     return null;
   }
