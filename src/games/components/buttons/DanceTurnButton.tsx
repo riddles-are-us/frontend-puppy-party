@@ -10,18 +10,24 @@ import progressImage from "../../images/dance_button_progress.png";
 import "./DanceTurnButton.css";
 
 interface Props {
+  isCoolDown: boolean;
   progress: number;
   isDancing: boolean;
   onClick: () => void;
 }
 
-const DanceTurnButton = ({ progress, isDancing, onClick }: Props) => {
+const DanceTurnButton = ({
+  isCoolDown,
+  progress,
+  isDancing,
+  onClick,
+}: Props) => {
   const filterPercentage = 100 - progress * 100;
   return (
     <>
       <div className="dance-turn-button-scale">
         <ImageButton
-          isDisabled={progress < 1}
+          isDisabled={isCoolDown}
           defaultImagePath={buttonImage}
           hoverImagePath={buttonHoverImage}
           clickedImagePath={buttonClickImage}
