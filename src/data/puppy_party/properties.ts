@@ -18,6 +18,8 @@ export enum UIState{
   DepositPopup,
   QueryGiftbox,
   GiftboxPopup,
+  ConfirmPopup,
+  ErrorPopup,
 }
 
 interface PlayerState {
@@ -45,6 +47,7 @@ interface PropertiesState {
   targetMemeIndex: number;
   memeList: MemeListElement[];
   giftboxShake: boolean;
+  popupDescription: string;
 }
 
 const SWAY = 0n;
@@ -68,6 +71,7 @@ const initialState: PropertiesState = {
     targetMemeIndex: 0,
     memeList: [],
     giftboxShake: false,
+    popupDescription: "",
   };
 
 export const propertiesSlice = createSlice({
@@ -87,6 +91,9 @@ export const propertiesSlice = createSlice({
     },
     setGiftboxShake: (state, action) => {
       state.giftboxShake = action.payload.giftboxShake;
+    },
+    setPopupDescription: (state, action) => {
+      state.popupDescription = action.payload.popupDescription;
     },
   },
   extraReducers: (builder) => {
@@ -151,5 +158,7 @@ export const selectProgress = (state: RootState) => state.puppyParty.properties.
 export const selectLastTxResult = (state: RootState) => state.puppyParty.properties.lastTxResult;
 export const selectTargetMemeIndex = (state: RootState) => state.puppyParty.properties.targetMemeIndex;
 export const selectGiftboxShake = (state: RootState) => state.puppyParty.properties.giftboxShake;
-export const { setTargetMemeIndex, setUIState, setLastTxResult, setGiftboxShake } = propertiesSlice.actions;
+export const selectPopupDescription = (state: RootState) => state.puppyParty.properties.popupDescription;
+
+export const { setTargetMemeIndex, setUIState, setLastTxResult, setGiftboxShake, setPopupDescription } = propertiesSlice.actions;
 export default propertiesSlice.reducer;

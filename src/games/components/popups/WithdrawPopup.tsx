@@ -8,6 +8,7 @@ import {
   selectBalance,
   selectNonce,
   selectUIState,
+  setPopupDescription,
   setUIState,
   UIState,
 } from "../../../data/puppy_party/properties";
@@ -67,15 +68,30 @@ const WithdrawPopup = () => {
       })
     ).then((action) => {
       if (sendTransaction.fulfilled.match(action)) {
-        dispatch(setUIState({ uIState: UIState.Idle }));
+        dispatch(
+          setPopupDescription({
+            popupDescription: "Hash Number : (TBD)",
+          })
+        );
+        dispatch(setUIState({ uIState: UIState.ConfirmPopup }));
       }
     });
   }
 
-  const withdraw = (amount: string) => {
+  const withdraw = (amountString: string) => {
     try {
-      dispatch(setUIState({ uIState: UIState.QueryWithdraw }));
-      withdrawRewards(BigInt(amount), nonce);
+      const amount = Number(amountString);
+      if (amount > balance) {
+        dispatch(
+          setPopupDescription({
+            popupDescription: "Not Enough Balance",
+          })
+        );
+        dispatch(setUIState({ uIState: UIState.ErrorPopup }));
+      } else {
+        dispatch(setUIState({ uIState: UIState.QueryWithdraw }));
+        withdrawRewards(BigInt(amount), nonce);
+      }
     } catch (e) {
       console.log("Error at withdraw " + e);
     }

@@ -8,6 +8,7 @@ import {
   selectBalance,
   selectNonce,
   selectUIState,
+  setPopupDescription,
   setUIState,
   UIState,
 } from "../../../data/puppy_party/properties";
@@ -52,6 +53,36 @@ const DepositPopup = () => {
           } else {
             //setErrorMessage(action.error.message);
           }
+        }
+
+        if (sendTransaction.fulfilled.match(action)) {
+          dispatch(
+            setPopupDescription({
+              popupDescription: "Hash Number : (TBD)",
+            })
+          );
+          dispatch(setUIState({ uIState: UIState.ConfirmPopup }));
+        } else if (AccountSlice.depositAsync.rejected.match(action)) {
+          if (action.error.message == null) {
+            dispatch(
+              setPopupDescription({
+                popupDescription: "Unknown Error",
+              })
+            );
+          } else if (action.error.message.startsWith("user rejected action")) {
+            dispatch(
+              setPopupDescription({
+                popupDescription: "User rejected action",
+              })
+            );
+          } else {
+            dispatch(
+              setPopupDescription({
+                popupDescription: "Deposit Fail",
+              })
+            );
+          }
+          dispatch(setUIState({ uIState: UIState.ErrorPopup }));
         }
       });
     } catch (e) {
