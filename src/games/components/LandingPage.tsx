@@ -171,7 +171,7 @@ const LandingPage = () => {
         <img className="landing-page-stage-background" src={stageBackground} />
         <div className="landing-page-panel-container">
           <p className="landing-page-panel-text">
-            Current Season Ends in {"00:00:00"}
+             Next Season will start at 15th December 2024
           </p>
           <div className="landing-page-panel-play-button">
             <PlayButton onClick={onClickPlay} />
