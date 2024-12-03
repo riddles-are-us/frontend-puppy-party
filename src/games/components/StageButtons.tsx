@@ -9,19 +9,13 @@ import { DanceType } from "./Gameplay";
 interface Props {
   danceButtonProgress: number;
   danceType: DanceType;
-  onClickMusicButton: () => void;
-  onClickSideButton: () => void;
-  onClickTurnButton: () => void;
-  onClickUpButton: () => void;
+  onClickButton: (danceType: DanceType) => () => void;
 }
 
 const StageButtons = ({
   danceButtonProgress,
   danceType,
-  onClickMusicButton,
-  onClickSideButton,
-  onClickTurnButton,
-  onClickUpButton,
+  onClickButton,
 }: Props) => {
   return (
     <div className="stage-buttons-container">
@@ -29,28 +23,28 @@ const StageButtons = ({
         <DanceMusicButton
           progress={danceButtonProgress}
           isDancing={danceType == DanceType.Music}
-          onClick={onClickMusicButton}
+          onClick={onClickButton(DanceType.Music)}
         />
       </div>
       <div className="stage-buttons-side-container">
         <DanceSideButton
           progress={danceButtonProgress}
           isDancing={danceType == DanceType.Side}
-          onClick={onClickSideButton}
+          onClick={onClickButton(DanceType.Side)}
         />
       </div>
       <div className="stage-buttons-turn-container">
         <DanceTurnButton
           progress={danceButtonProgress}
           isDancing={danceType == DanceType.Turn}
-          onClick={onClickTurnButton}
+          onClick={onClickButton(DanceType.Turn)}
         />
       </div>
       <div className="stage-buttons-up-container">
         <DanceUpButton
           progress={danceButtonProgress}
           isDancing={danceType == DanceType.Up}
-          onClick={onClickUpButton}
+          onClick={onClickButton(DanceType.Up)}
         />
       </div>
     </div>

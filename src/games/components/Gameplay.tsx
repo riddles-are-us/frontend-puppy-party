@@ -18,6 +18,8 @@ import {
   selectGiftboxShake,
   setGiftboxShake,
   setTargetMemeIndex,
+  selectTicket,
+  setPopupDescription,
 } from "../../data/puppy_party/properties";
 import { AccountSlice } from "zkwasm-minirollup-browser";
 import { getBeat } from "../draw";
@@ -67,6 +69,7 @@ const Gameplay = () => {
   const [danceButtonProgress, setDanceButtonProgress] = useState(0);
   const [isDanceButtonCoolDown, setIsDanceButtonCoolDown] = useState(false);
   const [danceType, setDanceType] = useState(DanceType.None);
+  const ticket = useAppSelector(selectTicket);
 
   const giftboxShakeRef = useRef(false);
 
@@ -251,90 +254,44 @@ const Gameplay = () => {
     dispatch(queryState({ cmd: [], prikey: l2account!.address }));
   }
 
-  function onClickMusicButton() {
+  const onClickDanceButton = (danceType: DanceType) => () => {
     if (isDanceButtonCoolDown == false) {
-      setDanceType(DanceType.Music);
-      scenario.focusActor(440, 190);
-      dispatch(
-        sendTransaction({
-          cmd: getTransactionCommandArray(DANCE_MUSIC, nonce, [
-            BigInt(targetMemeIndex),
-            0n,
-            0n,
-          ]),
-          prikey: l2account!.address,
-        })
-      );
+      if (ticket == 0) {
+        dispatch(
+          setPopupDescription({
+            popupDescription: "Not Enough Ticket",
+          })
+        );
+        dispatch(setUIState({ uIState: UIState.ErrorPopup }));
+      } else {
+        const danceCommand =
+          danceType == DanceType.Music
+            ? DANCE_MUSIC
+            : danceType == DanceType.Side
+            ? DANCE_SIDE
+            : danceType == DanceType.Turn
+            ? DANCE_TURN
+            : DANCE_UP;
+        setDanceType(danceType);
+        scenario.focusActor(440, 190);
+        dispatch(
+          sendTransaction({
+            cmd: getTransactionCommandArray(danceCommand, nonce, [
+              BigInt(targetMemeIndex),
+              0n,
+              0n,
+            ]),
+            prikey: l2account!.address,
+          })
+        );
 
-      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
-      setTimeout(() => {
-        scenario.restoreActor();
-      }, 5000);
+        dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+        setTimeout(() => {
+          scenario.restoreActor();
+        }, 5000);
+      }
     }
-  }
-
-  function onClickSideButton() {
-    if (isDanceButtonCoolDown == false) {
-      setDanceType(DanceType.Side);
-      scenario.focusActor(440, 190);
-      dispatch(
-        sendTransaction({
-          cmd: getTransactionCommandArray(DANCE_SIDE, nonce, [
-            BigInt(targetMemeIndex),
-            0n,
-            0n,
-          ]),
-          prikey: l2account!.address,
-        })
-      );
-      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
-      setTimeout(() => {
-        scenario.restoreActor();
-      }, 5000);
-    }
-  }
-
-  function onClickTurnButton() {
-    if (isDanceButtonCoolDown == false) {
-      setDanceType(DanceType.Turn);
-      scenario.focusActor(440, 190);
-      dispatch(
-        sendTransaction({
-          cmd: getTransactionCommandArray(DANCE_TURN, nonce, [
-            BigInt(targetMemeIndex),
-            0n,
-            0n,
-          ]),
-          prikey: l2account!.address,
-        })
-      );
-      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
-      setTimeout(() => {
-        scenario.restoreActor();
-      }, 5000);
-    }
-  }
-
-  function onClickUpButton() {
-    if (isDanceButtonCoolDown == false) {
-      setDanceType(DanceType.Up);
-      scenario.focusActor(440, 190);
-      dispatch(
-        sendTransaction({
-          cmd: getTransactionCommandArray(DANCE_UP, nonce, [
-            BigInt(targetMemeIndex),
-            0n,
-            0n,
-          ]),
-          prikey: l2account!.address,
-        })
-      );
-      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
-      setTimeout(() => {
-        scenario.restoreActor();
-      }, 5000);
-    }
-  }
+  };
 
   function onHoverCanvas(e: MouseEvent<HTMLCanvasElement>) {
     const target = e.currentTarget;
@@ -342,12 +299,11 @@ const Gameplay = () => {
     const ratio = rect.width / 960;
     //const left = (e.clientX - rect.left) * rect.width / 960;
     //const top = (e.clientY - rect.top) * rect.width / 960;
-    const left = (e.clientX - rect.left) * 960 / rect.width;
-    const top = (e.clientY - rect.top) * 960 / rect.width;
+    const left = ((e.clientX - rect.left) * 960) / rect.width;
+    const top = ((e.clientY - rect.top) * 960) / rect.width;
     console.log("canvas click:", left, top, ratio);
     scenario.hoverMeme(left, top);
     return;
-
   }
 
   function onClickCanvas(e: MouseEvent<HTMLCanvasElement>) {
@@ -356,12 +312,12 @@ const Gameplay = () => {
     const ratio = rect.width / 960;
     //const left = (e.clientX - rect.left) * rect.width / 960;
     //const top = (e.clientY - rect.top) * rect.width / 960;
-    const left = (e.clientX - rect.left) * 960 / rect.width;
-    const top = (e.clientY - rect.top) * 960 / rect.width;
+    const left = ((e.clientX - rect.left) * 960) / rect.width;
+    const top = ((e.clientY - rect.top) * 960) / rect.width;
     console.log("canvas click:", left, top, ratio);
     const memeIndex = scenario.selectMeme(left, top);
     if (memeIndex != null) {
-        dispatch(setTargetMemeIndex(memeIndex));
+      dispatch(setTargetMemeIndex(memeIndex));
     }
     return;
   }
@@ -375,14 +331,16 @@ const Gameplay = () => {
       />
 
       <div className="center" id="stage">
-        <canvas id="canvas" onMouseMove={onHoverCanvas} onClick={onClickCanvas} ref={canvasRef}></canvas>
+        <canvas
+          id="canvas"
+          onMouseMove={onHoverCanvas}
+          onClick={onClickCanvas}
+          ref={canvasRef}
+        ></canvas>
         <StageButtons
           danceButtonProgress={danceButtonProgress}
           danceType={danceType}
-          onClickMusicButton={onClickMusicButton}
-          onClickSideButton={onClickSideButton}
-          onClickTurnButton={onClickTurnButton}
-          onClickUpButton={onClickUpButton}
+          onClickButton={onClickDanceButton}
         />
       </div>
     </>
