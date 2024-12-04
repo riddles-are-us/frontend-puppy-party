@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import progressBarBackground from "../images/progress_bar_bg.png";
 import frontImage from "../images/progress_bar_front.png";
 import niceImage from "../images/nice.png";
@@ -42,14 +42,32 @@ const ProgressBar = ({ progress }: Props) => {
   const dispatch = useAppDispatch();
   const showProgressBarGoodJob = useAppSelector(selectShowProgressBarGoodJob);
   const showProgressBarNice = useAppSelector(selectShowProgressBarNice);
+  const [colorOffset, setColorOffset] = useState(0);
+  const colorOffsetRef = useRef(0);
 
   const colorLength = Math.floor(progress * barWidth);
   const colors = Array.from({ length: colorLength }, (_, index) => {
     const colorIndex = Math.floor(index / colorWidth);
     return progress < 1 && index == colorLength - 1
       ? whiteColor
-      : roundColorMap[colorIndex % roundColorMap.length];
+      : roundColorMap[
+          (colorIndex - colorOffset + roundColorMap.length) %
+            roundColorMap.length
+        ];
   });
+
+  useEffect(() => {
+    const updateColorOffset = (): void => {
+      colorOffsetRef.current =
+        (colorOffsetRef.current + 1) % roundColorMap.length;
+      setColorOffset(colorOffsetRef.current);
+    };
+
+    const intervalId = setInterval(updateColorOffset, 80);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   return (
     <div className="progress-bar-container">

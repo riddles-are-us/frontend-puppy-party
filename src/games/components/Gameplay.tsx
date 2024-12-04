@@ -61,6 +61,7 @@ const Gameplay = () => {
   const progressRef = useRef(progress);
   const displayProgressRef = useRef(progress);
   const isCountingDownRef = useRef(false);
+  const [displayProgress, setDisplayProgress] = useState(0);
   const [lastDanceActionTimeCache, setLastDanceActionTimeCache] = useState(0);
   const lastLotteryTimestamp = useAppSelector(selectLastLotteryTimestamp);
   const lastActionTimestamp = useAppSelector(selectLastActionTimestamp);
@@ -110,6 +111,12 @@ const Gameplay = () => {
         );
       }
     }
+
+    setDisplayProgress(displayProgressRef.current);
+    if (displayProgressRef.current == PROGRESS_LOTTERY_THRESHOLD) {
+      isCountingDownRef.current = true;
+      dispatch(setUIState({ uIState: UIState.GiftboxPopup }));
+    }
   };
 
   const updateDanceButtonCooldown = () => {
@@ -143,17 +150,7 @@ const Gameplay = () => {
 
         updateDisplayProgressRef();
 
-        // Reset to false
-        if (displayProgressRef.current == PROGRESS_LOTTERY_THRESHOLD) {
-          isCountingDownRef.current = true;
-          dispatch(setUIState({ uIState: UIState.GiftboxPopup }));
-        }
-
-        const progressRatio =
-          displayProgressRef.current / PROGRESS_LOTTERY_THRESHOLD;
-
         scenario.draw(ratioArray, {
-          progressRatio,
           l2account,
           memeList,
           giftboxShake: giftboxShakeRef.current,
@@ -298,7 +295,7 @@ const Gameplay = () => {
           onClick={onClickCanvas}
           ref={canvasRef}
         ></canvas>
-        <ProgressBar progress={0.5} />
+        <ProgressBar progress={displayProgress / PROGRESS_LOTTERY_THRESHOLD} />
         <StageButtons
           isCoolDown={isDanceButtonCoolDownLocal}
           progress={danceButtonProgress}
