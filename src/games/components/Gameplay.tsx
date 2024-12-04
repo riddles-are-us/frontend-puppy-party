@@ -269,7 +269,6 @@ const Gameplay = () => {
     //const top = (e.clientY - rect.top) * rect.width / 960;
     const left = ((e.clientX - rect.left) * 960) / rect.width;
     const top = ((e.clientY - rect.top) * 960) / rect.width;
-    console.log("canvas click:", left, top, ratio);
     scenario.hoverMeme(left, top);
     return;
   }
@@ -277,13 +276,10 @@ const Gameplay = () => {
   function onClickCanvas(e: MouseEvent<HTMLCanvasElement>) {
     const target = e.currentTarget;
     const rect = target.getBoundingClientRect();
-    const ratio = rect.width / 960;
-    //const left = (e.clientX - rect.left) * rect.width / 960;
-    //const top = (e.clientY - rect.top) * rect.width / 960;
     const left = ((e.clientX - rect.left) * 960) / rect.width;
     const top = ((e.clientY - rect.top) * 960) / rect.width;
-    console.log("canvas click:", left, top, ratio);
     const memeIndex = scenario.selectMeme(left, top);
+
     if (memeIndex != null) {
       dispatch(setTargetMemeIndex(memeIndex));
     }

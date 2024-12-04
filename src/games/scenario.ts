@@ -73,9 +73,9 @@ class Scenario {
         this.actor.focus = false;
         clip.focus = true;
         this.actor = clip;
-        const info:any = MemeSeasonCurrent.getMemeIndex(clip.name);
+        const index = MemeSeasonCurrent.getMemeIndex(clip.name);
         this.focusTorch.resetFrame();
-        return info.index;
+        return index;
       }
     }
     return null

@@ -61,7 +61,6 @@ export class Clip {
     const bottom = this.top + w * this.ratio;
     const right = this.left + w * this.ratio;
     const margin = w * this.ratio / 4;
-    console.log(this.left + margin, this.top + margin, right-margin, bottom-margin);
     if (cursorLeft > this.left + margin
       && cursorLeft < right - margin
       && cursorTop > this.top + margin
