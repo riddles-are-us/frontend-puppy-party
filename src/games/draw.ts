@@ -349,17 +349,6 @@ export function drawBackground(ratioArray: Array<Beat>, ctx: CanvasRenderingCont
   ctx.drawImage(spirites.backgroundImage, 0, 0, WIDTH, HEIGHT);
 }
 
-export function drawProgress(progress: number, ctx: CanvasRenderingContext2D) {
-  const ratio = 0.5;
-  const width = 740 * progress * ratio;
-  ctx.fillStyle = "#90D5FF";  // gray color
-  ctx.fillRect(204, 34, 740 * ratio, 14);
-  ctx.fillStyle = "orange";  // gray color
-  ctx.fillRect(204, 34, width, 14);
-  ctx.drawImage(spirites.progressBar, 200, 30, 753 * ratio, 45 * ratio);
-  ctx.drawImage(spirites.giftbox, 200 + width - 10, 20, 90*ratio, 90 * ratio);
-}
-
 export class Audience {
   toggle: number;
   light: number;

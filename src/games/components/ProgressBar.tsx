@@ -1,0 +1,73 @@
+import React, { useRef } from "react";
+import progressBarBackground from "../images/progress_bar_bg.png";
+import frontImage from "../images/progress_bar_front.png";
+import niceImage from "../images/nice.png";
+import goodJobImage from "../images/good_job.png";
+
+import "./ProgressBar.css";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+  selectShowProgressBarGoodJob,
+  selectShowProgressBarNice,
+} from "../../data/puppy_party/properties";
+import Grid from "./Grid";
+import ProgressBarElement from "./ProgressBarElement";
+
+const colorMap = [
+  "#4747D6",
+  "#5D5DF4",
+  "#7070F9",
+  "#8383FF",
+  "#85A5FF",
+  "#6EA4F9",
+  "#85D3FF",
+  "#85F1FF",
+  "#5BEFD6",
+  "#50FFC5",
+  "#67F496",
+  "#39EA6A",
+  "#29CE6F",
+  "#04B267",
+];
+const whiteColor = "#FFFFFF";
+const colorWidth = 3;
+const roundColorMap = [...colorMap, ...colorMap.slice(0, -1).reverse()];
+const barWidth = 86;
+
+interface Props {
+  progress: number;
+}
+
+const ProgressBar = ({ progress }: Props) => {
+  const dispatch = useAppDispatch();
+  const showProgressBarGoodJob = useAppSelector(selectShowProgressBarGoodJob);
+  const showProgressBarNice = useAppSelector(selectShowProgressBarNice);
+
+  const colorLength = Math.floor(progress * barWidth);
+  const colors = Array.from({ length: colorLength }, (_, index) => {
+    const colorIndex = Math.floor(index / colorWidth);
+    return progress < 1 && index == colorLength - 1
+      ? whiteColor
+      : roundColorMap[colorIndex % roundColorMap.length];
+  });
+
+  return (
+    <div className="progress-bar-container">
+      <img src={progressBarBackground} className="progress-bar-background" />
+      <img src={frontImage} className="progress-bar-front-image" />
+      {showProgressBarGoodJob && (
+        <img src={goodJobImage} className="progress-bar-good-job-image" />
+      )}
+      {showProgressBarNice && (
+        <img src={niceImage} className="progress-bar-nice-image" />
+      )}
+      <div className="progress-bar-progress-grid">
+        {colors.map((color, index) => (
+          <ProgressBarElement key={index} color={color} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default ProgressBar;

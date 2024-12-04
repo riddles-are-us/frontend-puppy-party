@@ -48,6 +48,8 @@ interface PropertiesState {
   memeList: MemeListElement[];
   giftboxShake: boolean;
   popupDescription: string;
+  showProgressBarGoodJob: boolean;
+  showProgressBarNice: boolean;
 }
 
 const SWAY = 0n;
@@ -72,6 +74,8 @@ const initialState: PropertiesState = {
     memeList: [],
     giftboxShake: false,
     popupDescription: "",
+    showProgressBarGoodJob: false,
+    showProgressBarNice: false,
   };
 
 export const propertiesSlice = createSlice({
@@ -94,6 +98,12 @@ export const propertiesSlice = createSlice({
     },
     setPopupDescription: (state, action) => {
       state.popupDescription = action.payload.popupDescription;
+    },
+    setShowProgressBarGoodJob: (state, action) => {
+      state.showProgressBarGoodJob = action.payload.showProgressBarGoodJob;
+    },
+    setShowProgressBarNice: (state, action) => {
+      state.showProgressBarNice = action.payload.showProgressBarNice;
     },
   },
   extraReducers: (builder) => {
@@ -159,6 +169,8 @@ export const selectLastTxResult = (state: RootState) => state.puppyParty.propert
 export const selectTargetMemeIndex = (state: RootState) => state.puppyParty.properties.targetMemeIndex;
 export const selectGiftboxShake = (state: RootState) => state.puppyParty.properties.giftboxShake;
 export const selectPopupDescription = (state: RootState) => state.puppyParty.properties.popupDescription;
+export const selectShowProgressBarGoodJob = (state: RootState) => state.puppyParty.properties.showProgressBarGoodJob;
+export const selectShowProgressBarNice = (state: RootState) => state.puppyParty.properties.showProgressBarNice;
 
-export const { setTargetMemeIndex, setUIState, setLastTxResult, setGiftboxShake, setPopupDescription } = propertiesSlice.actions;
+export const { setTargetMemeIndex, setUIState, setLastTxResult, setGiftboxShake, setPopupDescription, setShowProgressBarGoodJob, setShowProgressBarNice } = propertiesSlice.actions;
 export default propertiesSlice.reducer;

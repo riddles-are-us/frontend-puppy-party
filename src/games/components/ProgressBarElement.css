@@ -1,0 +1,19 @@
+.progress-bar-element-container {
+    display: inline;
+    width: 6px;
+    height: 18px;
+}
+
+.progress-bar-element-unit-container {
+    width: 6px;
+    height: 6px;
+}
+
+.progress-bar-element-unit-image {
+    position: relative;
+    width: 5px;
+    height: 5px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

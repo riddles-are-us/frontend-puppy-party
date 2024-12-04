@@ -1,7 +1,7 @@
 import {Clip, createAnimationClip, createDefaultAnimationClip} from "./animations/meme";
 import {
   Torch, Audience, drawHorn,
-  drawBackground, drawProgress,
+  drawBackground,
   Light, FixedLight,
   HEIGHT, WIDTH, Beat, drawScreen, FocusTorch,
 }  from "./draw";
@@ -162,8 +162,6 @@ class Scenario {
       light.drawLight(ratioArray, context);
     }
     this.audience.drawBeat(ratioArray, context);
-    drawProgress(state.progressRatio, context);
-
   }
 
   step(ratioArray: Array<Beat>) {

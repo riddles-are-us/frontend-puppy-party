@@ -27,6 +27,7 @@ import { queryState, sendTransaction, SERVER_TICK_TO_SECOND } from "../request";
 import { getTransactionCommandArray } from "../rpc";
 import "./Gameplay.css";
 import StageButtons from "./StageButtons";
+import ProgressBar from "./ProgressBar";
 
 const CREATE_PLAYER = 1n;
 const DANCE_MUSIC = 2n;
@@ -297,6 +298,7 @@ const Gameplay = () => {
           onClick={onClickCanvas}
           ref={canvasRef}
         ></canvas>
+        <ProgressBar progress={0.5} />
         <StageButtons
           isCoolDown={isDanceButtonCoolDownLocal}
           progress={danceButtonProgress}
