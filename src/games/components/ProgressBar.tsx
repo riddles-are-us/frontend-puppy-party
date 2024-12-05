@@ -84,6 +84,7 @@ const ProgressBar = ({ progress }: Props) => {
           <ProgressBarElement key={index} color={color} />
         ))}
       </div>
+      <div className="progress-bar-gift-animation" />
     </div>
   );
 };

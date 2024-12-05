@@ -67,3 +67,20 @@
     background-color: rgb(0, 255, 26);
     transform: translate(-50%, -50%);
 }
+
+@keyframes ProgressBarGiftAnimation {
+    from { background-position: 0px; }
+    to { background-position: -840px; }
+}
+
+.progress-bar-gift-animation {
+    position: absolute;
+    left: 85%;
+    bottom: 34%;
+    height: 70px;
+    width: 70px;
+    animation: ProgressBarGiftAnimation 1s steps(12) forwards infinite;
+    background-image: url("../images/animations/progressBarGift.png");
+    background-size: cover;
+    user-select: none;
+}
