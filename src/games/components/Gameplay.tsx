@@ -88,8 +88,6 @@ const Gameplay = () => {
 
   const canvasRef = React.createRef<HTMLCanvasElement>();
 
-  console.log("Progress", progress);
-
   const updateDisplayProgressRef = () => {
     if (progressRef.current == 0) {
       displayProgressRef.current = 0;
@@ -100,6 +98,7 @@ const Gameplay = () => {
     if (isCountingDownRef.current) {
       displayProgressRef.current -= PROGRESS_COUNTING_DOWN_SPEED;
       if (displayProgressRef.current <= 0) {
+        handleCancelRewards();
         displayProgressRef.current = 0;
         progressRef.current = 0;
         isCountingDownRef.current = false;
@@ -204,12 +203,6 @@ const Gameplay = () => {
       setTargetMemeRank(memeList[targetMemeIndex].rank);
     }
   }, [targetMemeIndex, memeList]);
-
-  useEffect(() => {
-    if (lastLotteryTimestamp != 0 && 10 < globalTimer - lastLotteryTimestamp) {
-      handleCancelRewards();
-    }
-  }, [lastDanceActionTimeCache, globalTimer]);
 
   useEffect(() => {
     isDanceButtonCoolDownGlobalRef.current =
