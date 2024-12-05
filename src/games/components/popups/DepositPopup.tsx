@@ -78,7 +78,7 @@ const DepositPopup = () => {
           } else {
             dispatch(
               setPopupDescription({
-                popupDescription: "Deposit Fail",
+                 popupDescription: "Deposit Fail: " + action.error.message,
               })
             );
           }
@@ -107,9 +107,6 @@ const DepositPopup = () => {
       <div onClick={onClickCancel} className="deposit-popup-mask" />
       <div className="deposit-popup-main-container">
         <img src={background} className="deposit-popup-main-background" />
-        <p className="deposit-popup-amount-text">
-          Please enter a number between 0 and {balance}.
-        </p>
         <input
           type="number"
           className="deposit-popup-amount-input"
