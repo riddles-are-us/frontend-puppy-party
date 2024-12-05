@@ -5,6 +5,7 @@ import "./GiftboxPopup.css";
 import { queryState, sendTransaction } from "../../request";
 import { AccountSlice } from "zkwasm-minirollup-browser";
 import {
+  selectLotteryInfo,
   selectNonce,
   selectUIState,
   setGiftboxShake,
@@ -130,6 +131,7 @@ const GiftboxPopup = () => {
   const [rewardAnimation, setRewardAnimation] = useState(false);
   const [finishQuery, setFinishQuery] = useState(false);
   const parentRef = useRef<HTMLDivElement | null>(null);
+  const lotteryInfo = useAppSelector(selectLotteryInfo);
 
   const getEndPosition = (parentContainer: HTMLDivElement | null) => {
     return parentContainer == null
@@ -145,7 +147,6 @@ const GiftboxPopup = () => {
   const endPosition = getEndPosition(parentRef && parentRef.current);
 
   const onClickConfirm = () => {
-    console.log(uIState);
     if (uIState == UIState.GiftboxPopup) {
       setFinishQuery(false);
       setRewardAnimation(true);
@@ -179,7 +180,11 @@ const GiftboxPopup = () => {
 
   useEffect(() => {
     if (!rewardAnimation && finishQuery) {
-      dispatch(setUIState({ uIState: UIState.Idle }));
+      if (lotteryInfo > 0) {
+        dispatch(setUIState({ uIState: UIState.SponsorPopup }));
+      } else {
+        dispatch(setUIState({ uIState: UIState.Idle }));
+      }
     }
   }, [rewardAnimation, finishQuery]);
 

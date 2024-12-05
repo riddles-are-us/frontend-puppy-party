@@ -18,6 +18,7 @@ export enum UIState{
   DepositPopup,
   QueryGiftbox,
   GiftboxPopup,
+  SponsorPopup,
   ConfirmPopup,
   ErrorPopup,
 }

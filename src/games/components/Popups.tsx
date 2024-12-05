@@ -11,6 +11,7 @@ import GiftboxPopup from "./popups/GiftboxPopup";
 import DepositPopup from "./popups/DepositPopup";
 import ConfirmPopup from "./popups/ConfirmPopup";
 import ErrorPopup from "./popups/ErrorPopup";
+import SponsorPopup from "./popups/SponsorPopup";
 
 const Popups = () => {
   const uIState = useAppSelector(selectUIState);
@@ -20,6 +21,7 @@ const Popups = () => {
   const showErrorPopup = uIState == UIState.ErrorPopup;
   const showGiftboxPopup =
     uIState == UIState.GiftboxPopup || uIState == UIState.QueryGiftbox;
+  const showSponsorPopup = uIState == UIState.SponsorPopup;
   const popupDescription = useAppSelector(selectPopupDescription);
 
   return (
@@ -27,6 +29,7 @@ const Popups = () => {
       {showWithdrawPopup && <WithdrawPopup />}
       {showDepositPopup && <DepositPopup />}
       {showGiftboxPopup && <GiftboxPopup />}
+      {showSponsorPopup && <SponsorPopup />}
       {showConfirmPopup && <ConfirmPopup description={popupDescription} />}
       {showErrorPopup && <ErrorPopup description={popupDescription} />}
     </>

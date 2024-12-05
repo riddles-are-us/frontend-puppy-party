@@ -49,5 +49,5 @@ def merge_images_to_sprite(folder_path, output_path):
 #     merge_images_to_sprite(folder_path, sprite_sheet_output_path, 1, 24)
 #     shutil.copy(icon_input_path, icon_output_path)
 
-merge_images_to_sprite("./raw", "./progressBarGift.png")
+merge_images_to_sprite("./raw", "./sponsor.png")
 
