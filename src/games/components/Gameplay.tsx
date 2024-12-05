@@ -20,6 +20,8 @@ import {
   setTargetMemeIndex,
   selectTicket,
   setPopupDescription,
+  selectProgressReset,
+  setProgressReset,
 } from "../../data/puppy_party/properties";
 import { AccountSlice } from "zkwasm-minirollup-browser";
 import { getBeat } from "../draw";
@@ -67,9 +69,9 @@ const Gameplay = () => {
   const lastActionTimestamp = useAppSelector(selectLastActionTimestamp);
   const memeList = useAppSelector(selectMemeList);
   const giftboxShake = useAppSelector(selectGiftboxShake);
+  const progressReset = useAppSelector(selectProgressReset);
   const targetMemeIndex = useAppSelector(selectTargetMemeIndex);
   const [targetMemeRank, setTargetMemeRank] = useState(0);
-
   const isDanceButtonCoolDownLocalRef = useRef(false);
   const isDanceButtonCoolDownGlobalRef = useRef(false);
   const [isDanceButtonCoolDownLocal, setIsDanceButtonCoolDownLocal] =
@@ -82,12 +84,16 @@ const Gameplay = () => {
   const globalTimer = useAppSelector(selectGlobalTimer);
 
   const giftboxShakeRef = useRef(false);
+  const progressResetRef = useRef(false);
 
   const canvasRef = React.createRef<HTMLCanvasElement>();
+
+  console.log("Progress", progress);
 
   const updateDisplayProgressRef = () => {
     if (progressRef.current == 0) {
       displayProgressRef.current = 0;
+      setDisplayProgress(displayProgressRef.current);
       return;
     }
 
@@ -100,7 +106,10 @@ const Gameplay = () => {
         dispatch(setUIState({ uIState: UIState.Idle }));
       }
     } else {
-      if (progressRef.current > displayProgressRef.current) {
+      if (
+        progressResetRef.current == false &&
+        progressRef.current > displayProgressRef.current
+      ) {
         const progressStep =
           (progressRef.current - displayProgressRef.current) *
           PROGRESS_UPDATE_RATE;
@@ -138,7 +147,6 @@ const Gameplay = () => {
         );
       }
       setDanceButtonProgress(danceButtonProgressRef.current);
-      console.log(danceButtonProgressRef.current);
     }
   };
 
@@ -177,9 +185,18 @@ const Gameplay = () => {
     giftboxShakeRef.current = giftboxShake;
   }, [giftboxShake]);
 
-  // Update the ref value whenever `progress` changes
+  useEffect(() => {
+    progressResetRef.current = progressReset;
+    if (progressReset) {
+      isCountingDownRef.current = false;
+      displayProgressRef.current = 0;
+      setDisplayProgress(displayProgressRef.current);
+    }
+  }, [progressReset]);
+
   useEffect(() => {
     progressRef.current = progress;
+    dispatch(setProgressReset({ progressReset: false }));
   }, [progress]);
 
   useEffect(() => {

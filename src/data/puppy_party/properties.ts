@@ -48,6 +48,7 @@ interface PropertiesState {
   targetMemeIndex: number;
   memeList: MemeListElement[];
   giftboxShake: boolean;
+  progressReset: boolean;
   popupDescription: string;
   showProgressBarGoodJob: boolean;
   showProgressBarNice: boolean;
@@ -74,6 +75,7 @@ const initialState: PropertiesState = {
     targetMemeIndex: 0,
     memeList: [],
     giftboxShake: false,
+    progressReset: false,
     popupDescription: "",
     showProgressBarGoodJob: false,
     showProgressBarNice: false,
@@ -96,6 +98,9 @@ export const propertiesSlice = createSlice({
     },
     setGiftboxShake: (state, action) => {
       state.giftboxShake = action.payload.giftboxShake;
+    },
+    setProgressReset: (state, action) => {
+      state.progressReset = action.payload.progressReset;
     },
     setPopupDescription: (state, action) => {
       state.popupDescription = action.payload.popupDescription;
@@ -169,9 +174,10 @@ export const selectProgress = (state: RootState) => state.puppyParty.properties.
 export const selectLastTxResult = (state: RootState) => state.puppyParty.properties.lastTxResult;
 export const selectTargetMemeIndex = (state: RootState) => state.puppyParty.properties.targetMemeIndex;
 export const selectGiftboxShake = (state: RootState) => state.puppyParty.properties.giftboxShake;
+export const selectProgressReset = (state: RootState) => state.puppyParty.properties.progressReset;
 export const selectPopupDescription = (state: RootState) => state.puppyParty.properties.popupDescription;
 export const selectShowProgressBarGoodJob = (state: RootState) => state.puppyParty.properties.showProgressBarGoodJob;
 export const selectShowProgressBarNice = (state: RootState) => state.puppyParty.properties.showProgressBarNice;
 
-export const { setTargetMemeIndex, setUIState, setLastTxResult, setGiftboxShake, setPopupDescription, setShowProgressBarGoodJob, setShowProgressBarNice } = propertiesSlice.actions;
+export const { setTargetMemeIndex, setUIState, setLastTxResult, setGiftboxShake, setProgressReset, setPopupDescription, setShowProgressBarGoodJob, setShowProgressBarNice } = propertiesSlice.actions;
 export default propertiesSlice.reducer;

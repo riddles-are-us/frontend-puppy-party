@@ -9,6 +9,7 @@ import {
   selectNonce,
   selectUIState,
   setGiftboxShake,
+  setProgressReset,
   setUIState,
   UIState,
 } from "../../../data/puppy_party/properties";
@@ -151,6 +152,7 @@ const GiftboxPopup = () => {
       setFinishQuery(false);
       setRewardAnimation(true);
       dispatch(setUIState({ uIState: UIState.QueryGiftbox }));
+      dispatch(setProgressReset({ progressReset: true }));
 
       dispatch(
         sendTransaction({
