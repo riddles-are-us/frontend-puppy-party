@@ -24,6 +24,15 @@ function bytesToHex(bytes: Array<number>): string {
   );
 }
 
+function getFirst10Words(input: string): string {
+    const words = input.split(/\s+/);
+    const first10Words = words.slice(0, 10);
+    if (words.length > 10) {
+        first10Words.push("...");
+    }
+    return first10Words.join(' ');
+}
+
 const DepositPopup = () => {
   const dispatch = useAppDispatch();
   const uIState = useAppSelector(selectUIState);
@@ -78,7 +87,7 @@ const DepositPopup = () => {
           } else {
             dispatch(
               setPopupDescription({
-                 popupDescription: "Deposit Fail: " + action.error.message,
+                 popupDescription: "Deposit Fail: " + getFirst10Words(action.error.message),
               })
             );
           }
