@@ -133,6 +133,7 @@ const GiftboxPopup = () => {
   const [finishQuery, setFinishQuery] = useState(false);
   const parentRef = useRef<HTMLDivElement | null>(null);
   const lotteryInfo = useAppSelector(selectLotteryInfo);
+  const [preLotteryInfo, setPreLotterInfo]  = useState(0);
 
   const getEndPosition = (parentContainer: HTMLDivElement | null) => {
     return parentContainer == null
@@ -153,7 +154,7 @@ const GiftboxPopup = () => {
       setRewardAnimation(true);
       dispatch(setUIState({ uIState: UIState.QueryGiftbox }));
       dispatch(setProgressReset({ progressReset: true }));
-
+      setPreLotterInfo(lotteryInfo);
       dispatch(
         sendTransaction({
           cmd: getTransactionCommandArray(LOTTERY, nonce, [0n, 0n, 0n]),
@@ -182,7 +183,7 @@ const GiftboxPopup = () => {
 
   useEffect(() => {
     if (!rewardAnimation && finishQuery) {
-      if (lotteryInfo > 0) {
+      if (lotteryInfo > preLotteryInfo) {
         dispatch(setUIState({ uIState: UIState.SponsorPopup }));
       } else {
         dispatch(setUIState({ uIState: UIState.Idle }));
