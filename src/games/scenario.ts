@@ -101,16 +101,60 @@ class Scenario {
     return;
   }
 
-  focusActor(left: number, top: number) {
+  cicleClips() {
+    let j = 0;
+    const factor = Math.PI * 2 / (this.clips.length - 1)
+    for (let i=0; i<this.clips.length; i++) {
+      if (this.clips[i] != this.actor) {
+        const x = 300*Math.sin(j * factor);
+        const y = 50*Math.cos(j * factor);
+        this.clips[i].target = [[450 + x, 300 + y]];
+        j++;
+      }
+    }
+  }
+
+  waveClips() {
+    for (let i=0; i<this.clips.length; i++) {
+      if (this.clips[i] != this.actor) {
+        this.clips[i].target = [[150 + (60 * i), 300 + 30*Math.cos(((i + 1)*Math.PI)/3)]];
+      }
+    }
+  }
+
+  lineClips() {
+    const mid = this.clips.length/2;
+    for (let i=0; i<mid; i++) {
+      if (this.clips[i] != this.actor) {
+        this.clips[i].target = [[370 - (40 * i), 300 + 20*(i - 3)]];
+      }
+    }
+    for (let i=mid; i<this.clips.length; i++) {
+      if (this.clips[i] != this.actor) {
+        this.clips[i].target = [[370 + (40 * i), 300 + 20*(i - 3 - mid)]];
+      }
+    }
+  }
+
+  focusActor(left: number, top: number, move: number) {
+    if (move == 1) {
+      this.waveClips();
+    } else if (move == 2) {
+      this.cicleClips();
+    } else if (move == 3) {
+      this.lineClips();
+    }
     this.actorState = "focus";
-    this.actor.target = [left, top];
+    this.actor.target = [[left, top]];
   }
 
   restoreActor() {
     this.actorState = "restore";
-    const top = 220 + getRandomNumber(80);
-    const left = 50 + getRandomNumber(800);
-    this.actor.target = [left, top];
+    for (let i=0; i<this.clips.length; i++) {
+      const top = 240 + getRandomNumber(80);
+      const left = 50 + getRandomNumber(800);
+      this.clips[i].target = [[left, top]];
+    }
   }
 
 
@@ -174,21 +218,7 @@ class Scenario {
       if (ratioArray[channelIdx].ratio > 1) {
         vratio = 1 + (ratioArray[channelIdx].ratio-1) * amplifier;
       }
-      const rx = 2 * Math.random() - 1;
-      const ry = Math.sign(rx) * Math.sqrt(1 - rx*rx);
-      obj.setSpeed(rx*vratio, ry*vratio);
-    }
-
-    if (this.actor.target != null) {
-      let rx = this.actor.target[0] - this.actor.left;
-      let ry = this.actor.target[1] - this.actor.top;
-      if (Math.abs(rx) > 10) {
-        rx = Math.sign(rx) * 10;
-      }
-      if (Math.abs(ry) > 10) {
-        ry = Math.sign(ry) * 10;
-      }
-      this.actor.setSpeed(rx, ry);
+      obj.setSpeed(vratio);
     }
 
     for (const l of this.lights) {

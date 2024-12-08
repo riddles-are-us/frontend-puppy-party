@@ -241,7 +241,15 @@ const Gameplay = () => {
             ? DANCE_TURN
             : DANCE_UP;
         setDanceType(danceType);
-        scenario.focusActor(440, 190);
+        let move = 0;
+        if (danceType == DanceType.Side) {
+          move = 1;
+        } else if (danceType == DanceType.Turn) {
+          move = 2;
+        } else if (danceType == DanceType.Up) {
+          move = 3;
+        }
+        scenario.focusActor(440, 190, move);
         dispatch(
           sendTransaction({
             cmd: getTransactionCommandArray(danceCommand, nonce, [
@@ -256,7 +264,7 @@ const Gameplay = () => {
         dispatch(queryState({ cmd: [], prikey: l2account!.address }));
         setTimeout(() => {
           scenario.restoreActor();
-        }, 5000);
+        }, 8000);
       }
     }
   };

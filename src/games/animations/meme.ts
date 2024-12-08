@@ -37,7 +37,7 @@ export class Clip {
   ratio: number;
   focus: boolean;
   hover: boolean;
-  target: [number, number] | null;
+  target: Array<[number, number]>;
   constructor(src: HTMLImageElement, boundry: ClipRect, ratio: number) {
     this.name = "NPC";
     this.src = src;
@@ -52,7 +52,7 @@ export class Clip {
     this.ratio = ratio;
     this.focus = false;
     this.hover = false;
-    this.target = null;
+    this.target = [];
   }
 
   inRect(cursorLeft: number, cursorTop: number): boolean {
@@ -100,9 +100,28 @@ export class Clip {
   }
 
 
-  setSpeed(vx: number, vy: number) {
-    this.vx = vx;
-    this.vy = vy;
+  setSpeed(ratio: number) {
+    const rx = 2 * Math.random() - 1;
+    const ry = Math.sign(rx) * Math.sqrt(1 - rx*rx);
+    if (this.target.length == 0) {
+      this.vx = rx * ratio;
+      this.vy = ry * ratio;
+    } else {
+      const len = this.target.length - 1;
+      let rx = this.target[len][0] - this.left;
+      let ry = this.target[len][1] - this.top;
+      if (Math.abs(rx) > 10) {
+        rx = Math.sign(rx) * 10;
+      }
+      if (Math.abs(ry) > 10) {
+        ry = Math.sign(ry) * 10;
+      }
+      this.vx = rx;
+      this.vy = ry;
+      if (rx*rx + ry*ry < 5) {
+        //this.target.pop();
+      }
+    }
   }
 
   draw(ctx: CanvasRenderingContext2D, memeinfos: MemeListElement[]) {
@@ -152,7 +171,7 @@ export class Clip {
       this.currentFrame = (this.currentFrame + 1) % len;
       this.top = this.vy + this.top;
       this.left = this.vx + this.left;
-      if (this.target == null) {
+      if (this.target.length == 0) {
         if (this.top < this.boundry.top) {
           this.top = this.boundry.top;
         }
