@@ -30,7 +30,7 @@ const SponsorPopup = () => {
         <div className="sponsor-popup-main-container">
           <div className="sponsor-popup-main-animation" />
           <p className="sponsor-popup-description-text">
-            You won ${lotteryInfo}
+            Your lottery pool has reached ${lotteryInfo}
           </p>
           <p className="sponsor-popup-sponsor-text">Sponsored by</p>
           <img src={sponsor_logo} className="sponsor-popup-sponsor-image" />
