@@ -148,6 +148,12 @@ class Scenario {
     this.actor.target = [[left, top]];
   }
 
+  clearTargets() {
+    for (let i=0; i<this.clips.length; i++) {
+      this.clips[i].target = [];
+    }
+  }
+
   restoreActor() {
     this.actorState = "restore";
     for (let i=0; i<this.clips.length; i++) {
@@ -155,6 +161,9 @@ class Scenario {
       const left = 50 + getRandomNumber(800);
       this.clips[i].target = [[left, top]];
     }
+    setTimeout(() => {
+          this.clearTargets();
+    }, 3000);
   }
 
 
