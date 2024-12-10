@@ -29,11 +29,9 @@ const SponsorPopup = () => {
       <div className="sponsor-popup-container">
         <div className="sponsor-popup-main-container">
           <div className="sponsor-popup-main-animation" />
-          <p className="sponsor-popup-description-text">
-            Your lottery pool has reached ${lotteryInfo}
-          </p>
-          <p className="sponsor-popup-sponsor-text">Sponsored by</p>
+          <p className="sponsor-popup-sponsor-text">Cash out</p>
           <img src={sponsor_logo} className="sponsor-popup-sponsor-image" />
+          <p className="sponsor-popup-description-text">$ {lotteryInfo}</p>
           <div className="sponsor-popup-confirm-button">
             <GiftboxConfirmButton onClick={onClickConfirm} />
           </div>

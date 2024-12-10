@@ -47,11 +47,28 @@
     to { opacity: 1; }
 }
 
+.sponsor-popup-sponsor-text {
+    position: absolute;
+    top: 60%;
+    left: 40%;
+    transform: translate(-50%, -50%);
+    font-size: 17px;
+    text-align: center;
+    line-height: 17px;
+    margin: 0px;
+    width: 80%;
+    height: 35%;
+    animation: SponsorFadeIn 0.3s ease-in forwards;
+    font-family: "mishmash";
+    color: rgb(138, 228, 244);
+    user-select: none;
+}
+
 .sponsor-popup-sponsor-image {
     position: absolute;
     transform: translate(-50%, -50%);
-    top: 57%;
-    left: 50%;
+    top: 45%;
+    left: 58%;
     width: 107px;
     height: 29px;
     opacity: 0;
@@ -71,7 +88,7 @@
 
 .sponsor-popup-description-text {
     position: absolute;
-    top: 58%;
+    top: 70%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 20px;
@@ -82,23 +99,6 @@
     height: 35%;
     animation: SponsorFadeIn 0.3s ease-in forwards;
     font-family: "mishmash";
-    color: white;
-    user-select: none;
-}
-
-.sponsor-popup-sponsor-text {
-    position: absolute;
-    top: 64%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 15px;
-    text-align: center;
-    line-height: 15px;
-    margin: 0px;
-    width: 80%;
-    height: 35%;
-    animation: SponsorFadeIn 0.3s ease-in forwards;
-    font-family: "mishmash";
-    color: white;
+    color: rgb(138, 228, 244);
     user-select: none;
 }
