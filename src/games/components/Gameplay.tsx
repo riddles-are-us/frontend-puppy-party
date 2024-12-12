@@ -22,6 +22,7 @@ import {
   setPopupDescription,
   selectProgressReset,
   setProgressReset,
+  MemeListElement,
 } from "../../data/puppy_party/properties";
 import { AccountSlice } from "zkwasm-minirollup-browser";
 import { getBeat } from "../draw";
@@ -63,6 +64,7 @@ const Gameplay = () => {
   const lastLotteryTimestamp = useAppSelector(selectLastLotteryTimestamp);
   const lastActionTimestamp = useAppSelector(selectLastActionTimestamp);
   const memeList = useAppSelector(selectMemeList);
+  const memeListRef = useRef<MemeListElement[]>([]);
   const giftboxShake = useAppSelector(selectGiftboxShake);
   const progressReset = useAppSelector(selectProgressReset);
   const targetMemeIndex = useAppSelector(selectTargetMemeIndex);
@@ -154,7 +156,7 @@ const Gameplay = () => {
 
         scenario.draw(ratioArray, {
           l2account,
-          memeList,
+          memeList: memeListRef.current,
           giftboxShake: giftboxShakeRef.current,
         });
         if (giftboxShakeRef.current) {
@@ -178,6 +180,10 @@ const Gameplay = () => {
   useEffect(() => {
     giftboxShakeRef.current = giftboxShake;
   }, [giftboxShake]);
+
+  useEffect(() => {
+    memeListRef.current = memeList;
+  }, [memeList]);
 
   useEffect(() => {
     progressResetRef.current = progressReset;
