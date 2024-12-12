@@ -16,11 +16,16 @@ import DC from "../images/season1/deadchu.jpg";
 import FWOG from "../images/season2/fwog.jpg";
 import BURGER2 from "../images/season2/burger.jpg";
 import DOKUAN2 from "../images/season2/dokuan.jpg";
-import GOCHUJANG from "../images/season2/gochujang.jpg";
-import SUNBEANS from "../images/season2/sunbeans.jpg";
 import KAWAII from "../images/season2/kawaii.jpg";
-import MOUTAI from "../images/season2/moutai.jpg";
-import ASTRO from "../images/season2/astro.jpg";
+import GAIB from "../images/season2/gaib.jpg";
+import NEIRO from "../images/season2/neiro.jpg";
+import SUNBEANS from "../images/season2/sunbeans.jpg";
+import CHEEMS from "../images/season2/cheems.jpg";
+import SHAUNMOON from "../images/season2/shaunmoon.jpg";
+import AIKUN from "../images/season2/cheems.jpg";
+import FIAMMA from "../images/season2/fiamma.jpg";
+import PAOPAO from "../images/season2/paopao.jpg";
+
 
 interface MemeInterface {
   name: string,
@@ -136,79 +141,79 @@ export const MemeSeasonPrevious = new MemeSeasonInfo([
 
 export const MemeSeasonCurrent = new MemeSeasonInfo([
   {
-    name: "fwog",
-    cover: FWOG,
-    animationIndex: 2,
-    index: 0,
-  },
-  {
     name: "burger",
     cover: BURGER2,
-    animationIndex: 4,
-    index: 1,
+    animationIndex: 0,
+    index: 0,
   },
   {
     name: "dokuan",
     cover: DOKUAN2,
-    animationIndex: 3,
+    animationIndex: 1,
+    index: 1,
+  },
+  {
+    name: "fwog",
+    cover: FWOG,
+    animationIndex: 2,
     index: 2,
-  },
-  {
-    name: "gochujang",
-    cover: GOCHUJANG,
-    animationIndex: null,
-    index: 3,
-  },
-  {
-    name: "sunbeans",
-    cover: SUNBEANS,
-    animationIndex: null,
-    index: 4,
   },
   {
     name: "kawaii",
     cover: KAWAII,
-    animationIndex: null,
+    animationIndex: 3,
+    index: 3,
+  },
+  {
+    name: "gaib",
+    cover: GAIB,
+    animationIndex: 4,
+    index: 4,
+  },
+  {
+    name: "neiro",
+    cover: NEIRO,
+    animationIndex: 5,
     index: 5,
   },
   {
-    name: "moutai",
-    cover: MOUTAI,
-    animationIndex: null,
+    name: "sunbeans",
+    cover: SUNBEANS,
+    animationIndex: 6,
     index: 6,
   },
   {
-    name: "astro",
-    cover: ASTRO,
-    animationIndex: null,
+    name: "cheems",
+    cover: CHEEMS,
+    animationIndex: 7,
     index: 7,
   },
 
   {
-    name: "eddy",
-    cover: EDDY,
-    animationIndex: null,
+    name: "shaunmoon",
+    cover: SHAUNMOON,
+    animationIndex: 8,
     index: 8,
   },
 
   {
-    name: "psd",
-    cover: PSD,
-    animationIndex: null,
+    name: "aikun",
+    cover: AIKUN,
+    animationIndex: 9,
     index: 9,
   },
 
   {
-    name: "zkshark",
-    cover: ZKSHARK,
-    animationIndex: null,
+    name: "fiamma",
+    cover: FIAMMA,
+    animationIndex: 10,
     index: 10,
   },
 
   {
-    name: "deadchu",
-    cover: DC,
-    animationIndex: null,
+    name: "paopao",
+    cover: PAOPAO,
+    animationIndex: 11,
     index: 11,
   },
 ]);
