@@ -5,6 +5,7 @@ import "./SponsorPopup.css";
 import { queryState, sendTransaction } from "../../request";
 import { AccountSlice } from "zkwasm-minirollup-browser";
 import {
+  resetLotteryInfoDiff,
   selectLotteryInfoDiff,
   selectNonce,
   selectUIState,
@@ -36,6 +37,7 @@ const SponsorPopup = () => {
       )
     ).then((action) => {
       if (sendTransaction.fulfilled.match(action)) {
+        dispatch(resetLotteryInfoDiff({}));
         dispatch(setUIState({ uIState: UIState.Idle }));
       }
     });

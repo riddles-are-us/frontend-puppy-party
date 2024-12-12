@@ -113,6 +113,9 @@ export const propertiesSlice = createSlice({
     setShowProgressBarNice: (state, action) => {
       state.showProgressBarNice = action.payload.showProgressBarNice;
     },
+    resetLotteryInfoDiff: (state, action) => {
+      state.lotteryInfoDiff = 0;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -187,5 +190,5 @@ export const selectPopupDescription = (state: RootState) => state.puppyParty.pro
 export const selectShowProgressBarGoodJob = (state: RootState) => state.puppyParty.properties.showProgressBarGoodJob;
 export const selectShowProgressBarNice = (state: RootState) => state.puppyParty.properties.showProgressBarNice;
 
-export const { setTargetMemeIndex, setUIState, setLastTxResult, setGiftboxShake, setProgressReset, setPopupDescription, setShowProgressBarGoodJob, setShowProgressBarNice } = propertiesSlice.actions;
+export const { setTargetMemeIndex, setUIState, setLastTxResult, setGiftboxShake, setProgressReset, setPopupDescription, setShowProgressBarGoodJob, setShowProgressBarNice, resetLotteryInfoDiff } = propertiesSlice.actions;
 export default propertiesSlice.reducer;
