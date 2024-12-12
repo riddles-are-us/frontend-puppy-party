@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
-import background from "../../images/withdraw_frame.png";
+import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import "./GiftboxPopup.css";
 import { queryState, sendTransaction } from "../../request";
 import { AccountSlice } from "zkwasm-minirollup-browser";
 import {
-  selectLotteryInfo,
+  selectLotteryInfoDiff,
   selectNonce,
   selectUIState,
   setGiftboxShake,
@@ -27,8 +26,8 @@ import note7 from "../../images/note/note7.png";
 import note8 from "../../images/note/note8.png";
 import note9 from "../../images/note/note9.png";
 import note10 from "../../images/note/note10.png";
-import { getTransactionCommandArray } from "../../rpc";
 import GiftboxNotes from "./GiftboxNotes";
+import { getLotteryransactionParameter } from "../../api";
 
 const LOTTERY = 6n;
 
@@ -132,8 +131,7 @@ const GiftboxPopup = () => {
   const [rewardAnimation, setRewardAnimation] = useState(false);
   const [finishQuery, setFinishQuery] = useState(false);
   const parentRef = useRef<HTMLDivElement | null>(null);
-  const lotteryInfo = useAppSelector(selectLotteryInfo);
-  const [preLotteryInfo, setPreLotterInfo]  = useState(0);
+  const lotteryInfoDiff = useAppSelector(selectLotteryInfoDiff);
 
   const getEndPosition = (parentContainer: HTMLDivElement | null) => {
     return parentContainer == null
@@ -154,12 +152,8 @@ const GiftboxPopup = () => {
       setRewardAnimation(true);
       dispatch(setUIState({ uIState: UIState.QueryGiftbox }));
       dispatch(setProgressReset({ progressReset: true }));
-      setPreLotterInfo(lotteryInfo);
       dispatch(
-        sendTransaction({
-          cmd: getTransactionCommandArray(LOTTERY, nonce, [0n, 0n, 0n]),
-          prikey: l2account!.address,
-        })
+        sendTransaction(getLotteryransactionParameter(l2account!, nonce))
       ).then((action) => {
         if (sendTransaction.fulfilled.match(action)) {
           dispatch(queryState({ cmd: [], prikey: l2account!.address })).then(
@@ -183,7 +177,7 @@ const GiftboxPopup = () => {
 
   useEffect(() => {
     if (!rewardAnimation && finishQuery) {
-      if (lotteryInfo > preLotteryInfo) {
+      if (lotteryInfoDiff > 0) {
         dispatch(setUIState({ uIState: UIState.SponsorPopup }));
       } else {
         dispatch(setUIState({ uIState: UIState.Idle }));

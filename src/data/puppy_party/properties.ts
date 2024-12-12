@@ -52,6 +52,7 @@ interface PropertiesState {
   popupDescription: string;
   showProgressBarGoodJob: boolean;
   showProgressBarNice: boolean;
+  lotteryInfoDiff: number;
 }
 
 const SWAY = 0n;
@@ -79,6 +80,7 @@ const initialState: PropertiesState = {
     popupDescription: "",
     showProgressBarGoodJob: false,
     showProgressBarNice: false,
+    lotteryInfoDiff: 0,
   };
 
 export const propertiesSlice = createSlice({
@@ -129,6 +131,9 @@ export const propertiesSlice = createSlice({
         }
         state.memeList = action.payload.memeList;
         state.globalTimer = action.payload.globalTimer;
+        state.lotteryInfoDiff = state.player.data.lottery_info == 0 
+          ? 0 
+          : state.lotteryInfoDiff + (action.payload.player.data.lottery_info - state.player.data.lottery_info);
         state.player = action.payload.player;
         state.lastTxResult = action.payload.globalTimer;
         console.log("send transaction fulfilled. The command processed at:", action.payload);
@@ -147,6 +152,9 @@ export const propertiesSlice = createSlice({
 
         state.memeList = action.payload.memeList;
         state.globalTimer = action.payload.globalTimer;
+        state.lotteryInfoDiff = state.player.data.lottery_info == 0 
+          ? 0 
+          : state.lotteryInfoDiff + (action.payload.player.data.lottery_info - state.player.data.lottery_info);
         state.player = action.payload.player;
         console.log("state player:", state.player);
         console.log("query state fulfilled");
@@ -166,7 +174,7 @@ export const selectNonce = (state: RootState) => BigInt(state.puppyParty.propert
 export const selectMemeList = (state: RootState) => state.puppyParty.properties.memeList;
 export const selectBalance = (state: RootState) => state.puppyParty.properties.player.data.balance;
 export const selectTicket = (state: RootState) => state.puppyParty.properties.player.data.ticket ?? 0;
-export const selectLotteryInfo = (state: RootState) => state.puppyParty.properties.player.data.lottery_info;
+export const selectLotteryInfoDiff = (state: RootState) => state.puppyParty.properties.lotteryInfoDiff;
 export const selectAction = (state: RootState) => state.puppyParty.properties.player.data.action;
 export const selectLastLotteryTimestamp = (state: RootState) => state.puppyParty.properties.player.data.last_lottery_timestamp;
 export const selectLastActionTimestamp = (state: RootState) => state.puppyParty.properties.player.data.last_action_timestamp;

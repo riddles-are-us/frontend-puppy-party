@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState, memo } from "react";
+import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { scenario } from "./scenario";
 import { getConfig, sendTransaction, queryState } from "./request";
@@ -8,23 +8,13 @@ import {
   setUIState,
   selectNonce,
 } from "../data/puppy_party/properties";
-import { getTransactionCommandArray } from "./rpc";
 import { AccountSlice } from "zkwasm-minirollup-browser";
 import "./style.scss";
-import BN from "bn.js";
 import Gameplay from "./components/Gameplay";
 import WelcomePage from "./components/WelcomePage";
+import { getCreatePlayerTransactionParameter } from "./api";
 
 //import cover from "./images/towerdefence.jpg";
-
-const CREATE_PLAYER = 1n;
-const SHAKE_FEET = 2n;
-const JUMP = 3n;
-const SHAKE_HEADS = 4n;
-const POST_COMMENTS = 5n;
-const LOTTERY = 6n;
-const CANCELL_LOTTERY = 7n;
-const WITHDRAW = 8n;
 
 export function GameController() {
   const dispatch = useAppDispatch();
@@ -72,10 +62,7 @@ export function GameController() {
   function createPlayer() {
     try {
       dispatch(
-        sendTransaction({
-          cmd: getTransactionCommandArray(CREATE_PLAYER, nonce, [0n, 0n, 0n]),
-          prikey: l2account!.address,
-        })
+        sendTransaction(getCreatePlayerTransactionParameter(l2account!, nonce))
       );
     } catch (e) {
       console.log("Error at create player " + e);

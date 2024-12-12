@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import background from "../../images/deposit_frame.png";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import "./DepositPopup.css";
@@ -12,9 +12,7 @@ import {
   setUIState,
   UIState,
 } from "../../../data/puppy_party/properties";
-import BN from "bn.js";
 import ConfirmButton from "../buttons/WithdrawConfirmButton";
-import { getTransactionCommandArray } from "../../rpc";
 import CancelButton from "../buttons/WithdrawCancelButton";
 
 const WITHDRAW = 8n;
@@ -25,12 +23,12 @@ function bytesToHex(bytes: Array<number>): string {
 }
 
 function getFirst10Words(input: string): string {
-    const words = input.split(/\s+/);
-    const first10Words = words.slice(0, 10);
-    if (words.length > 10) {
-        first10Words.push("...");
-    }
-    return first10Words.join(' ');
+  const words = input.split(/\s+/);
+  const first10Words = words.slice(0, 10);
+  if (words.length > 10) {
+    first10Words.push("...");
+  }
+  return first10Words.join(" ");
 }
 
 const DepositPopup = () => {
@@ -87,7 +85,8 @@ const DepositPopup = () => {
           } else {
             dispatch(
               setPopupDescription({
-                 popupDescription: "Deposit Fail: " + getFirst10Words(action.error.message),
+                popupDescription:
+                  "Deposit Fail: " + getFirst10Words(action.error.message),
               })
             );
           }

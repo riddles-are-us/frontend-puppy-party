@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import background from "../../images/withdraw_frame.png";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import "./WithdrawPopup.css";
@@ -12,10 +12,9 @@ import {
   setUIState,
   UIState,
 } from "../../../data/puppy_party/properties";
-import BN from "bn.js";
 import ConfirmButton from "../buttons/WithdrawConfirmButton";
-import { getTransactionCommandArray } from "../../rpc";
 import CancelButton from "../buttons/WithdrawCancelButton";
+import { getWithdrawTransactionParameter } from "../../api";
 
 const WITHDRAW = 8n;
 function bytesToHex(bytes: Array<number>): string {
@@ -34,38 +33,10 @@ const WithdrawPopup = () => {
   const [amountString, setAmountString] = useState("");
 
   async function withdrawRewards(amount: bigint, nonce: bigint) {
-    const address = l1account!.address.slice(2);
-    const addressBN = new BN(address, 16);
-    const addressBE = addressBN.toArray("be", 20); // 20 bytes = 160 bits and split into 4, 8, 8
-    console.log("address is", address);
-    console.log("address big endian is", addressBE);
-    const firstLimb = BigInt(
-      "0x" + bytesToHex(addressBE.slice(0, 4).reverse())
-    );
-    const sndLimb = BigInt("0x" + bytesToHex(addressBE.slice(4, 12).reverse()));
-    const thirdLimb = BigInt(
-      "0x" + bytesToHex(addressBE.slice(12, 20).reverse())
-    );
-
-    /*
-    (32 bit amount | 32 bit highbit of address)
-    (64 bit mid bit of address (be))
-    (64 bit tail bit of address (be))
-    */
-
-    console.log("first is", firstLimb);
-    console.log("snd is", sndLimb);
-    console.log("third is", thirdLimb);
-
     dispatch(
-      sendTransaction({
-        cmd: getTransactionCommandArray(WITHDRAW, nonce, [
-          (firstLimb << 32n) + amount,
-          sndLimb,
-          thirdLimb,
-        ]),
-        prikey: l2account!.address,
-      })
+      sendTransaction(
+        getWithdrawTransactionParameter(l1account!, l2account!, amount, nonce)
+      )
     ).then((action) => {
       if (sendTransaction.fulfilled.match(action)) {
         dispatch(

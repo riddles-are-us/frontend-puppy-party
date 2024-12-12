@@ -26,19 +26,14 @@ import {
 import { AccountSlice } from "zkwasm-minirollup-browser";
 import { getBeat } from "../draw";
 import { queryState, sendTransaction, SERVER_TICK_TO_SECOND } from "../request";
-import { getTransactionCommandArray } from "../rpc";
 import "./Gameplay.css";
 import StageButtons from "./StageButtons";
 import ProgressBar from "./ProgressBar";
+import {
+  getCancelLotteryransactionParameter,
+  getDanceTransactionParameter,
+} from "../api";
 
-const CREATE_PLAYER = 1n;
-const DANCE_MUSIC = 2n;
-const DANCE_SIDE = 3n;
-const DANCE_TURN = 4n;
-const DANCE_UP = 5n;
-const LOTTERY = 6n;
-const CANCELL_LOTTERY = 7n;
-const WITHDRAW = 8n;
 const COOL_DOWN = 2;
 const PROGRESS_LOTTERY_THRESHOLD = 1000;
 const MIN_PROGRESS_UPDATE = 30;
@@ -211,10 +206,7 @@ const Gameplay = () => {
 
   function handleCancelRewards() {
     dispatch(
-      sendTransaction({
-        cmd: getTransactionCommandArray(CANCELL_LOTTERY, nonce, [0n, 0n, 0n]),
-        prikey: l2account!.address,
-      })
+      sendTransaction(getCancelLotteryransactionParameter(l2account!, nonce))
     );
     dispatch(queryState({ cmd: [], prikey: l2account!.address }));
   }
@@ -232,14 +224,6 @@ const Gameplay = () => {
         isDanceButtonCoolDownLocalRef.current = true;
         setIsDanceButtonCoolDownLocal(true);
         danceButtonProgressRef.current = 0;
-        const danceCommand =
-          danceType == DanceType.Music
-            ? DANCE_MUSIC
-            : danceType == DanceType.Side
-            ? DANCE_SIDE
-            : danceType == DanceType.Turn
-            ? DANCE_TURN
-            : DANCE_UP;
         setDanceType(danceType);
         let move = 0;
         if (danceType == DanceType.Side) {
@@ -251,14 +235,14 @@ const Gameplay = () => {
         }
         scenario.focusActor(440, 190, move);
         dispatch(
-          sendTransaction({
-            cmd: getTransactionCommandArray(danceCommand, nonce, [
+          sendTransaction(
+            getDanceTransactionParameter(
+              l2account!,
+              danceType,
               BigInt(targetMemeIndex),
-              0n,
-              0n,
-            ]),
-            prikey: l2account!.address,
-          })
+              nonce
+            )
+          )
         );
 
         dispatch(queryState({ cmd: [], prikey: l2account!.address }));
