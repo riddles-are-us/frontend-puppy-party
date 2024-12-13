@@ -22,7 +22,7 @@ import NEIRO from "../images/season2/neiro.jpg";
 import SUNBEANS from "../images/season2/sunbeans.jpg";
 import CHEEMS from "../images/season2/cheems.jpg";
 import SHAUNMOON from "../images/season2/shaunmoon.jpg";
-import AIKUN from "../images/season2/cheems.jpg";
+import AIKUN from "../images/season2/ikun.jpg";
 import FIAMMA from "../images/season2/fiamma.jpg";
 import PAOPAO from "../images/season2/paopao.jpg";
 
