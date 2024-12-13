@@ -21,6 +21,24 @@
     object-fit: cover;
 }
 
+.landing-page-stage-dog-1-image {
+    position: absolute;
+    width: auto;
+    height: 16.7%;
+    aspect-ratio: 383 / 267;
+    top: 9.5%;
+    left: 33%;
+}
+
+.landing-page-stage-dog-2-image {
+    position: absolute;
+    width: auto;
+    height: 17.1%;
+    aspect-ratio: 322 / 273;
+    top: 10.5%;
+    left: 55%;
+}
+
 @keyframes people-animation {
     0% {
       bottom: -35%;

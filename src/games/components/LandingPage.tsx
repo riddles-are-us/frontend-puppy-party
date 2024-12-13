@@ -11,6 +11,8 @@ import background from "../images/landing/landing_bg.png";
 import titleImage from "../images/landing/landing_title.png";
 import peopleBackground from "../images/landing/people.png";
 import stageBackground from "../images/landing/stage_bg.png";
+import dog1 from "../images/landing/dog1.png";
+import dog2 from "../images/landing/dog2.png";
 import speakerGreenLeft from "../images/animations/landing/green.png";
 import speakerGreenRight from "../images/animations/landing/green1.png";
 import speakerPinkLeft from "../images/animations/landing/pink.png";
@@ -169,9 +171,11 @@ const LandingPage = () => {
           src={peopleBackground}
         />
         <img className="landing-page-stage-background" src={stageBackground} />
+        <img className="landing-page-stage-dog-1-image" src={dog1} />
+        <img className="landing-page-stage-dog-2-image" src={dog2} />
         <div className="landing-page-panel-container">
           <p className="landing-page-panel-text">
-             Next Season will start at 15th December 2024
+            Next Season will start at 15th December 2024
           </p>
           <div className="landing-page-panel-play-button">
             <PlayButton onClick={onClickPlay} />
