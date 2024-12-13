@@ -175,7 +175,7 @@ const LandingPage = () => {
         <img className="landing-page-stage-dog-2-image" src={dog2} />
         <div className="landing-page-panel-container">
           <p className="landing-page-panel-text">
-            Next Season will start at 15th December 2024
+            Next Season will start at 20th December 2024
           </p>
           <div className="landing-page-panel-play-button">
             <PlayButton onClick={onClickPlay} />
