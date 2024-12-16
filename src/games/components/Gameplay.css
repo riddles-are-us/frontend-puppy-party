@@ -126,3 +126,19 @@ div.none {
     opacity: 1;
   }
 }
+
+
+@keyframes testAnimation {
+  from { background-position: 0px; }
+  to { background-position: -4800px; }
+}
+
+.test {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  animation: testAnimation 3s steps(24) infinite;
+  background-image: url("../images/test2.png");
+  background-size: cover;
+  user-select: none;
+}

@@ -34,6 +34,8 @@ import {
   getCancelLotteryransactionParameter,
   getDanceTransactionParameter,
 } from "../api";
+import test from "../images/test.png";
+import test2 from "../images/test2.png";
 
 const COOL_DOWN = 2;
 const PROGRESS_LOTTERY_THRESHOLD = 1000;
@@ -84,6 +86,7 @@ const Gameplay = () => {
   const progressResetRef = useRef(false);
 
   const canvasRef = React.createRef<HTMLCanvasElement>();
+  const testRef = useRef<HTMLImageElement | null>(null);
 
   const updateDisplayProgressRef = () => {
     if (progressRef.current == 0) {
@@ -158,6 +161,7 @@ const Gameplay = () => {
           l2account,
           memeList: memeListRef.current,
           giftboxShake: giftboxShakeRef.current,
+          image: testRef.current,
         });
         if (giftboxShakeRef.current) {
           dispatch(setGiftboxShake({ giftboxShake: false }));
@@ -170,6 +174,17 @@ const Gameplay = () => {
 
     // Set the interval
     const intervalId = setInterval(draw, 100); // 1000ms = 1 second
+
+    const image = new Image();
+    image.src = test2;
+
+    image.onload = () => {
+      testRef.current = image;
+    };
+
+    image.onerror = (error) => {
+      console.error("Error loading image:", error);
+    };
 
     // Cleanup function to clear the interval when the component unmounts
     return () => {
@@ -286,6 +301,7 @@ const Gameplay = () => {
 
   return (
     <>
+      {/* <img ref={testRef} className="test" src={test2} /> */}
       <Popups />
       <TopMenu
         targetMemeIndex={targetMemeIndex}

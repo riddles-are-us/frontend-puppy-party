@@ -28,6 +28,8 @@ class Scenario {
   toggleShapeCounter: number;
   toggleShapeIndex: number;
   toggleText: Array<string>;
+  currentShapeClip: number;
+  first: boolean;
 
   constructor() {
     this.audience = new Audience();
@@ -61,9 +63,11 @@ class Scenario {
     this.actorState = "restore";
     this.shapeBuilder = new ShapeBuilder();
     this.toggleText = ["MEME", "DISCO", "LFGGGG", "ROCK"];
-    this.shape = this.shapeBuilder.letter("!!!!!!!!!");
-    this.toggleShapeCounter = 100;
+    this.shape = this.shapeBuilder.letter("");
+    this.toggleShapeCounter = 0;
     this.toggleShapeIndex = this.toggleText.length;
+    this.currentShapeClip = 0;
+    this.first = true;
   }
 
   selectMeme(cursorLeft: number, cursorTop: number) {
@@ -174,15 +178,34 @@ class Scenario {
     c.width = WIDTH;
     c.height = HEIGHT;
     const context = c.getContext("2d")!;
-    context.clearRect(0, 0, c.width, c.height);
+    // context.clearRect(0, 0, c.width, c.height);
     drawScreen(ratioArray, context);
 
     const eff = new Effect(WIDTH, 400, context);
-    if (this.toggleShapeCounter == 0) {
+
+    if (this.first == true){
+      this.first = false;
+      this.shape.switchShape(eff, this.shapeBuilder.letter("!!!!"), true);
+      this.toggleShapeCounter = 2;
+    } else if (this.toggleShapeCounter == 0 && state.image) {
       this.toggleShapeIndex = (this.toggleShapeIndex + 1) % this.toggleText.length;
       const text = this.toggleText[this.toggleShapeIndex];
-      this.shape.switchShape(eff, this.shapeBuilder.letter(text), true);
-      this.toggleShapeCounter = 100;
+      // this.shape.switchShape(eff, this.shapeBuilder.letter(text), true);
+      
+      // const focusObj = this.clips.find((obj) => obj.focus);
+      // if (focusObj){
+      //   console.log("Test", focusObj.boundry)
+      //   this.shape.switchShape(eff, this.shapeBuilder.processImageFile(focusObj.src), true);
+      //   this.toggleShapeCounter = 100;
+      // }
+
+      // this.shape.switchShape(eff, this.shapeBuilder.processImageFile(state.image), true);
+      console.log("test", this.currentShapeClip);
+      this.shape.render_image(eff, this.shapeBuilder.processImageFile(state.image, this.currentShapeClip));
+      
+      this.currentShapeClip = (this.currentShapeClip + 1) % 24;
+      this.toggleShapeCounter = 1;
+      this.shape.render(eff);
     } else {
       this.shape.render(eff);
     }

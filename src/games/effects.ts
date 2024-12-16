@@ -42,7 +42,7 @@ export class Effect {
     this.ctx = ctx;
   }
   clearFrame() {
-    this.ctx.clearRect(0, 0, this.width, this.height);
+    // this.ctx.clearRect(0, 0, this.width, this.height);
   }
 
   drawCircle(p: Point, c: Color) {
@@ -202,7 +202,7 @@ export class ShapeBuilder {
     let w = 0;
     let h = 0;
     for (let p = 0; p < pixels.length; p += (4 * this.gap)) {
-      if (pixels[p + 3] > 0) {
+      if (pixels[p + 3] > 200) {
         dots.push(new Dot(
           x,
           y,
@@ -234,9 +234,9 @@ export class ShapeBuilder {
     return !isNaN(parseFloat(n)) && isFinite(n);
   }
 
-  processImageFile(image: HTMLImageElement) {
+  processImageFile(image: HTMLImageElement, currentShapeClip: number) {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.drawImage(image, 0, 0, this.canvas.width * 0.6, this.canvas.height * 0.6);
+    this.context.drawImage(image, currentShapeClip * 200, 0, 200, 200, 0, 0, 150, 150);
     return this.processCanvas();
   }
 
@@ -248,7 +248,7 @@ export class ShapeBuilder {
        (this.canvas.height / this.fontSize) * (this.isNumber(l) ? 1 : 0.45) * this.fontSize);
      this.setFontSize(s);
 
-     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    //  this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
      this.context.fillText(l, this.canvas.width / 2, this.canvas.height / 2);
 
      return this.processCanvas();
@@ -310,7 +310,7 @@ export class Shape {
     d = 0;
     while (n.dots.length > 0) {
       const i = Math.floor(Math.random() * n.dots.length);
-      this.dots[d].e = fast ? 0.25 : (this.dots[d].s ? 0.14 : 0.11);
+      this.dots[d].e = fast ? 1 : (this.dots[d].s ? 0.14 : 0.11);
 
       if (this.dots[d].s) {
         this.dots[d].move(new Point(
@@ -318,14 +318,14 @@ export class Shape {
           //Math.random() * 10 + 5,
           5,
           Math.random(),
-          18
+          0
         ), false);
       } else {
         this.dots[d].move(new Point(
           0, 0,
           Math.random() * 5 + 5,
           0,
-          fast ? 18 : 30
+          fast ? 0 : 30
         ), false);
       }
 
@@ -349,11 +349,11 @@ export class Shape {
           5,
           //Math.random() * 10 + 5,
           Math.random(),
-          20
+          0
         ), false);
 
         this.dots[i].s = false;
-        this.dots[i].e = 0.04;
+        this.dots[i].e = 1;
         this.dots[i].move(new Point(
           Math.random() * a.w,
           Math.random() * a.h,
@@ -367,6 +367,80 @@ export class Shape {
   render(eff: Effect) {
     for (let d = 0; d < this.dots.length; d++) {
       this.dots[d].render(eff);
+    }
+  }
+  render_image(eff: Effect, n: Shape) {
+    let size;
+    const a = {w: eff.width, h: eff.height};
+    let d = 0;
+
+    this.width = n.width;
+    this.height = n.height;
+
+    this.compensate(eff);
+
+    if (n.dots.length > this.dots.length) {
+      size = n.dots.length - this.dots.length;
+      for (let d = 1; d <= size; d++) {
+        this.dots.push(new Dot(a.w / 2, a.h / 2));
+      }
+    }
+
+    d = 0;
+    while (n.dots.length > 0) {
+      const i = Math.floor(Math.random() * n.dots.length);
+      this.dots[d].e = 1;
+
+      if (this.dots[d].s) {
+        this.dots[d].move(new Point(
+          0, 0,
+          //Math.random() * 10 + 5,
+          5,
+          Math.random(),
+          0
+        ), false);
+      } else {
+        this.dots[d].move(new Point(
+          0, 0,
+          Math.random() * 5 + 5,
+          0,
+          0
+        ), false);
+      }
+
+      this.dots[d].s = true;
+      this.dots[d].move(new Point(
+        n.dots[i].p.x + this.cx,
+        n.dots[i].p.y + this.cy,
+        4,
+        5,
+        0
+      ), false);
+
+      n.dots = n.dots.slice(0, i).concat(n.dots.slice(i + 1));
+      d++;
+    }
+
+    for (let i = d; i < this.dots.length; i++) {
+      if (this.dots[i].s) {
+        this.dots[i].move(new Point(
+          0, 0,
+          5,
+          //Math.random() * 10 + 5,
+          Math.random(),
+          0
+        ), false);
+
+        this.dots[i].s = false;
+        this.dots[i].e = 1;
+        this.dots[i].move(new Point(
+          Math.random() * a.w,
+          Math.random() * a.h,
+          0.3, //.4
+          Math.random() * 4,
+          0
+        ), false);
+      }
     }
   }
 }
