@@ -12,6 +12,7 @@ import DepositPopup from "./popups/DepositPopup";
 import ConfirmPopup from "./popups/ConfirmPopup";
 import ErrorPopup from "./popups/ErrorPopup";
 import SponsorPopup from "./popups/SponsorPopup";
+import LotteryHeatPopup from "./popups/LotteryHeatPopup";
 
 const Popups = () => {
   const uIState = useAppSelector(selectUIState);
@@ -22,6 +23,7 @@ const Popups = () => {
   const showGiftboxPopup =
     uIState == UIState.GiftboxPopup || uIState == UIState.QueryGiftbox;
   const showSponsorPopup = uIState == UIState.SponsorPopup;
+  const showLotteryHeatPopup = uIState == UIState.LotteryHeatPopup;
   const popupDescription = useAppSelector(selectPopupDescription);
 
   return (
@@ -30,6 +32,7 @@ const Popups = () => {
       {showDepositPopup && <DepositPopup />}
       {showGiftboxPopup && <GiftboxPopup />}
       {showSponsorPopup && <SponsorPopup />}
+      {showLotteryHeatPopup && <LotteryHeatPopup />}
       {showConfirmPopup && <ConfirmPopup description={popupDescription} />}
       {showErrorPopup && <ErrorPopup description={popupDescription} />}
     </>

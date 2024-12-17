@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import background from "../../images/withdraw_frame.png";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import "./GiftboxPopup.css";
 import { queryState, sendTransaction } from "../../request";
 import { AccountSlice } from "zkwasm-minirollup-browser";
 import {
-  selectLotteryInfoDiff,
+  selectLotteryInfo,
   selectNonce,
   selectUIState,
   setGiftboxShake,
@@ -26,6 +27,7 @@ import note7 from "../../images/note/note7.png";
 import note8 from "../../images/note/note8.png";
 import note9 from "../../images/note/note9.png";
 import note10 from "../../images/note/note10.png";
+import { getTransactionCommandArray } from "../../rpc";
 import GiftboxNotes from "./GiftboxNotes";
 import { getLotteryransactionParameter } from "../../api";
 
@@ -131,7 +133,8 @@ const GiftboxPopup = () => {
   const [rewardAnimation, setRewardAnimation] = useState(false);
   const [finishQuery, setFinishQuery] = useState(false);
   const parentRef = useRef<HTMLDivElement | null>(null);
-  const lotteryInfoDiff = useAppSelector(selectLotteryInfoDiff);
+  const lotteryInfo = useAppSelector(selectLotteryInfo);
+  const [preLotteryInfo, setPreLotterInfo] = useState(0);
 
   const getEndPosition = (parentContainer: HTMLDivElement | null) => {
     return parentContainer == null
@@ -152,6 +155,7 @@ const GiftboxPopup = () => {
       setRewardAnimation(true);
       dispatch(setUIState({ uIState: UIState.QueryGiftbox }));
       dispatch(setProgressReset({ progressReset: true }));
+      setPreLotterInfo(lotteryInfo);
       dispatch(
         sendTransaction(getLotteryransactionParameter(l2account!, nonce))
       ).then((action) => {
@@ -177,7 +181,7 @@ const GiftboxPopup = () => {
 
   useEffect(() => {
     if (!rewardAnimation && finishQuery) {
-      if (lotteryInfoDiff > 0) {
+      if (lotteryInfo > preLotteryInfo) {
         dispatch(setUIState({ uIState: UIState.SponsorPopup }));
       } else {
         dispatch(setUIState({ uIState: UIState.Idle }));

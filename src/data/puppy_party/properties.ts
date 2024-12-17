@@ -19,6 +19,7 @@ export enum UIState{
   QueryGiftbox,
   GiftboxPopup,
   SponsorPopup,
+  LotteryHeatPopup,
   ConfirmPopup,
   ErrorPopup,
 }
@@ -177,6 +178,7 @@ export const selectNonce = (state: RootState) => BigInt(state.puppyParty.propert
 export const selectMemeList = (state: RootState) => state.puppyParty.properties.memeList;
 export const selectBalance = (state: RootState) => state.puppyParty.properties.player.data.balance;
 export const selectTicket = (state: RootState) => state.puppyParty.properties.player.data.ticket ?? 0;
+export const selectLotteryInfo = (state: RootState) => state.puppyParty.properties.player.data.lottery_info;
 export const selectLotteryInfoDiff = (state: RootState) => state.puppyParty.properties.lotteryInfoDiff;
 export const selectAction = (state: RootState) => state.puppyParty.properties.player.data.action;
 export const selectLastLotteryTimestamp = (state: RootState) => state.puppyParty.properties.player.data.last_lottery_timestamp;

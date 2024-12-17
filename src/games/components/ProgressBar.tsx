@@ -1,17 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
 import progressBarBackground from "../images/progress_bar_bg.png";
-import frontImage from "../images/progress_bar_front.png";
 import niceImage from "../images/nice.png";
 import goodJobImage from "../images/good_job.png";
 
 import "./ProgressBar.css";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
+  selectLotteryInfo,
   selectShowProgressBarGoodJob,
   selectShowProgressBarNice,
+  setUIState,
+  UIState,
 } from "../../data/puppy_party/properties";
 import Grid from "./Grid";
 import ProgressBarElement from "./ProgressBarElement";
+import LotteryHeatButton from "./buttons/LotteryHeatButton";
 
 const colorMap = [
   "#4747D6",
@@ -42,6 +45,7 @@ const ProgressBar = ({ progress }: Props) => {
   const dispatch = useAppDispatch();
   const showProgressBarGoodJob = useAppSelector(selectShowProgressBarGoodJob);
   const showProgressBarNice = useAppSelector(selectShowProgressBarNice);
+  const lotteryInfo = useAppSelector(selectLotteryInfo);
   const [colorOffset, setColorOffset] = useState(0);
   const colorOffsetRef = useRef(0);
 
@@ -69,10 +73,19 @@ const ProgressBar = ({ progress }: Props) => {
     };
   }, []);
 
+  const onClickLotteryHeatButton = () => {
+    dispatch(setUIState({ uIState: UIState.LotteryHeatPopup }));
+  };
+
   return (
     <div className="progress-bar-container">
       <img src={progressBarBackground} className="progress-bar-background" />
-      <img src={frontImage} className="progress-bar-front-image" />
+      <div className="progress-bar-lottery-heat-button">
+        <LotteryHeatButton
+          isDisabled={lotteryInfo == 0}
+          onClick={onClickLotteryHeatButton}
+        />
+      </div>
       {showProgressBarGoodJob && (
         <img src={goodJobImage} className="progress-bar-good-job-image" />
       )}

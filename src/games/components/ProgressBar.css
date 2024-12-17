@@ -16,10 +16,8 @@
     transform: translate(-50%, -50%);
 }
 
-.progress-bar-front-image {
+.progress-bar-lottery-heat-button {
     position: absolute;
-    width: 218px;
-    height: 47px;
     top: 80%;
     left: 48%;
     transform: translate(-50%, -50%);
