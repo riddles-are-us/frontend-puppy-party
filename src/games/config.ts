@@ -26,6 +26,8 @@ import AIKUN from "../images/season2/cheems.jpg";
 import FIAMMA from "../images/season2/fiamma.jpg";
 import PAOPAO from "../images/season2/paopao.jpg";
 
+import cheems_logo from "./images/cheems.png";
+
 
 interface MemeInterface {
   name: string,
@@ -217,3 +219,5 @@ export const MemeSeasonCurrent = new MemeSeasonInfo([
     index: 11,
   },
 ]);
+
+export const SponsorLogo = cheems_logo;

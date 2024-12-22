@@ -12,8 +12,8 @@ import {
 } from "../../../data/puppy_party/properties";
 import GiftboxConfirmButton from "../buttons/GiftboxConfirmButton";
 import sponsor_image from "../../images/animations/sponsor.png";
-import sponsor_logo from "../../images/sponsor_logo.png";
 import { getWithdrawLotteryTransactionParameter } from "../../api";
+import { SponsorLogo } from "../../config";
 
 const LotteryHeatPopup = () => {
   const dispatch = useAppDispatch();
@@ -51,10 +51,7 @@ const LotteryHeatPopup = () => {
         <div className="lottery-heat-popup-main-container">
           <div className="lottery-heat-popup-main-animation" />
           <p className="lottery-heat-popup-sponsor-text">Cash out</p>
-          <img
-            src={sponsor_logo}
-            className="lottery-heat-popup-sponsor-image"
-          />
+          <img src={SponsorLogo} className="lottery-heat-popup-sponsor-image" />
           <p className="lottery-heat-popup-description-text">$ {lotteryInfo}</p>
           <div className="lottery-heat-popup-confirm-button">
             <GiftboxConfirmButton onClick={onClickConfirm} />

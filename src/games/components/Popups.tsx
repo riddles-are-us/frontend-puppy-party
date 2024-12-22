@@ -22,7 +22,7 @@ const Popups = () => {
   const showErrorPopup = uIState == UIState.ErrorPopup;
   const showGiftboxPopup =
     uIState == UIState.GiftboxPopup || uIState == UIState.QueryGiftbox;
-  const showSponsorPopup = uIState == UIState.SponsorPopup;
+  const showSponsorPopup = true;
   const showLotteryHeatPopup = uIState == UIState.LotteryHeatPopup;
   const popupDescription = useAppSelector(selectPopupDescription);
 

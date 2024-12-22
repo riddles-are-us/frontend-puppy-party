@@ -8,7 +8,7 @@ import {
 } from "../../../data/puppy_party/properties";
 import GiftboxConfirmButton from "../buttons/GiftboxConfirmButton";
 import sponsor_image from "../../images/animations/sponsor.png";
-import sponsor_logo from "../../images/sponsor_logo.png";
+import { SponsorLogo } from "../../config";
 
 const SponsorPopup = () => {
   const dispatch = useAppDispatch();
@@ -29,7 +29,7 @@ const SponsorPopup = () => {
             Lottery pool has reached ${lotteryInfoDiff}
           </p>
           <p className="sponsor-popup-sponsor-text">Sponsored by</p>
-          <img src={sponsor_logo} className="sponsor-popup-sponsor-image" />
+          <img src={SponsorLogo} className="sponsor-popup-sponsor-image" />
           <div className="sponsor-popup-confirm-button">
             <GiftboxConfirmButton onClick={onClickConfirm} />
           </div>
