@@ -86,6 +86,8 @@ const LandingPage = () => {
   const [memelayout, setMemeLayout] = useState<LayoutInfo>({
     divs: [],
   });
+  const textRef = useRef<HTMLParagraphElement>(null);
+  const [fontSize, setFontSize] = useState<number>(10);
 
   /* Not sorting now
     let indexedMemeList = prop.memeList.map((v, index) => {
@@ -100,6 +102,13 @@ const LandingPage = () => {
     });
   */
 
+  const adjustFontSize = () => {
+    if (textRef.current) {
+      const parentWidth = textRef.current.offsetWidth;
+      setFontSize(parentWidth / 25);
+    }
+  };
+
   // Update the ref value whenever `progress` changes
   useEffect(() => {
     //layoutRef.current = memelayout;
@@ -112,6 +121,13 @@ const LandingPage = () => {
     if (nextSeasonContainerRef.current) {
       setMemeIconElementWidth(nextSeasonContainerRef.current.offsetWidth / 3);
     }
+
+    adjustFontSize();
+    window.addEventListener("resize", adjustFontSize);
+
+    return () => {
+      window.removeEventListener("resize", adjustFontSize);
+    };
   }, []);
 
   /*
@@ -174,7 +190,13 @@ const LandingPage = () => {
         <img className="landing-page-stage-dog-1-image" src={dog1} />
         <img className="landing-page-stage-dog-2-image" src={dog2} />
         <div className="landing-page-panel-container">
-          <p className="landing-page-panel-text">
+          <p
+            ref={textRef}
+            className="landing-page-panel-text"
+            style={{
+              fontSize: `${fontSize}px`,
+            }}
+          >
             Next Season will start at 15th December 2024
           </p>
           <div className="landing-page-panel-play-button">
@@ -189,7 +211,14 @@ const LandingPage = () => {
           ref={rankingContainerRef}
           className="landing-page-ranking-container"
         >
-          <p className="landing-page-ranking-text">Current Season Ranking</p>
+          <p
+            className="landing-page-ranking-text"
+            style={{
+              fontSize: `${fontSize}px`,
+            }}
+          >
+            Current Season Ranking
+          </p>
           <div className="landing-page-ranking-grid">
             <Grid
               elementWidth={memeRankingIconElementWidth}
@@ -214,7 +243,14 @@ const LandingPage = () => {
           ref={nextSeasonContainerRef}
           className="landing-page-next-season-container"
         >
-          <p className="landing-page-next-season-text">Previous Season</p>
+          <p
+            className="landing-page-next-season-text"
+            style={{
+              fontSize: `${fontSize}px`,
+            }}
+          >
+            Previous Season
+          </p>
           <div className="landing-page-next-season-grid">
             <Grid
               elementWidth={memeIconElementWidth}
