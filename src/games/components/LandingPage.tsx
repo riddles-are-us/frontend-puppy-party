@@ -26,81 +26,16 @@ import MemeIcon from "./MemeIcon";
 import Grid from "./Grid";
 import MemeRankingIcon from "./MemeRankingIcon";
 
-function sortLayout<T>(
-  array: Array<T>,
-  sz: number
-): Array<{ index: number; value: T }> {
-  let retArray: Array<T> = [...array];
-
-  retArray.sort((a: any, b: any) => {
-    return a[2] - b[2];
-  }); // accending order
-
-  retArray = retArray.slice(36 - sz);
-
-  const len = retArray.length - 1;
-
-  const ret = retArray.map((v, index) => {
-    return {
-      index: len - index,
-      value: v,
-    };
-  });
-  return ret;
-}
-
-/*
-function stageDivStyle(layout: Array<number>, index: number, height: number) {
-  const ratio = height / 1000;
-  const left_shift = 0;
-  const top_shift = 0;
-  const divStyle = {
-    position: "absolute" as const, // ensures type is 'absolute' for TS
-    backgroundImage: `url('${memeInfoList[index].cover}')`,
-    top: `${layout[1] * ratio + top_shift}px`,
-    left: `${layout[0] * ratio + left_shift}px`,
-    width: `${layout[2] * ratio}px`,
-    height: `${layout[2] * ratio}px`,
-  };
-  return divStyle;
-}
-*/
-
-const installedDiv: JSX.Element[] = [];
-
-interface LayoutInfo {
-  divs: JSX.Element[];
-}
-
 const LandingPage = () => {
   const dispatch = useAppDispatch();
   const memeList = useAppSelector(selectMemeList);
-  const layoutRef = useRef<LayoutInfo | null>(null);
   const rankingContainerRef = useRef<HTMLDivElement>(null);
-  const [rankingContainerHeight, setRankingContainerHeight] =
-    useState<number>(0);
   const [memeRankingIconElementWidth, setMemeRankingIconElementWidth] =
     useState<number>(0);
   const nextSeasonContainerRef = useRef<HTMLDivElement>(null);
   const [memeIconElementWidth, setMemeIconElementWidth] = useState<number>(0);
-  const [memelayout, setMemeLayout] = useState<LayoutInfo>({
-    divs: [],
-  });
   const textRef = useRef<HTMLParagraphElement>(null);
   const [fontSize, setFontSize] = useState<number>(10);
-
-  /* Not sorting now
-    let indexedMemeList = prop.memeList.map((v, index) => {
-      return {
-        index: index,
-        value: v,
-      };
-    });
-
-    indexedMemeList.sort((a: any, b: any) => {
-      return b.value.rank - a.value.rank;
-    });
-  */
 
   const adjustFontSize = () => {
     if (textRef.current) {
@@ -111,9 +46,7 @@ const LandingPage = () => {
 
   // Update the ref value whenever `progress` changes
   useEffect(() => {
-    //layoutRef.current = memelayout;
     if (rankingContainerRef.current) {
-      setRankingContainerHeight(rankingContainerRef.current.offsetHeight);
       setMemeRankingIconElementWidth(
         rankingContainerRef.current.offsetWidth / 4
       );
@@ -129,32 +62,6 @@ const LandingPage = () => {
       window.removeEventListener("resize", adjustFontSize);
     };
   }, []);
-
-  /*
-  useEffect(() => {
-    // Set up an interval that adds a new div every 1 second
-    setTimeout(() => {
-      setMemeLayout((m) => {
-        if (shuffled.length > 0) {
-          const l = shuffled.pop();
-          const style = stageDivStyle(
-            l!.value,
-            l!.index,
-            rankingContainerHeight
-          );
-          installedDiv.push(
-            <div key={installedDiv.length} style={style}></div>
-          );
-          return {
-            divs: installedDiv,
-          };
-        } else {
-          return m;
-        }
-      });
-    }, 100);
-  }, [memelayout]);
-         */
 
   const account = useAppSelector(AccountSlice.selectL1Account);
 
