@@ -37,15 +37,11 @@ const LandingPage = () => {
   const textRef = useRef<HTMLParagraphElement>(null);
   const [fontSize, setFontSize] = useState<number>(10);
 
-  const adjustFontSize = () => {
+  const adjustSize = () => {
     if (textRef.current) {
       const parentWidth = textRef.current.offsetWidth;
       setFontSize(parentWidth / 25);
     }
-  };
-
-  // Update the ref value whenever `progress` changes
-  useEffect(() => {
     if (rankingContainerRef.current) {
       setMemeRankingIconElementWidth(
         rankingContainerRef.current.offsetWidth / 4
@@ -54,12 +50,13 @@ const LandingPage = () => {
     if (nextSeasonContainerRef.current) {
       setMemeIconElementWidth(nextSeasonContainerRef.current.offsetWidth / 3);
     }
+  };
 
-    adjustFontSize();
-    window.addEventListener("resize", adjustFontSize);
-
+  useEffect(() => {
+    adjustSize();
+    window.addEventListener("resize", adjustSize);
     return () => {
-      window.removeEventListener("resize", adjustFontSize);
+      window.removeEventListener("resize", adjustSize);
     };
   }, []);
 
