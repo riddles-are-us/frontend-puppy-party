@@ -136,6 +136,7 @@ const LandingPage = () => {
                     key={index}
                     height={memeRankingIconElementWidth}
                     width={memeRankingIconElementWidth}
+                    fontSize={fontSize}
                     image={memeInfo.cover}
                     rank={memeList[memeInfo.index].rank}
                   />
