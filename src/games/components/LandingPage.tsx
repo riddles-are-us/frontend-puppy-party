@@ -35,7 +35,9 @@ const LandingPage = () => {
   const nextSeasonContainerRef = useRef<HTMLDivElement>(null);
   const [memeIconElementWidth, setMemeIconElementWidth] = useState<number>(0);
   const textRef = useRef<HTMLParagraphElement>(null);
-  const [fontSize, setFontSize] = useState<number>(10);
+  const [fontSize, setFontSize] = useState<number>(0);
+  const animationContainerRef = useRef<HTMLDivElement>(null);
+  const [scaleSize, setScaleSize] = useState<number>(0);
 
   const adjustSize = () => {
     if (textRef.current) {
@@ -49,6 +51,9 @@ const LandingPage = () => {
     }
     if (nextSeasonContainerRef.current) {
       setMemeIconElementWidth(nextSeasonContainerRef.current.offsetWidth / 3);
+    }
+    if (animationContainerRef.current) {
+      setScaleSize(animationContainerRef.current.offsetWidth / 300);
     }
   };
 
@@ -199,8 +204,25 @@ const LandingPage = () => {
           className="landing-page-speaker-yellow-right-image"
           src={speakerYellowRight}
         />
-        <div className="landing-page-left-white-light-left-animation" />
-        <div className="landing-page-left-white-light-right-animation" />
+        <div
+          ref={animationContainerRef}
+          className="landing-page-left-white-light-left-animation-container"
+        >
+          <div
+            className="landing-page-left-white-light-left-animation"
+            style={{
+              transform: `translate(-50%, -50%) scale(${scaleSize * 100}%)`,
+            }}
+          />
+        </div>
+        <div className="landing-page-left-white-light-right-animation-container">
+          <div
+            className="landing-page-left-white-light-right-animation"
+            style={{
+              transform: `translate(-50%, -50%) scale(${scaleSize * 100}%)`,
+            }}
+          />
+        </div>
       </div>
     </div>
   );

@@ -269,28 +269,46 @@
     to { background-position: -3600px; }
 }
 
+.landing-page-left-white-light-left-animation-container {
+    position: absolute;
+    left: 18.15%;
+    bottom: 37.4%;
+    height: 13.56%;
+    width: auto;
+    aspect-ratio: 1 / 1;
+    transform: scale(135%);
+}
+
 .landing-page-left-white-light-left-animation {
     position: absolute;
-    left: 10.45%;
-    bottom: 25.1%;
+    left: 50%;
+    top: 50%;
     height: 300px;
     width: 300px;
     aspect-ratio: 1 / 1;
-    transform: scale(50%);
     animation: WhitelightAnimation 1s steps(12) forwards infinite;
     background-image: url("../images/animations/whitelight_left.png");
     background-size: cover;
     user-select: none;
 }
 
+.landing-page-left-white-light-right-animation-container {
+    position: absolute;
+    left: 74.8%;
+    bottom: 37.4%;
+    height: 13.56%;
+    width: auto;
+    aspect-ratio: 1 / 1;
+    transform: scale(135%);
+}
+
 .landing-page-left-white-light-right-animation {
     position: absolute;
-    left: 67.2%;
-    bottom: 25.1%;
+    left: 50%;
+    top: 50%;
     height: 300px;
     width: 300px;
     aspect-ratio: 1 / 1;
-    transform: scale(50%);
     animation: WhitelightAnimation 1s steps(12) forwards infinite;
     background-image: url("../images/animations/whitelight_right.png");
     background-size: cover;
