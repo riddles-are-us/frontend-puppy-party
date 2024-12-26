@@ -26,85 +26,25 @@ import MemeIcon from "./MemeIcon";
 import Grid from "./Grid";
 import MemeRankingIcon from "./MemeRankingIcon";
 
-function sortLayout<T>(
-  array: Array<T>,
-  sz: number
-): Array<{ index: number; value: T }> {
-  let retArray: Array<T> = [...array];
-
-  retArray.sort((a: any, b: any) => {
-    return a[2] - b[2];
-  }); // accending order
-
-  retArray = retArray.slice(36 - sz);
-
-  const len = retArray.length - 1;
-
-  const ret = retArray.map((v, index) => {
-    return {
-      index: len - index,
-      value: v,
-    };
-  });
-  return ret;
-}
-
-/*
-function stageDivStyle(layout: Array<number>, index: number, height: number) {
-  const ratio = height / 1000;
-  const left_shift = 0;
-  const top_shift = 0;
-  const divStyle = {
-    position: "absolute" as const, // ensures type is 'absolute' for TS
-    backgroundImage: `url('${memeInfoList[index].cover}')`,
-    top: `${layout[1] * ratio + top_shift}px`,
-    left: `${layout[0] * ratio + left_shift}px`,
-    width: `${layout[2] * ratio}px`,
-    height: `${layout[2] * ratio}px`,
-  };
-  return divStyle;
-}
-*/
-
-const installedDiv: JSX.Element[] = [];
-
-interface LayoutInfo {
-  divs: JSX.Element[];
-}
-
 const LandingPage = () => {
   const dispatch = useAppDispatch();
   const memeList = useAppSelector(selectMemeList);
-  const layoutRef = useRef<LayoutInfo | null>(null);
   const rankingContainerRef = useRef<HTMLDivElement>(null);
-  const [rankingContainerHeight, setRankingContainerHeight] =
-    useState<number>(0);
   const [memeRankingIconElementWidth, setMemeRankingIconElementWidth] =
     useState<number>(0);
   const nextSeasonContainerRef = useRef<HTMLDivElement>(null);
   const [memeIconElementWidth, setMemeIconElementWidth] = useState<number>(0);
-  const [memelayout, setMemeLayout] = useState<LayoutInfo>({
-    divs: [],
-  });
+  const textRef = useRef<HTMLParagraphElement>(null);
+  const [fontSize, setFontSize] = useState<number>(0);
+  const animationContainerRef = useRef<HTMLDivElement>(null);
+  const [scaleSize, setScaleSize] = useState<number>(0);
 
-  /* Not sorting now
-    let indexedMemeList = prop.memeList.map((v, index) => {
-      return {
-        index: index,
-        value: v,
-      };
-    });
-
-    indexedMemeList.sort((a: any, b: any) => {
-      return b.value.rank - a.value.rank;
-    });
-  */
-
-  // Update the ref value whenever `progress` changes
-  useEffect(() => {
-    //layoutRef.current = memelayout;
+  const adjustSize = () => {
+    if (textRef.current) {
+      const parentWidth = textRef.current.offsetWidth;
+      setFontSize(parentWidth / 25);
+    }
     if (rankingContainerRef.current) {
-      setRankingContainerHeight(rankingContainerRef.current.offsetHeight);
       setMemeRankingIconElementWidth(
         rankingContainerRef.current.offsetWidth / 4
       );
@@ -112,33 +52,18 @@ const LandingPage = () => {
     if (nextSeasonContainerRef.current) {
       setMemeIconElementWidth(nextSeasonContainerRef.current.offsetWidth / 3);
     }
-  }, []);
+    if (animationContainerRef.current) {
+      setScaleSize(animationContainerRef.current.offsetWidth / 300);
+    }
+  };
 
-  /*
   useEffect(() => {
-    // Set up an interval that adds a new div every 1 second
-    setTimeout(() => {
-      setMemeLayout((m) => {
-        if (shuffled.length > 0) {
-          const l = shuffled.pop();
-          const style = stageDivStyle(
-            l!.value,
-            l!.index,
-            rankingContainerHeight
-          );
-          installedDiv.push(
-            <div key={installedDiv.length} style={style}></div>
-          );
-          return {
-            divs: installedDiv,
-          };
-        } else {
-          return m;
-        }
-      });
-    }, 100);
-  }, [memelayout]);
-         */
+    adjustSize();
+    window.addEventListener("resize", adjustSize);
+    return () => {
+      window.removeEventListener("resize", adjustSize);
+    };
+  }, []);
 
   const account = useAppSelector(AccountSlice.selectL1Account);
 
@@ -174,8 +99,14 @@ const LandingPage = () => {
         <img className="landing-page-stage-dog-1-image" src={dog1} />
         <img className="landing-page-stage-dog-2-image" src={dog2} />
         <div className="landing-page-panel-container">
-          <p className="landing-page-panel-text">
-                  The current season will run until January 30, 2025
+          <p
+            ref={textRef}
+            className="landing-page-panel-text"
+            style={{
+              fontSize: `${fontSize}px`,
+            }}
+          >
+            Current season runs until Jan 30, 2025
           </p>
           <div className="landing-page-panel-play-button">
             <PlayButton onClick={onClickPlay} />
@@ -189,7 +120,14 @@ const LandingPage = () => {
           ref={rankingContainerRef}
           className="landing-page-ranking-container"
         >
-          <p className="landing-page-ranking-text">Current Season Ranking</p>
+          <p
+            className="landing-page-ranking-text"
+            style={{
+              fontSize: `${fontSize}px`,
+            }}
+          >
+            Current Season Ranking
+          </p>
           <div className="landing-page-ranking-grid">
             <Grid
               elementWidth={memeRankingIconElementWidth}
@@ -203,6 +141,7 @@ const LandingPage = () => {
                     key={index}
                     height={memeRankingIconElementWidth}
                     width={memeRankingIconElementWidth}
+                    fontSize={fontSize}
                     image={memeInfo.cover}
                     rank={memeList[memeInfo.index].rank}
                   />
@@ -214,7 +153,14 @@ const LandingPage = () => {
           ref={nextSeasonContainerRef}
           className="landing-page-next-season-container"
         >
-          <p className="landing-page-next-season-text">Previous Season</p>
+          <p
+            className="landing-page-next-season-text"
+            style={{
+              fontSize: `${fontSize}px`,
+            }}
+          >
+            Previous Season
+          </p>
           <div className="landing-page-next-season-grid">
             <Grid
               elementWidth={memeIconElementWidth}
@@ -258,8 +204,25 @@ const LandingPage = () => {
           className="landing-page-speaker-yellow-right-image"
           src={speakerYellowRight}
         />
-        <div className="landing-page-left-white-light-left-animation" />
-        <div className="landing-page-left-white-light-right-animation" />
+        <div
+          ref={animationContainerRef}
+          className="landing-page-left-white-light-left-animation-container"
+        >
+          <div
+            className="landing-page-left-white-light-left-animation"
+            style={{
+              transform: `translate(-50%, -50%) scale(${scaleSize * 100}%)`,
+            }}
+          />
+        </div>
+        <div className="landing-page-left-white-light-right-animation-container">
+          <div
+            className="landing-page-left-white-light-right-animation"
+            style={{
+              transform: `translate(-50%, -50%) scale(${scaleSize * 100}%)`,
+            }}
+          />
+        </div>
       </div>
     </div>
   );
