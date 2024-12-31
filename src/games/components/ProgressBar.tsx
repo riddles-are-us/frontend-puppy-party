@@ -87,7 +87,9 @@ const ProgressBar = ({ progress }: Props) => {
         />
       </div>
       <div className="progress-bar-lottery-text">
-        Lottery Heat: {lotteryInfo}
+        {lotteryInfo > 0
+          ? `Lottery Heat: ${lotteryInfo}`
+          : "Nothing to Cashout"}
       </div>
       {showProgressBarGoodJob && (
         <img src={goodJobImage} className="progress-bar-good-job-image" />
