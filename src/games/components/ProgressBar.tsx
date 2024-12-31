@@ -82,9 +82,12 @@ const ProgressBar = ({ progress }: Props) => {
       <img src={progressBarBackground} className="progress-bar-background" />
       <div className="progress-bar-lottery-heat-button">
         <LotteryHeatButton
-          isDisabled={lotteryInfo == 0}
+          isDisabled={lotteryInfo <= 0}
           onClick={onClickLotteryHeatButton}
         />
+      </div>
+      <div className="progress-bar-lottery-text">
+        Lottery Heat: {lotteryInfo}
       </div>
       {showProgressBarGoodJob && (
         <img src={goodJobImage} className="progress-bar-good-job-image" />

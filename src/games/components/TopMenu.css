@@ -50,6 +50,8 @@
     width: 30px;
     height: 30px;
     transform: translate(-50%, -50%);
+    user-select: none;
+    pointer-events: none;
 }
 
 .top-menu-balance-text {
@@ -75,6 +77,8 @@
     width: 30px;
     height: 30px;
     transform: translate(-50%, -50%);
+    user-select: none;
+    pointer-events: none;
 }
 
 .top-menu-vote-text {
@@ -106,20 +110,6 @@
     width: 30px;
     height: 30px;
     transform: translate(-50%, -50%);
-}
-
-.top-menu-lottery-text {
-    position: absolute;
-    top: 30%;
-    left: 12%;
-    transform: translate(-50%, -50%);
-    text-align: left;
-    line-height: 30px;
-    margin: 0px;
-    color: white;
-    width: 150px;
-    height: 30px;
-    font-family: "Allerta";
-    pointer-events: none;
     user-select: none;
+    pointer-events: none;
 }

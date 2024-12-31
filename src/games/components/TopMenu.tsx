@@ -3,7 +3,6 @@ import "./TopMenu.css";
 import WithdrawButton from "./buttons/WithdrawButton";
 import {
   selectBalance,
-  selectLotteryInfo,
   selectTicket,
   selectUIState,
   setUIState,
@@ -25,7 +24,6 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
   const uiState = useAppSelector(selectUIState);
   const balance = useAppSelector(selectBalance);
   const ticket = useAppSelector(selectTicket);
-  const lotteryInfo = useAppSelector(selectLotteryInfo);
   const onClickWithdraw = () => {
     if (uiState == UIState.Idle) {
       dispatch(setUIState({ uIState: UIState.WithdrawPopup }));
@@ -52,8 +50,10 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
       <div className="top-menu-balance-text">DiscoNote: {balance}</div>
       <img src={balanceIcon} className="top-menu-balance-icon"></img>
       <div className="top-menu-vote-text">Vote: {targetMemeRank}</div>
-      <img src={MemeSeasonCurrent.getCover(targetMemeIndex)} className="top-menu-vote-icon"></img>
-      <div className="top-menu-lottery-text">Lottery Heat: {lotteryInfo}</div>
+      <img
+        src={MemeSeasonCurrent.getCover(targetMemeIndex)}
+        className="top-menu-vote-icon"
+      ></img>
     </div>
   );
 }

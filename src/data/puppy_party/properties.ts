@@ -20,6 +20,7 @@ export enum UIState{
   GiftboxPopup,
   SponsorPopup,
   LotteryHeatPopup,
+  QueryLotteryHeat,
   ConfirmPopup,
   ErrorPopup,
 }
