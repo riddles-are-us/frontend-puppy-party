@@ -178,7 +178,14 @@ class Scenario {
     drawScreen(ratioArray, context);
 
     const eff = new Effect(WIDTH, 400, context);
-    if (this.toggleShapeCounter == 0) {
+    const dancingObj = this.clips.find((obj) => obj.target.length > 0);
+
+    if (dancingObj && dancingObj.currentClip && dancingObj.currentFrame){
+      const rect = dancingObj.clips.get(dancingObj.currentClip)![dancingObj.currentFrame];
+      this.shape.render_image(eff, this.shapeBuilder.processImageFile(dancingObj.src, rect));
+      this.toggleShapeCounter = 1;
+      this.shape.render(eff);
+    }else if (this.toggleShapeCounter == 0) {
       this.toggleShapeIndex = (this.toggleShapeIndex + 1) % this.toggleText.length;
       const text = this.toggleText[this.toggleShapeIndex];
       this.shape.switchShape(eff, this.shapeBuilder.letter(text), true);
