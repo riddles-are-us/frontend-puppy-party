@@ -7,17 +7,18 @@ import {
   selectLotteryInfo,
   selectLotteryInfoDiff,
   selectNonce,
+  selectUIState,
   setUIState,
   UIState,
 } from "../../../data/puppy_party/properties";
 import GiftboxConfirmButton from "../buttons/GiftboxConfirmButton";
 import sponsor_image from "../../images/animations/sponsor.png";
 import { getWithdrawLotteryTransactionParameter } from "../../api";
-import { SponsorLogo } from "../../config";
 
 const LotteryHeatPopup = () => {
   const dispatch = useAppDispatch();
   const nonce = useAppSelector(selectNonce);
+  const uIState = useAppSelector(selectUIState);
   const l2account = useAppSelector(AccountSlice.selectL2Account);
   const l1account = useAppSelector(AccountSlice.selectL1Account);
   const lotteryInfo = useAppSelector(selectLotteryInfo);
@@ -41,7 +42,10 @@ const LotteryHeatPopup = () => {
   };
 
   const onClickConfirm = () => {
-    withdrawLottery();
+    if (uIState == UIState.LotteryHeatPopup) {
+      dispatch(setUIState({ uIState: UIState.QueryLotteryHeat }));
+      withdrawLottery();
+    }
   };
 
   return (
@@ -51,8 +55,7 @@ const LotteryHeatPopup = () => {
         <div className="lottery-heat-popup-main-container">
           <div className="lottery-heat-popup-main-animation" />
           <p className="lottery-heat-popup-sponsor-text">Cash out</p>
-          <img src={SponsorLogo} className="lottery-heat-popup-sponsor-image" />
-          <p className="lottery-heat-popup-description-text">$ {lotteryInfo}</p>
+          <p className="lottery-heat-popup-description-text">{lotteryInfo}</p>
           <div className="lottery-heat-popup-confirm-button">
             <GiftboxConfirmButton onClick={onClickConfirm} />
           </div>

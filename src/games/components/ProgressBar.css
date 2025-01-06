@@ -5,6 +5,7 @@
     top: 7.7%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0.7);
+    user-select: none;
 }
 
 .progress-bar-background {
@@ -22,6 +23,24 @@
     left: 48%;
     transform: translate(-50%, -50%);
 }
+
+.progress-bar-lottery-text {
+    position: absolute;
+    top: 82%;
+    left: 48%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    line-height: 10px;
+    margin: 0px;
+    color: white;
+    width: 200px;
+    height: 20px;
+    font-family: "DS-DIGI";
+    color: yellow;
+    pointer-events: none;
+    user-select: none;
+}
+
 
 .progress-bar-good-job-image {
     position: absolute;
