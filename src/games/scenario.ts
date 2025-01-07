@@ -4,6 +4,7 @@ import {
   drawBackground,
   Light, FixedLight,
   HEIGHT, WIDTH, Beat, drawScreen, FocusTorch,
+  processShakeEffect,
 }  from "./draw";
 import { ShapeBuilder, Shape, Effect} from "./effects";
 import { MemeSeasonCurrent } from "./config";
@@ -202,7 +203,7 @@ class Scenario {
     context.globalCompositeOperation = 'source-over';
      */
 
-    drawHorn(ratioArray, context, state.giftboxShake);
+    drawHorn(ratioArray, context);
     for (const light of this.fixedLights) {
       light.drawLight(ratioArray, context);
     }
@@ -215,6 +216,7 @@ class Scenario {
       light.drawLight(ratioArray, context);
     }
     this.audience.drawBeat(ratioArray, context);
+    processShakeEffect(ratioArray, state.giftboxShake);
   }
 
   step(ratioArray: Array<Beat>) {

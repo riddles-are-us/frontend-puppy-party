@@ -255,42 +255,23 @@ function maxRatio(ratioArray: Array<Beat>) {
 }
 
 let freeze = 0;
-export function drawHorn(ratioArray: Array<Beat>, ctx: CanvasRenderingContext2D, giftboxShake: boolean) {
-  // 900 width
-  const top = 80;
-  const left = 60;
-  const ratio = maxRatio(ratioArray);
-  const avg = averageBeat(ratioArray);
-  /*
-  ctx.fillStyle = "blue";  // gray color
-  ctx.fillRect(left, top, 80* ratioL, 100*ratioL);
-  ctx.fillRect(600, top, 80* ratioH, 100*ratioH);
-  */
-
+export function drawHorn(ratioArray: Array<Beat>, ctx: CanvasRenderingContext2D) {
   const x = 0;
   const y = 33;
-
   const rH = ratioHigh(ratioArray) + Math.random()/40;
   const rL = ratioLow(ratioArray) + Math.random()/40;
-
-  /*
-  if (hornRatio > 1.1) {
-    hornRatio = 1.1;
-  }
-  if (hornRatio < 0.9) {
-    hornRatio = 0.9;
-  }
-  */
-
   ctx.drawImage(spirites.horn, 0, 0, 177, 210, x, y, 88*rH, 105*rH);
   ctx.drawImage(spirites.horn, 0, 0, 177, 210, x, y+110, 88*rL, 105*rL);
+}
+
+export function processShakeEffect(ratioArray: Array<Beat>, giftboxShake: boolean){
+  const ratio = maxRatio(ratioArray);
+  const avg = averageBeat(ratioArray);
   const ele = document.getElementById("stage");
   const height = window.document.body.offsetHeight - 100;
   const width = window.document.body.offsetWidth - 100;
   const r = Math.min(Math.floor(height/(HEIGHT / 100))/100, Math.floor(width/(WIDTH / 100))/100);
   const transform = `translate(50%, -45%) scale(${r})`;
-
-  // console.log("r", r)
 
   if (giftboxShake){
 
