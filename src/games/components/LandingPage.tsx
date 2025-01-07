@@ -106,7 +106,7 @@ const LandingPage = () => {
               fontSize: `${fontSize}px`,
             }}
           >
-            Next Season will start at 15th December 2024
+            Current season runs until Jan 30, 2025
           </p>
           <div className="landing-page-panel-play-button">
             <PlayButton onClick={onClickPlay} />
