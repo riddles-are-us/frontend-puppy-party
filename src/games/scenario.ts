@@ -9,6 +9,8 @@ import {
 import { ShapeBuilder, Shape, Effect} from "./effects";
 import { MemeSeasonCurrent } from "./config";
 import spirits from "./spirite";
+import { BackgroundDisco } from "./components/backgrounds/BackgroundDisco";
+import { BackgroundBase } from "./components/backgrounds/BackgroundBase";
 
 function getRandomNumber(range: number): number {
     return Math.floor(Math.random() * range);
@@ -18,10 +20,8 @@ class Scenario {
   status: string;
   clips: Array<Clip>;
   lights: Array<Light>;
-  fixedLights: Array<FixedLight>;
   torch: Torch;
   focusTorch: FocusTorch;
-  audience: Audience;
   actor: Clip;
   actorState: "focus" | "restore";
   shapeBuilder: ShapeBuilder;
@@ -29,9 +29,9 @@ class Scenario {
   toggleShapeCounter: number;
   toggleShapeIndex: number;
   toggleText: Array<string>;
+  background: BackgroundBase;
 
   constructor() {
-    this.audience = new Audience();
     this.status = "pause";
     this.clips = [];
     for (let i = 0; i< MemeSeasonCurrent.memeInfoList.length; i++) {
@@ -56,7 +56,6 @@ class Scenario {
       new Light(0,800,30, 90, 60, 2, 10),
     ];
     this.actor = this.clips[0];
-    this.fixedLights = [new FixedLight(0,0)];
     this.torch = new Torch(100, 100, 40, 4, 4);
     this.focusTorch = new FocusTorch();
     this.actorState = "restore";
@@ -65,6 +64,18 @@ class Scenario {
     this.shape = this.shapeBuilder.letter("!!!!!!!!!");
     this.toggleShapeCounter = 100;
     this.toggleShapeIndex = this.toggleText.length;
+
+    this.background = new BackgroundDisco(
+      this.clips,
+      this.shapeBuilder,
+      this.shape,
+      this.toggleShapeCounter,
+      this.toggleShapeIndex,
+      this.toggleText,
+      this.lights,
+      this.torch,
+      this.focusTorch,
+      this.actor);
   }
 
   selectMeme(cursorLeft: number, cursorTop: number) {
@@ -170,59 +181,52 @@ class Scenario {
 
   draw(ratioArray: Array<Beat>, state: any) {
     const c = document.getElementById("canvas")! as HTMLCanvasElement;
-    //c.width = window.innerWidth;
-    //c.height = window.innerHeight;
     c.width = WIDTH;
     c.height = HEIGHT;
     const context = c.getContext("2d")!;
     context.clearRect(0, 0, c.width, c.height);
-    drawScreen(ratioArray, context);
 
-    const eff = new Effect(WIDTH, 400, context);
-    const dancingObj = this.clips.find((obj) => obj.target.length > 0);
+    this.background.draw(ratioArray, context, state.memeList);
 
-    if (dancingObj && dancingObj.currentClip && dancingObj.currentFrame){
-      const rect = dancingObj.clips.get(dancingObj.currentClip)![dancingObj.currentFrame];
-      this.shape.render_image(eff, this.shapeBuilder.processImageFile(dancingObj.src, rect));
-      this.toggleShapeCounter = 1;
-      this.shape.render(eff);
-    }else if (this.toggleShapeCounter == 0) {
-      this.toggleShapeIndex = (this.toggleShapeIndex + 1) % this.toggleText.length;
-      const text = this.toggleText[this.toggleShapeIndex];
-      this.shape.switchShape(eff, this.shapeBuilder.letter(text), true);
-      this.toggleShapeCounter = 100;
-    } else {
-      this.shape.render(eff);
-    }
+    // drawScreen(ratioArray, context);
+    // const eff = new Effect(WIDTH, 400, context);
+    // const dancingObj = this.clips.find((obj) => obj.target.length > 0);
 
-    drawBackground(ratioArray, context);
-    context.drawImage(spirits.leftEcoImage, 0, 0, 1700 * 0.5, 1076*0.5);
-    context.drawImage(spirits.rightEcoImage, WIDTH - 1324 * 0.5, 0, 1324*0.5, 798*0.5);
+    // if (dancingObj && dancingObj.currentClip && dancingObj.currentFrame){
+    //   const rect = dancingObj.clips.get(dancingObj.currentClip)![dancingObj.currentFrame];
+    //   this.shape.render_image(eff, this.shapeBuilder.processImageFile(dancingObj.src, rect));
+    //   this.toggleShapeCounter = 1;
+    //   this.shape.render(eff);
+    // }else if (this.toggleShapeCounter == 0) {
+    //   this.toggleShapeIndex = (this.toggleShapeIndex + 1) % this.toggleText.length;
+    //   const text = this.toggleText[this.toggleShapeIndex];
+    //   this.shape.switchShape(eff, this.shapeBuilder.letter(text), true);
+    //   this.toggleShapeCounter = 100;
+    // } else {
+    //   this.shape.render(eff);
+    // }
 
-    const [bLeft, bTop] = this.actor.getZCenter()!;
-    this.focusTorch.drawLight(bLeft, bTop, context);
+    // drawBackground(ratioArray, context);
+    // context.drawImage(spirits.leftEcoImage, 0, 0, 1700 * 0.5, 1076*0.5);
+    // context.drawImage(spirits.rightEcoImage, WIDTH - 1324 * 0.5, 0, 1324*0.5, 798*0.5);
 
+    // const [bLeft, bTop] = this.actor.getZCenter()!;
+    // this.focusTorch.drawLight(bLeft, bTop, context);
 
-    /*
-    context.globalCompositeOperation = 'hue';
-    context.fillStyle = `hsl(120, 100%, 20%)`;
-    context.fillRect(0, 0, WIDTH, HEIGHT);
-    context.globalCompositeOperation = 'source-over';
-     */
+    // drawHorn(ratioArray, context);
+    // for (const light of this.fixedLights) {
+    //   light.drawLight(ratioArray, context);
+    // }
+    // this.torch.drawLight(ratioArray, context);
+    // const clips = this.clips.sort((a, b) => a.getBottom() - b.getBottom());
+    // for (const obj of clips) {
+    //   obj.draw(context, state.memeList);
+    // }
+    // for (const light of this.lights) {
+    //   light.drawLight(ratioArray, context);
+    // }
+    // this.audience.drawBeat(ratioArray, context);
 
-    drawHorn(ratioArray, context);
-    for (const light of this.fixedLights) {
-      light.drawLight(ratioArray, context);
-    }
-    this.torch.drawLight(ratioArray, context);
-    const clips = this.clips.sort((a, b) => a.getBottom() - b.getBottom());
-    for (const obj of clips) {
-      obj.draw(context, state.memeList);
-    }
-    for (const light of this.lights) {
-      light.drawLight(ratioArray, context);
-    }
-    this.audience.drawBeat(ratioArray, context);
     processShakeEffect(ratioArray, state.giftboxShake);
   }
 
