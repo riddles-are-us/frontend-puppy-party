@@ -57,7 +57,7 @@ class Scenario {
     this.actorState = "restore";
     this.shapeBuilder = new ShapeBuilder();
     this.toggleText = ["MEME", "DISCO", "LFGGGG", "ROCK"];
-    this.shape = this.shapeBuilder.letter(this.toggleText[0]);
+    this.shape = this.shapeBuilder.processLetter(this.toggleText[0]);
     this.toggleShapeCounter = 100;
     this.toggleShapeIndex = 0;
 

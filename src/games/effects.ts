@@ -178,6 +178,7 @@ export class ShapeBuilder {
   fontSize: number;
   fontFamily: string;
   canvas: HTMLCanvasElement;
+
   constructor() {
     const shapeCanvas = document.createElement('canvas');
     const shapeContext = shapeCanvas.getContext('2d')!;
@@ -192,55 +193,13 @@ export class ShapeBuilder {
     this.canvas = shapeCanvas;
   }
 
-  processCanvas(gap: number): Shape {
-    const pixels = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height).data;
-    const dots = [];
-    let x = 0;
-    let y = 0;
-    let fx = this.canvas.width;
-    let fy = this.canvas.height;
-    let w = 0;
-    let h = 0;
-    for (let p = 0; p < pixels.length; p += (4 * gap)) {
-      if (pixels[p + 3] > 0) {
-        dots.push(new Dot(
-          x,
-          y,
-        ));
-
-        w = x > w ? x : w;
-        h = y > h ? y : h;
-        fx = x < fx ? x : fx;
-        fy = y < fy ? y : fy;
-      }
-
-      x += gap;
-
-      if (x >= this.canvas.width) {
-        x = 0;
-        y += gap;
-        p += gap * 4 * this.canvas.width;
-      }
-    }
-
-    return new Shape(dots, w + fx, h + fy);
-  }
-
-  setFontSize(s:number) {
-    this.context.font = 'bold ' + s + 'px ' + this.fontFamily;
-  }
-
-  isNumber(n: any) {
-    return !isNaN(parseFloat(n)) && isFinite(n);
-  }
-
-  processImageFile(image: HTMLImageElement, rect: ClipRect) {
+  processImage(image: HTMLImageElement, rect: ClipRect) {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.context.drawImage(image, rect.left, rect.top, 200, 200, 0, 0, 150, 150);
     return this.processCanvas(5);
   }
 
-  letter(l: string) {
+  processLetter(l: string) {
      let s = 0;
      this.setFontSize(this.fontSize);
      s = Math.min(this.fontSize,
@@ -253,6 +212,48 @@ export class ShapeBuilder {
 
      return this.processCanvas(10);
    }
+
+   private processCanvas(gap: number): Shape {
+     const pixels = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height).data;
+     const dots = [];
+     let x = 0;
+     let y = 0;
+     let fx = this.canvas.width;
+     let fy = this.canvas.height;
+     let w = 0;
+     let h = 0;
+     for (let p = 0; p < pixels.length; p += (4 * gap)) {
+       if (pixels[p + 3] > 0) {
+         dots.push(new Dot(
+           x,
+           y,
+         ));
+ 
+         w = x > w ? x : w;
+         h = y > h ? y : h;
+         fx = x < fx ? x : fx;
+         fy = y < fy ? y : fy;
+       }
+ 
+       x += gap;
+ 
+       if (x >= this.canvas.width) {
+         x = 0;
+         y += gap;
+         p += gap * 4 * this.canvas.width;
+       }
+     }
+ 
+     return new Shape(dots, w + fx, h + fy);
+   }
+ 
+   private setFontSize(s:number) {
+     this.context.font = 'bold ' + s + 'px ' + this.fontFamily;
+   }
+ 
+   private isNumber(n: any) {
+     return !isNaN(parseFloat(n)) && isFinite(n);
+   }
 }
 
 
@@ -262,6 +263,7 @@ export class Shape {
   height: number;
   cx: number;
   cy: number;
+
   constructor(dots: Array<Dot>, width: number, height: number) {
     this.dots = dots;
     this.width = width;
@@ -270,7 +272,7 @@ export class Shape {
     this.cy = 0;
   }
 
-  compensate(eff: Effect) {
+  private compensate(eff: Effect) {
     const w = eff.width;
     const h = eff.height;
 
@@ -278,19 +280,7 @@ export class Shape {
     this.cy = h / 2 - this.height / 2;
   }
 
-  shuffleIdle(w: number, h: number) {
-    for (let d = 0; d < this.dots.length; d++) {
-      if (!this.dots[d].s) {
-        this.dots[d].move(new Point(
-          Math.random() * w,
-          Math.random() * h,
-          0,0,0
-        ), false);
-      }
-    }
-  }
-
-  switchShape(eff: Effect, n: Shape, fast: boolean) {
+  renderText(eff: Effect, n: Shape, fast: boolean) {
     let size;
     const a = {w: eff.width, h: eff.height};
     let d = 0;
@@ -364,12 +354,8 @@ export class Shape {
       }
     }
   }
-  render(eff: Effect) {
-    for (let d = 0; d < this.dots.length; d++) {
-      this.dots[d].render(eff);
-    }
-  }
-  render_image(eff: Effect, n: Shape) {
+
+  renderImage(eff: Effect, n: Shape) {
     this.width = n.width;
     this.height = n.height;
 
@@ -380,6 +366,16 @@ export class Shape {
         this.dots.push(new Dot(
           n.dots[i].p.x + this.cx,
           n.dots[i].p.y + this.cy, 2));
+    }
+    
+    for (let d = 0; d < this.dots.length; d++) {
+      this.dots[d].render(eff);
+    }
+  }
+
+  render(eff: Effect) {
+    for (let d = 0; d < this.dots.length; d++) {
+      this.dots[d].render(eff);
     }
   }
 }

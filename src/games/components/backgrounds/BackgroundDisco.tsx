@@ -59,9 +59,9 @@ export class BackgroundDisco extends BackgroundBase {
     const eff = new Effect(WIDTH, 400, context);
 
     if (shapeProps.state == ShapeState.Text && shapeProps.text) {
-      this.shape.switchShape(
+      this.shape.renderText(
         eff,
-        this.shapeBuilder.letter(shapeProps.text),
+        this.shapeBuilder.processLetter(shapeProps.text),
         true
       );
     } else if (
@@ -69,15 +69,10 @@ export class BackgroundDisco extends BackgroundBase {
       shapeProps.image &&
       shapeProps.imageRect
     ) {
-      console.log("Error", shapeProps.image, shapeProps.imageRect);
-      this.shape.render_image(
+      this.shape.renderImage(
         eff,
-        this.shapeBuilder.processImageFile(
-          shapeProps.image,
-          shapeProps.imageRect
-        )
+        this.shapeBuilder.processImage(shapeProps.image, shapeProps.imageRect)
       );
-      this.shape.render(eff);
     } else {
       this.shape.render(eff);
     }
