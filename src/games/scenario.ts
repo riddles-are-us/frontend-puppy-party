@@ -1,16 +1,12 @@
-import {Clip, createAnimationClip, createDefaultAnimationClip} from "./animations/meme";
+import { Clip, createAnimationClip, createDefaultAnimationClip } from "./animations/meme";
 import {
-  Torch, Audience, drawHorn,
-  drawBackground,
-  Light, FixedLight,
-  HEIGHT, WIDTH, Beat, drawScreen, FocusTorch,
-  processShakeEffect,
-}  from "./draw";
-import { ShapeBuilder, Shape, Effect} from "./effects";
+  Torch, Light, HEIGHT, WIDTH, Beat, FocusTorch,
+  processShakeEffect
+} from "./draw";
+import { ShapeBuilder, Shape } from "./effects";
 import { MemeSeasonCurrent } from "./config";
-import spirits from "./spirite";
 import { BackgroundDisco } from "./components/backgrounds/BackgroundDisco";
-import { BackgroundBase } from "./components/backgrounds/BackgroundBase";
+import { BackgroundBase, ShapeProps } from "./components/backgrounds/BackgroundBase";
 
 function getRandomNumber(range: number): number {
     return Math.floor(Math.random() * range);
@@ -61,9 +57,9 @@ class Scenario {
     this.actorState = "restore";
     this.shapeBuilder = new ShapeBuilder();
     this.toggleText = ["MEME", "DISCO", "LFGGGG", "ROCK"];
-    this.shape = this.shapeBuilder.letter("!!!!!!!!!");
+    this.shape = this.shapeBuilder.letter(this.toggleText[0]);
     this.toggleShapeCounter = 100;
-    this.toggleShapeIndex = this.toggleText.length;
+    this.toggleShapeIndex = 0;
 
     this.background = new BackgroundDisco(
       this.clips,
@@ -186,46 +182,8 @@ class Scenario {
     const context = c.getContext("2d")!;
     context.clearRect(0, 0, c.width, c.height);
 
-    this.background.draw(ratioArray, context, state.memeList);
-
-    // drawScreen(ratioArray, context);
-    // const eff = new Effect(WIDTH, 400, context);
-    // const dancingObj = this.clips.find((obj) => obj.target.length > 0);
-
-    // if (dancingObj && dancingObj.currentClip && dancingObj.currentFrame){
-    //   const rect = dancingObj.clips.get(dancingObj.currentClip)![dancingObj.currentFrame];
-    //   this.shape.render_image(eff, this.shapeBuilder.processImageFile(dancingObj.src, rect));
-    //   this.toggleShapeCounter = 1;
-    //   this.shape.render(eff);
-    // }else if (this.toggleShapeCounter == 0) {
-    //   this.toggleShapeIndex = (this.toggleShapeIndex + 1) % this.toggleText.length;
-    //   const text = this.toggleText[this.toggleShapeIndex];
-    //   this.shape.switchShape(eff, this.shapeBuilder.letter(text), true);
-    //   this.toggleShapeCounter = 100;
-    // } else {
-    //   this.shape.render(eff);
-    // }
-
-    // drawBackground(ratioArray, context);
-    // context.drawImage(spirits.leftEcoImage, 0, 0, 1700 * 0.5, 1076*0.5);
-    // context.drawImage(spirits.rightEcoImage, WIDTH - 1324 * 0.5, 0, 1324*0.5, 798*0.5);
-
-    // const [bLeft, bTop] = this.actor.getZCenter()!;
-    // this.focusTorch.drawLight(bLeft, bTop, context);
-
-    // drawHorn(ratioArray, context);
-    // for (const light of this.fixedLights) {
-    //   light.drawLight(ratioArray, context);
-    // }
-    // this.torch.drawLight(ratioArray, context);
-    // const clips = this.clips.sort((a, b) => a.getBottom() - b.getBottom());
-    // for (const obj of clips) {
-    //   obj.draw(context, state.memeList);
-    // }
-    // for (const light of this.lights) {
-    //   light.drawLight(ratioArray, context);
-    // }
-    // this.audience.drawBeat(ratioArray, context);
+    const shapeProps = this.getShapeProps();
+    this.background.draw(ratioArray, context, state.memeList, shapeProps);
 
     processShakeEffect(ratioArray, state.giftboxShake);
   }
@@ -248,6 +206,25 @@ class Scenario {
     }
     this.torch.incFrame();
     this.toggleShapeCounter --;
+  }
+
+  private getShapeProps(): ShapeProps{
+    const dancingObj = this.clips.find((obj) => obj.target.length > 0);
+    if (dancingObj && dancingObj.currentClip && dancingObj.currentFrame) {
+      const rect = dancingObj.clips.get(dancingObj.currentClip)![
+        dancingObj.currentFrame
+      ];
+      this.toggleShapeCounter = 1;
+      return ShapeProps.GetImageShape(dancingObj.src, rect);
+    } else if (this.toggleShapeCounter == 0) {
+      this.toggleShapeIndex =
+        (this.toggleShapeIndex + 1) % this.toggleText.length;
+      const text = this.toggleText[this.toggleShapeIndex];
+      this.toggleShapeCounter = 100;
+      return ShapeProps.GetTextShape(text);
+    } else {
+      return ShapeProps.GetEmptyShape();
+    }
   }
 }
 

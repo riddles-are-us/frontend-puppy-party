@@ -13,7 +13,7 @@ import {
 } from "../../draw";
 import { ShapeBuilder, Shape, Effect } from "../../effects";
 import spirits from "../../spirite";
-import { BackgroundBase } from "./BackgroundBase";
+import { BackgroundBase, ShapeProps, ShapeState } from "./BackgroundBase";
 import { MemeListElement } from "../../../data/puppy_party/properties";
 
 export class BackgroundDisco extends BackgroundBase {
@@ -52,28 +52,32 @@ export class BackgroundDisco extends BackgroundBase {
   draw(
     ratioArray: Array<Beat>,
     context: CanvasRenderingContext2D,
-    memeList: MemeListElement[]
+    memeList: MemeListElement[],
+    shapeProps: ShapeProps
   ): void {
     drawScreen(ratioArray, context);
     const eff = new Effect(WIDTH, 400, context);
-    const dancingObj = this.clips.find((obj) => obj.target.length > 0);
 
-    if (dancingObj && dancingObj.currentClip && dancingObj.currentFrame) {
-      const rect = dancingObj.clips.get(dancingObj.currentClip)![
-        dancingObj.currentFrame
-      ];
+    if (shapeProps.state == ShapeState.Text && shapeProps.text) {
+      this.shape.switchShape(
+        eff,
+        this.shapeBuilder.letter(shapeProps.text),
+        true
+      );
+    } else if (
+      shapeProps.state == ShapeState.Image &&
+      shapeProps.image &&
+      shapeProps.imageRect
+    ) {
+      console.log("Error", shapeProps.image, shapeProps.imageRect);
       this.shape.render_image(
         eff,
-        this.shapeBuilder.processImageFile(dancingObj.src, rect)
+        this.shapeBuilder.processImageFile(
+          shapeProps.image,
+          shapeProps.imageRect
+        )
       );
-      this.toggleShapeCounter = 1;
       this.shape.render(eff);
-    } else if (this.toggleShapeCounter == 0) {
-      this.toggleShapeIndex =
-        (this.toggleShapeIndex + 1) % this.toggleText.length;
-      const text = this.toggleText[this.toggleShapeIndex];
-      this.shape.switchShape(eff, this.shapeBuilder.letter(text), true);
-      this.toggleShapeCounter = 100;
     } else {
       this.shape.render(eff);
     }
