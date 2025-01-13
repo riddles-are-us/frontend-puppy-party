@@ -1,5 +1,7 @@
 /* This is derived from https://github.com/kennethcachia/shape-shifter */
 
+import { ClipRect } from "./animations/meme";
+
 class Point {
     x: number;
     y: number;
@@ -61,11 +63,11 @@ class Dot {
   c: Color;
   t: Point;
   q: Array<Point>;
-  constructor (x:number, y:number) {
+  constructor (x:number, y:number, z = 5) {
     this.p = new Point(
       x,
       y,
-      5,
+      z,
       1,
       0
     );
@@ -176,9 +178,7 @@ export class ShapeBuilder {
   fontSize: number;
   fontFamily: string;
   canvas: HTMLCanvasElement;
-  gap: number;
   constructor() {
-    this.gap = 10;
     const shapeCanvas = document.createElement('canvas');
     const shapeContext = shapeCanvas.getContext('2d')!;
     this.fontSize = 150;
@@ -192,7 +192,7 @@ export class ShapeBuilder {
     this.canvas = shapeCanvas;
   }
 
-  processCanvas(): Shape {
+  processCanvas(gap: number): Shape {
     const pixels = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height).data;
     const dots = [];
     let x = 0;
@@ -201,7 +201,7 @@ export class ShapeBuilder {
     let fy = this.canvas.height;
     let w = 0;
     let h = 0;
-    for (let p = 0; p < pixels.length; p += (4 * this.gap)) {
+    for (let p = 0; p < pixels.length; p += (4 * gap)) {
       if (pixels[p + 3] > 0) {
         dots.push(new Dot(
           x,
@@ -214,12 +214,12 @@ export class ShapeBuilder {
         fy = y < fy ? y : fy;
       }
 
-      x += this.gap;
+      x += gap;
 
       if (x >= this.canvas.width) {
         x = 0;
-        y += this.gap;
-        p += this.gap * 4 * this.canvas.width;
+        y += gap;
+        p += gap * 4 * this.canvas.width;
       }
     }
 
@@ -234,10 +234,10 @@ export class ShapeBuilder {
     return !isNaN(parseFloat(n)) && isFinite(n);
   }
 
-  processImageFile(image: HTMLImageElement) {
+  processImageFile(image: HTMLImageElement, rect: ClipRect) {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.drawImage(image, 0, 0, this.canvas.width * 0.6, this.canvas.height * 0.6);
-    return this.processCanvas();
+    this.context.drawImage(image, rect.left, rect.top, 200, 200, 0, 0, 150, 150);
+    return this.processCanvas(5);
   }
 
   letter(l: string) {
@@ -251,7 +251,7 @@ export class ShapeBuilder {
      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
      this.context.fillText(l, this.canvas.width / 2, this.canvas.height / 2);
 
-     return this.processCanvas();
+     return this.processCanvas(10);
    }
 }
 
@@ -367,6 +367,19 @@ export class Shape {
   render(eff: Effect) {
     for (let d = 0; d < this.dots.length; d++) {
       this.dots[d].render(eff);
+    }
+  }
+  render_image(eff: Effect, n: Shape) {
+    this.width = n.width;
+    this.height = n.height;
+
+    this.compensate(eff);
+
+    this.dots=[];
+    for (let i = 0; i < n.dots.length; i++) {
+        this.dots.push(new Dot(
+          n.dots[i].p.x + this.cx,
+          n.dots[i].p.y + this.cy, 2));
     }
   }
 }
