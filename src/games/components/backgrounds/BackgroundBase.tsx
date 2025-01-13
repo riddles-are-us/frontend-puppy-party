@@ -1,12 +1,11 @@
 import { MemeListElement } from "../../../data/puppy_party/properties";
 import { Clip, ClipRect } from "../../animations/meme";
 import { Beat, FocusTorch, Light, Torch } from "../../draw";
-import { Shape, ShapeBuilder } from "../../effects";
+import { ShapeBuilder } from "../../ShapeBuilder";
 
 export class BackgroundBase {
   clips: Array<Clip>;
   shapeBuilder: ShapeBuilder;
-  shape: Shape;
   toggleShapeCounter: number;
   toggleShapeIndex: number;
   toggleText: Array<string>;
@@ -18,7 +17,6 @@ export class BackgroundBase {
   constructor(
     clips: Array<Clip>,
     shapeBuilder: ShapeBuilder,
-    shape: Shape,
     toggleShapeCounter: number,
     toggleShapeIndex: number,
     toggleText: Array<string>,
@@ -29,7 +27,6 @@ export class BackgroundBase {
   ) {
     this.clips = clips;
     this.shapeBuilder = shapeBuilder;
-    this.shape = shape;
     this.toggleShapeCounter = toggleShapeCounter;
     this.toggleShapeIndex = toggleShapeIndex;
     this.toggleText = toggleText;

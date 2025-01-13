@@ -11,7 +11,7 @@ import {
   drawScreen,
   FocusTorch,
 } from "../../draw";
-import { ShapeBuilder, Shape, Effect } from "../../effects";
+import { ShapeBuilder, Effect } from "../../ShapeBuilder";
 import spirits from "../../spirite";
 import { BackgroundBase, ShapeProps, ShapeState } from "./BackgroundBase";
 import { MemeListElement } from "../../../data/puppy_party/properties";
@@ -23,7 +23,6 @@ export class BackgroundDisco extends BackgroundBase {
   constructor(
     clips: Array<Clip>,
     shapeBuilder: ShapeBuilder,
-    shape: Shape,
     toggleShapeCounter: number,
     toggleShapeIndex: number,
     toggleText: Array<string>,
@@ -35,7 +34,6 @@ export class BackgroundDisco extends BackgroundBase {
     super(
       clips,
       shapeBuilder,
-      shape,
       toggleShapeCounter,
       toggleShapeIndex,
       toggleText,
@@ -59,22 +57,19 @@ export class BackgroundDisco extends BackgroundBase {
     const eff = new Effect(WIDTH, 400, context);
 
     if (shapeProps.state == ShapeState.Text && shapeProps.text) {
-      this.shape.renderText(
-        eff,
-        this.shapeBuilder.processLetter(shapeProps.text),
-        true
-      );
+      this.shapeBuilder.renderText(shapeProps.text, eff, true);
     } else if (
       shapeProps.state == ShapeState.Image &&
       shapeProps.image &&
       shapeProps.imageRect
     ) {
-      this.shape.renderImage(
-        eff,
-        this.shapeBuilder.processImage(shapeProps.image, shapeProps.imageRect)
+      this.shapeBuilder.renderImage(
+        shapeProps.image,
+        shapeProps.imageRect,
+        eff
       );
     } else {
-      this.shape.render(eff);
+      this.shapeBuilder.render(eff);
     }
 
     drawBackground(ratioArray, context);

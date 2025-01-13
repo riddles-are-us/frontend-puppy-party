@@ -3,7 +3,7 @@ import {
   Torch, Light, HEIGHT, WIDTH, Beat, FocusTorch,
   processShakeEffect
 } from "./draw";
-import { ShapeBuilder, Shape } from "./effects";
+import { ShapeBuilder } from "./ShapeBuilder";
 import { MemeSeasonCurrent } from "./config";
 import { BackgroundDisco } from "./components/backgrounds/BackgroundDisco";
 import { BackgroundBase, ShapeProps } from "./components/backgrounds/BackgroundBase";
@@ -20,8 +20,6 @@ class Scenario {
   focusTorch: FocusTorch;
   actor: Clip;
   actorState: "focus" | "restore";
-  shapeBuilder: ShapeBuilder;
-  shape: Shape;
   toggleShapeCounter: number;
   toggleShapeIndex: number;
   toggleText: Array<string>;
@@ -55,16 +53,14 @@ class Scenario {
     this.torch = new Torch(100, 100, 40, 4, 4);
     this.focusTorch = new FocusTorch();
     this.actorState = "restore";
-    this.shapeBuilder = new ShapeBuilder();
     this.toggleText = ["MEME", "DISCO", "LFGGGG", "ROCK"];
-    this.shape = this.shapeBuilder.processLetter(this.toggleText[0]);
     this.toggleShapeCounter = 100;
     this.toggleShapeIndex = 0;
 
+    const shapeBuilder = new ShapeBuilder(this.toggleText[0]);
     this.background = new BackgroundDisco(
       this.clips,
-      this.shapeBuilder,
-      this.shape,
+      shapeBuilder,
       this.toggleShapeCounter,
       this.toggleShapeIndex,
       this.toggleText,
