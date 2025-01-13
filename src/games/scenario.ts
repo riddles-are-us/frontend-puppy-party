@@ -61,9 +61,6 @@ class Scenario {
     this.background = new BackgroundDisco(
       this.clips,
       shapeBuilder,
-      this.toggleShapeCounter,
-      this.toggleShapeIndex,
-      this.toggleText,
       this.lights,
       this.torch,
       this.focusTorch,
@@ -170,16 +167,18 @@ class Scenario {
     }, 3000);
   }
 
+  init(){
+    const canvas = document.getElementById("canvas")! as HTMLCanvasElement;
+    canvas.width = WIDTH;
+    canvas.height = HEIGHT;
+    const context = canvas.getContext("2d")!;
+    this.background.init(context);
+  }
 
   draw(ratioArray: Array<Beat>, state: any) {
-    const c = document.getElementById("canvas")! as HTMLCanvasElement;
-    c.width = WIDTH;
-    c.height = HEIGHT;
-    const context = c.getContext("2d")!;
-    context.clearRect(0, 0, c.width, c.height);
 
     const shapeProps = this.getShapeProps();
-    this.background.draw(ratioArray, context, state.memeList, shapeProps);
+    this.background.draw(ratioArray, state.memeList, shapeProps);
 
     processShakeEffect(ratioArray, state.giftboxShake);
   }

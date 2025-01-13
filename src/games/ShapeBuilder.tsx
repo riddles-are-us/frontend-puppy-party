@@ -33,7 +33,7 @@ class Color {
   }
 }
 
-export class Effect {
+class Effect {
   width: number;
   height: number;
   ctx: CanvasRenderingContext2D;
@@ -171,6 +171,7 @@ export class ShapeBuilder {
   fontFamily: string;
   canvas: HTMLCanvasElement;
   shape: Shape;
+  eff?: Effect;
 
   constructor(text: string) {
     const shapeCanvas = document.createElement("canvas");
@@ -187,16 +188,28 @@ export class ShapeBuilder {
     this.shape = this.processText(text);
   }
 
-  renderText(text: string, eff: Effect, fast: boolean) {
+  init(
+    effectWidth: number,
+    effectHeight: number,
+    context: CanvasRenderingContext2D
+  ) {
+    this.eff = new Effect(effectWidth, effectHeight, context);
+  }
+
+  renderText(text: string, fast: boolean) {
+    if (!this.eff) {
+      return;
+    }
+
     const newShape = this.processText(text);
     let size;
-    const a = { w: eff.width, h: eff.height };
+    const a = { w: this.eff.width, h: this.eff.height };
     let d = 0;
 
     this.shape.width = newShape.width;
     this.shape.height = newShape.height;
 
-    this.shape.compensate(eff);
+    this.shape.compensate(this.eff);
 
     if (newShape.dots.length > this.shape.dots.length) {
       size = newShape.dots.length - this.shape.dots.length;
@@ -257,13 +270,17 @@ export class ShapeBuilder {
     }
   }
 
-  renderImage(image: HTMLImageElement, rect: ClipRect, eff: Effect) {
+  renderImage(image: HTMLImageElement, rect: ClipRect) {
+    if (!this.eff) {
+      return;
+    }
+
     const newShape = this.processImage(image, rect);
 
     this.shape.width = newShape.width;
     this.shape.height = newShape.height;
 
-    this.shape.compensate(eff);
+    this.shape.compensate(this.eff);
 
     this.shape.dots = [];
     for (let i = 0; i < newShape.dots.length; i++) {
@@ -277,13 +294,17 @@ export class ShapeBuilder {
     }
 
     for (let d = 0; d < this.shape.dots.length; d++) {
-      this.shape.dots[d].render(eff);
+      this.shape.dots[d].render(this.eff);
     }
   }
 
-  render(eff: Effect) {
+  render() {
+    if (!this.eff) {
+      return;
+    }
+
     for (let d = 0; d < this.shape.dots.length; d++) {
-      this.shape.dots[d].render(eff);
+      this.shape.dots[d].render(this.eff);
     }
   }
 

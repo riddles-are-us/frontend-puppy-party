@@ -10,8 +10,9 @@ import {
   Beat,
   drawScreen,
   FocusTorch,
+  HEIGHT,
 } from "../../draw";
-import { ShapeBuilder, Effect } from "../../ShapeBuilder";
+import { ShapeBuilder } from "../../ShapeBuilder";
 import spirits from "../../spirite";
 import { BackgroundBase, ShapeProps, ShapeState } from "./BackgroundBase";
 import { MemeListElement } from "../../../data/puppy_party/properties";
@@ -23,58 +24,43 @@ export class BackgroundDisco extends BackgroundBase {
   constructor(
     clips: Array<Clip>,
     shapeBuilder: ShapeBuilder,
-    toggleShapeCounter: number,
-    toggleShapeIndex: number,
-    toggleText: Array<string>,
     lights: Array<Light>,
     torch: Torch,
     focusTorch: FocusTorch,
     actor: Clip
   ) {
-    super(
-      clips,
-      shapeBuilder,
-      toggleShapeCounter,
-      toggleShapeIndex,
-      toggleText,
-      lights,
-      torch,
-      focusTorch,
-      actor
-    );
-
+    super(clips, shapeBuilder, lights, torch, focusTorch, actor);
+    this.effectHeight = 400;
     this.fixedLights = [new FixedLight(0, 0)];
     this.audience = new Audience();
   }
 
   draw(
     ratioArray: Array<Beat>,
-    context: CanvasRenderingContext2D,
     memeList: MemeListElement[],
     shapeProps: ShapeProps
   ): void {
-    drawScreen(ratioArray, context);
-    const eff = new Effect(WIDTH, 400, context);
+    if (!this.context) {
+      return;
+    }
+    this.context.clearRect(0, 0, WIDTH, HEIGHT);
+    drawScreen(ratioArray, this.context);
 
     if (shapeProps.state == ShapeState.Text && shapeProps.text) {
-      this.shapeBuilder.renderText(shapeProps.text, eff, true);
+      this.shapeBuilder.renderText(shapeProps.text, true);
     } else if (
       shapeProps.state == ShapeState.Image &&
       shapeProps.image &&
       shapeProps.imageRect
     ) {
-      this.shapeBuilder.renderImage(
-        shapeProps.image,
-        shapeProps.imageRect,
-        eff
-      );
+      this.shapeBuilder.renderImage(shapeProps.image, shapeProps.imageRect);
     } else {
-      this.shapeBuilder.render(eff);
+      this.shapeBuilder.render();
     }
 
-    drawBackground(ratioArray, context);
-    context.drawImage(spirits.leftEcoImage, 0, 0, 1700 * 0.5, 1076 * 0.5);
-    context.drawImage(
+    drawBackground(ratioArray, this.context);
+    this.context.drawImage(spirits.leftEcoImage, 0, 0, 1700 * 0.5, 1076 * 0.5);
+    this.context.drawImage(
       spirits.rightEcoImage,
       WIDTH - 1324 * 0.5,
       0,
@@ -83,22 +69,22 @@ export class BackgroundDisco extends BackgroundBase {
     );
 
     const [bLeft, bTop] = this.actor.getZCenter()!;
-    this.focusTorch.drawLight(bLeft, bTop, context);
+    this.focusTorch.drawLight(bLeft, bTop, this.context);
 
-    drawHorn(ratioArray, context);
+    drawHorn(ratioArray, this.context);
     for (const light of this.fixedLights) {
-      light.drawLight(ratioArray, context);
+      light.drawLight(ratioArray, this.context);
     }
-    this.torch.drawLight(ratioArray, context);
+    this.torch.drawLight(ratioArray, this.context);
     const sortedClips = this.clips.sort(
       (a, b) => a.getBottom() - b.getBottom()
     );
     for (const obj of sortedClips) {
-      obj.draw(context, memeList);
+      obj.draw(this.context, memeList);
     }
     for (const light of this.lights) {
-      light.drawLight(ratioArray, context);
+      light.drawLight(ratioArray, this.context);
     }
-    this.audience.drawBeat(ratioArray, context);
+    this.audience.drawBeat(ratioArray, this.context);
   }
 }

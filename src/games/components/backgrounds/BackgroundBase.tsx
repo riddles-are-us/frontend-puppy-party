@@ -1,25 +1,22 @@
 import { MemeListElement } from "../../../data/puppy_party/properties";
 import { Clip, ClipRect } from "../../animations/meme";
-import { Beat, FocusTorch, Light, Torch } from "../../draw";
+import { Beat, FocusTorch, HEIGHT, Light, Torch, WIDTH } from "../../draw";
 import { ShapeBuilder } from "../../ShapeBuilder";
 
 export class BackgroundBase {
   clips: Array<Clip>;
   shapeBuilder: ShapeBuilder;
-  toggleShapeCounter: number;
-  toggleShapeIndex: number;
-  toggleText: Array<string>;
   lights: Array<Light>;
   torch: Torch;
   focusTorch: FocusTorch;
   actor: Clip;
+  effectWidth: number;
+  effectHeight: number;
+  context?: CanvasRenderingContext2D;
 
   constructor(
     clips: Array<Clip>,
     shapeBuilder: ShapeBuilder,
-    toggleShapeCounter: number,
-    toggleShapeIndex: number,
-    toggleText: Array<string>,
     lights: Array<Light>,
     torch: Torch,
     focusTorch: FocusTorch,
@@ -27,18 +24,21 @@ export class BackgroundBase {
   ) {
     this.clips = clips;
     this.shapeBuilder = shapeBuilder;
-    this.toggleShapeCounter = toggleShapeCounter;
-    this.toggleShapeIndex = toggleShapeIndex;
-    this.toggleText = toggleText;
     this.lights = lights;
     this.torch = torch;
     this.focusTorch = focusTorch;
     this.actor = actor;
+    this.effectWidth = WIDTH;
+    this.effectHeight = HEIGHT;
+  }
+
+  init(context: CanvasRenderingContext2D) {
+    this.context = context;
+    this.shapeBuilder.init(this.effectWidth, this.effectHeight, this.context);
   }
 
   draw(
     ratioArray: Array<Beat>,
-    context: CanvasRenderingContext2D,
     memeList: MemeListElement[],
     shapeProps: ShapeProps
   ): void {

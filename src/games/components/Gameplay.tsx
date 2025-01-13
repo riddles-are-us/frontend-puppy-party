@@ -168,6 +168,7 @@ const Gameplay = () => {
       }
     };
 
+    scenario.init();
     // Set the interval
     const intervalId = setInterval(draw, 100); // 1000ms = 1 second
 
