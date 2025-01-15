@@ -9,7 +9,6 @@ export class BackgroundBase {
   lights: Array<Light>;
   torch: Torch;
   focusTorch: FocusTorch;
-  actor: Clip;
   effectWidth: number;
   effectHeight: number;
   context?: CanvasRenderingContext2D;
@@ -19,15 +18,13 @@ export class BackgroundBase {
     shapeBuilder: ShapeBuilder,
     lights: Array<Light>,
     torch: Torch,
-    focusTorch: FocusTorch,
-    actor: Clip
+    focusTorch: FocusTorch
   ) {
     this.clips = clips;
     this.shapeBuilder = shapeBuilder;
     this.lights = lights;
     this.torch = torch;
     this.focusTorch = focusTorch;
-    this.actor = actor;
     this.effectWidth = WIDTH;
     this.effectHeight = HEIGHT;
   }

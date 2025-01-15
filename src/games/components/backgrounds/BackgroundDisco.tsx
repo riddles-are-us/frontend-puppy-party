@@ -26,10 +26,9 @@ export class BackgroundDisco extends BackgroundBase {
     shapeBuilder: ShapeBuilder,
     lights: Array<Light>,
     torch: Torch,
-    focusTorch: FocusTorch,
-    actor: Clip
+    focusTorch: FocusTorch
   ) {
-    super(clips, shapeBuilder, lights, torch, focusTorch, actor);
+    super(clips, shapeBuilder, lights, torch, focusTorch);
     this.effectHeight = 400;
     this.fixedLights = [new FixedLight(0, 0)];
     this.audience = new Audience();
@@ -67,9 +66,6 @@ export class BackgroundDisco extends BackgroundBase {
       1324 * 0.5,
       798 * 0.5
     );
-
-    const [bLeft, bTop] = this.actor.getZCenter()!;
-    this.focusTorch.drawLight(bLeft, bTop, this.context);
 
     drawHorn(ratioArray, this.context);
     for (const light of this.fixedLights) {

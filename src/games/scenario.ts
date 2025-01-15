@@ -24,6 +24,7 @@ class Scenario {
   toggleShapeIndex: number;
   toggleText: Array<string>;
   background: BackgroundBase;
+  context?: CanvasRenderingContext2D;
 
   constructor() {
     this.status = "pause";
@@ -63,8 +64,7 @@ class Scenario {
       shapeBuilder,
       this.lights,
       this.torch,
-      this.focusTorch,
-      this.actor);
+      this.focusTorch);
   }
 
   selectMeme(cursorLeft: number, cursorTop: number) {
@@ -172,15 +172,20 @@ class Scenario {
     canvas.width = WIDTH;
     canvas.height = HEIGHT;
     const context = canvas.getContext("2d")!;
+    this.context = context;
     this.background.init(context);
   }
 
   draw(ratioArray: Array<Beat>, state: any) {
-
-    const shapeProps = this.getShapeProps();
-    this.background.draw(ratioArray, state.memeList, shapeProps);
-
-    processShakeEffect(ratioArray, state.giftboxShake);
+    if (this.context){
+      const shapeProps = this.getShapeProps();
+      this.background.draw(ratioArray, state.memeList, shapeProps);
+  
+      const [bLeft, bTop] = this.actor.getZCenter()!;
+      this.focusTorch.drawLight(bLeft, bTop, this.context);
+  
+      processShakeEffect(ratioArray, state.giftboxShake);
+    }
   }
 
   step(ratioArray: Array<Beat>) {
