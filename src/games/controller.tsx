@@ -15,6 +15,7 @@ import { getCreatePlayerTransactionParameter } from "./api";
 import sanityClient from "./sanityClient";
 import { MemeData } from "./config";
 import { Scenario } from "./scenario";
+import { setPreviousMemeDatas } from "../data/puppy_party/memeDatas";
 
 //import cover from "./images/towerdefence.jpg";
 
@@ -117,6 +118,7 @@ export function GameController() {
             index: item.index,
           }));
           console.log("meme", formattedData);
+          dispatch(setPreviousMemeDatas({ previousMemeDatas: formattedData }));
           dispatch(setUIState({ uIState: UIState.Preloading }));
         })
         .catch((error: any) => {

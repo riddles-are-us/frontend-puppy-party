@@ -6,7 +6,7 @@ import {
   setTargetMemeIndex,
 } from "../../data/puppy_party/properties";
 import { loadAudio } from "../audio";
-import { MemeSeasonCurrent, MemeSeasonPrevious } from "../config";
+import { MemeSeasonCurrent } from "../config";
 import background from "../images/landing/landing_bg.png";
 import titleImage from "../images/landing/landing_title.png";
 import peopleBackground from "../images/landing/people.png";
@@ -25,10 +25,12 @@ import JoinButton from "./buttons/JoinButton";
 import MemeIcon from "./MemeIcon";
 import Grid from "./Grid";
 import MemeRankingIcon from "./MemeRankingIcon";
+import { selectPreviousMemeDatas } from "../../data/puppy_party/memeDatas";
 
 const LandingPage = () => {
   const dispatch = useAppDispatch();
   const memeList = useAppSelector(selectMemeList);
+  const previousMemeDatas = useAppSelector(selectPreviousMemeDatas);
   const rankingContainerRef = useRef<HTMLDivElement>(null);
   const [memeRankingIconElementWidth, setMemeRankingIconElementWidth] =
     useState<number>(0);
@@ -167,7 +169,7 @@ const LandingPage = () => {
               elementHeight={memeIconElementWidth}
               columnCount={3}
               rowCount={4}
-              elements={MemeSeasonPrevious.memeInfoList
+              elements={previousMemeDatas
                 .slice(0, 12)
                 .map((memeInfo, index) => (
                   <MemeIcon
