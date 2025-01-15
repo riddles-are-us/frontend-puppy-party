@@ -29,17 +29,17 @@ import PAOPAO from "../images/season2/paopao.jpg";
 import cheems_logo from "./images/cheems.png";
 
 
-interface MemeInterface {
+export interface MemeData {
   name: string,
   cover: string,
-  animationIndex: number | null,
+  animationIndex: number | -1,
   index: number,
 }
 
 class MemeSeasonInfo {
-  memeInfoMap: Map<string, MemeInterface>;
-  memeInfoList: Array<MemeInterface>;
-  constructor(memeInfoList: Array<MemeInterface>) {
+  memeInfoMap: Map<string, MemeData>;
+  memeInfoList: Array<MemeData>;
+  constructor(memeInfoList: Array<MemeData>) {
     this.memeInfoList = memeInfoList;
     this.memeInfoMap = new Map();
     for (const memeInfo of memeInfoList) {
@@ -80,7 +80,7 @@ export const MemeSeasonPrevious = new MemeSeasonInfo([
   {
     name: "ami",
     cover: AMI,
-    animationIndex: null,
+    animationIndex: -1,
     index: 3,
   },
 
@@ -95,13 +95,13 @@ export const MemeSeasonPrevious = new MemeSeasonInfo([
     name: "zkj",
     cover: ZKJ,
     index: 5,
-    animationIndex: null,
+    animationIndex: -1,
   },
 
   {
     name: "dalp",
     cover: DALP,
-    animationIndex: null,
+    animationIndex: -1,
     index: 6,
   },
 
@@ -115,28 +115,28 @@ export const MemeSeasonPrevious = new MemeSeasonInfo([
   {
     name: "eddy",
     cover: EDDY,
-    animationIndex: null,
+    animationIndex: -1,
     index: 8,
   },
 
   {
     name: "psd",
     cover: PSD,
-    animationIndex: null,
+    animationIndex: -1,
     index: 9,
   },
 
   {
     name: "zkshark",
     cover: ZKSHARK,
-    animationIndex: null,
+    animationIndex: -1,
     index: 10,
   },
 
   {
     name: "deadchu",
     cover: DC,
-    animationIndex: null,
+    animationIndex: -1,
     index: 11,
   },
 ]);

@@ -29,8 +29,8 @@ class Scenario {
     this.status = "pause";
     this.clips = [];
     for (let i = 0; i< MemeSeasonCurrent.memeInfoList.length; i++) {
-      const info:any = MemeSeasonCurrent.memeInfoList[i];
-      if (info.animationIndex != null) {
+      const info = MemeSeasonCurrent.memeInfoList[i];
+      if (info.animationIndex != -1) {
         const clip = createAnimationClip(0, info.animationIndex, 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24);
         this.clips.push(clip);
         clip.name = info.name;

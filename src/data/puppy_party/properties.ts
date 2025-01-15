@@ -5,6 +5,7 @@ import {scenario} from '../../games/scenario';
 
 export enum UIState{
   Init,
+  LoadingSanity,
   Preloading,
   QueryConfig,
   WelcomePage,

@@ -13,6 +13,8 @@ import "./style.scss";
 import Gameplay from "./components/Gameplay";
 import WelcomePage from "./components/WelcomePage";
 import { getCreatePlayerTransactionParameter } from "./api";
+import sanityClient from "./sanityClient";
+import { MemeData } from "./config";
 
 //import cover from "./images/towerdefence.jpg";
 
@@ -55,7 +57,7 @@ export function GameController() {
 
   useEffect(() => {
     if (uIState == UIState.Init) {
-      dispatch(setUIState({ uIState: UIState.Preloading }));
+      dispatch(setUIState({ uIState: UIState.LoadingSanity }));
     }
   }, [account]);
 
@@ -96,6 +98,33 @@ export function GameController() {
       scenario.status = "play";
     }
   }, [l2account]);
+
+  useEffect(() => {
+    if (uIState == UIState.LoadingSanity) {
+      const query = `*[_type == "meme"] {
+        name,
+        "cover": mainImage.asset->url,
+        animationIndex,
+        index
+      }`;
+
+      sanityClient
+        .fetch(query)
+        .then((result: any) => {
+          const formattedData = result.map((item: MemeData) => ({
+            name: item.name,
+            cover: item.cover,
+            animationIndex: item.animationIndex || 0,
+            index: item.index || 0,
+          }));
+          console.log("meme", formattedData);
+          dispatch(setUIState({ uIState: UIState.Preloading }));
+        })
+        .catch((error: any) => {
+          console.error("Error fetching data:", error);
+        });
+    }
+  }, [uIState]);
 
   useEffect(() => {
     if (uIState == UIState.Preloading) {
