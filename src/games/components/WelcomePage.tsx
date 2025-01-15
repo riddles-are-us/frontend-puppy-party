@@ -13,7 +13,7 @@ interface Props {
 const WelcomePage = ({ progress }: Props) => {
   const uIState = useAppSelector(selectUIState);
 
-  if (uIState == UIState.Init) {
+  if (uIState == UIState.Init || uIState == UIState.LoadingSanity) {
     return <WelcomePageConnecting />;
   } else if (uIState == UIState.ConnectionError) {
     return <WelcomePageConnecting />;

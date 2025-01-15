@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
-import { scenario } from "./scenario";
 import { getConfig, sendTransaction, queryState } from "./request";
 import {
   UIState,
@@ -15,6 +14,7 @@ import WelcomePage from "./components/WelcomePage";
 import { getCreatePlayerTransactionParameter } from "./api";
 import sanityClient from "./sanityClient";
 import { MemeData } from "./config";
+import { Scenario } from "./scenario";
 
 //import cover from "./images/towerdefence.jpg";
 
@@ -95,7 +95,6 @@ export function GameController() {
   useEffect(() => {
     if (l2account) {
       dispatch(setUIState({ uIState: UIState.QueryState }));
-      scenario.status = "play";
     }
   }, [l2account]);
 
@@ -114,8 +113,8 @@ export function GameController() {
           const formattedData = result.map((item: MemeData) => ({
             name: item.name,
             cover: item.cover,
-            animationIndex: item.animationIndex || 0,
-            index: item.index || 0,
+            animationIndex: item.animationIndex,
+            index: item.index,
           }));
           console.log("meme", formattedData);
           dispatch(setUIState({ uIState: UIState.Preloading }));

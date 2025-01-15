@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState, MouseEvent } from "react";
 import Popups from "./Popups";
 import TopMenu from "./TopMenu";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { scenario } from "../scenario";
 import { audioSystem } from "../audio";
 import {
   UIState,
@@ -34,6 +33,7 @@ import {
   getCancelLotteryransactionParameter,
   getDanceTransactionParameter,
 } from "../api";
+import { Scenario } from "../scenario";
 
 const COOL_DOWN = 2;
 const PROGRESS_LOTTERY_THRESHOLD = 1000;
@@ -53,6 +53,7 @@ const Gameplay = () => {
   const dispatch = useAppDispatch();
   const l2account = useAppSelector(AccountSlice.selectL2Account);
   const uIState = useAppSelector(selectUIState);
+  const [scenario, setScenario] = useState(new Scenario());
   const [inc, setInc] = useState(0);
   const nonce = useAppSelector(selectNonce);
   const progress = useAppSelector(selectProgress);

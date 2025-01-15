@@ -12,7 +12,7 @@ function getRandomNumber(range: number): number {
     return Math.floor(Math.random() * range);
 }
 
-class Scenario {
+export class Scenario {
   status: string;
   clips: Array<Clip>;
   lights: Array<Light>;
@@ -27,7 +27,7 @@ class Scenario {
   context?: CanvasRenderingContext2D;
 
   constructor() {
-    this.status = "pause";
+    this.status = "play";
     this.clips = [];
     for (let i = 0; i< MemeSeasonCurrent.memeInfoList.length; i++) {
       const info = MemeSeasonCurrent.memeInfoList[i];
@@ -95,11 +95,6 @@ class Scenario {
         clip.hover = false;
       }
     }
-  }
-
-
-  setSelectedMeme(index: number) {
-    return;
   }
 
   cicleClips() {
@@ -227,7 +222,3 @@ class Scenario {
     }
   }
 }
-
-
-
-export const scenario = new Scenario();
