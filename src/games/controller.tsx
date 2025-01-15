@@ -16,6 +16,7 @@ import sanityClient from "./sanityClient";
 import { MemeData } from "./config";
 import { Scenario } from "./scenario";
 import { setPreviousMemeDatas } from "../data/puppy_party/memeDatas";
+import { SeasonData } from "./season";
 
 //import cover from "./images/towerdefence.jpg";
 
@@ -101,24 +102,30 @@ export function GameController() {
 
   useEffect(() => {
     if (uIState == UIState.LoadingSanity) {
-      const query = `*[_type == "meme"] {
+      const query = `*[_type == "season"] {
         name,
-        "cover": mainImage.asset->url,
-        animationIndex,
-        index
+        seasonEndDate,
+        "isCurrentSeason": coalesce(isCurrentSeason, false),
+        "isPreviousSeason": coalesce(isPreviousSeason, false),
+        "memes": coalesce(memes[]->{
+          name,
+          "cover": mainImage.asset->url,
+          animationIndex,
+          index
+        }, [])
       }`;
 
       sanityClient
         .fetch(query)
-        .then((result: any) => {
-          const formattedData = result.map((item: MemeData) => ({
-            name: item.name,
-            cover: item.cover,
-            animationIndex: item.animationIndex,
-            index: item.index,
-          }));
-          console.log("meme", formattedData);
-          dispatch(setPreviousMemeDatas({ previousMemeDatas: formattedData }));
+        .then((result: SeasonData) => {
+          // const formattedData = result.map((item: MemeData) => ({
+          //   name: item.name,
+          //   cover: item.cover,
+          //   animationIndex: item.animationIndex,
+          //   index: item.index,
+          // }));
+          console.log("meme", result);
+          // dispatch(setPreviousMemeDatas({ previousMemeDatas: result }));
           dispatch(setUIState({ uIState: UIState.Preloading }));
         })
         .catch((error: any) => {
