@@ -13,12 +13,11 @@ import Gameplay from "./components/Gameplay";
 import WelcomePage from "./components/WelcomePage";
 import { getCreatePlayerTransactionParameter } from "./api";
 import sanityClient from "./sanityClient";
-import { MemeData } from "./config";
-import { Scenario } from "./scenario";
-import { setPreviousMemeDatas } from "../data/puppy_party/memeDatas";
 import { SeasonData } from "./season";
-
-//import cover from "./images/towerdefence.jpg";
+import {
+  setCurrentSeason,
+  setPreviousSeason,
+} from "../data/puppy_party/memeDatas";
 
 export function GameController() {
   const dispatch = useAppDispatch();
@@ -117,15 +116,18 @@ export function GameController() {
 
       sanityClient
         .fetch(query)
-        .then((result: SeasonData) => {
-          // const formattedData = result.map((item: MemeData) => ({
-          //   name: item.name,
-          //   cover: item.cover,
-          //   animationIndex: item.animationIndex,
-          //   index: item.index,
-          // }));
-          console.log("meme", result);
-          // dispatch(setPreviousMemeDatas({ previousMemeDatas: result }));
+        .then((result: SeasonData[]) => {
+          console.log("season", result);
+          const previousSeason = result.find(
+            (season) => season.isPreviousSeason
+          );
+          const currentSeason = result.find((season) => season.isCurrentSeason);
+          if (previousSeason) {
+            dispatch(setPreviousSeason({ previousSeason: previousSeason }));
+          }
+          if (currentSeason) {
+            dispatch(setCurrentSeason({ currentSeason: currentSeason }));
+          }
           dispatch(setUIState({ uIState: UIState.Preloading }));
         })
         .catch((error: any) => {

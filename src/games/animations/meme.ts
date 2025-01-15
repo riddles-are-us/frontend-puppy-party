@@ -4,7 +4,6 @@ import {
 }  from "../draw";
 
 import spirites from "../spirite";
-import { MemeSeasonCurrent } from "../config";
 
 const MEME_DEFAULT_CATEGORY = spirites.spirites.length - 1; // the last animation are of default dogs
 
@@ -24,6 +23,7 @@ export class ClipRect {
 }
 
 export class Clip {
+  index: number;
   name: string;
   src: HTMLImageElement;
   top: number;
@@ -38,7 +38,8 @@ export class Clip {
   focus: boolean;
   hover: boolean;
   target: Array<[number, number]>;
-  constructor(src: HTMLImageElement, boundry: ClipRect, ratio: number) {
+  constructor(index: number, src: HTMLImageElement, boundry: ClipRect, ratio: number) {
+    this.index = index;
     this.name = "NPC";
     this.src = src;
     this.boundry = boundry;
@@ -138,7 +139,7 @@ export class Clip {
         ctx.fillStyle = "black";  // Red color
       }
 
-      const rank = memeinfos[MemeSeasonCurrent.getMemeIndex(this.name)].rank;
+      const rank = memeinfos[this.index].rank;
       const fullname = `${this.name}:${rank}`;
       {
         ctx.fillRect(this.left + 30, this.top - 13, fullname.length * 7 + 5, 15);
@@ -206,13 +207,13 @@ export class Clip {
 }
 
 
-export function createAnimationClip(categoryIndex: number, animeIndex: number, top:number, left:number, start: number) {
+export function createAnimationClip(index: number, categoryIndex: number, animeIndex: number, top:number, left:number, start: number) {
   const boundry = new ClipRect(HEIGHT/2 - 40, 50, WIDTH-100, HEIGHT-200);
-  const clip = new Clip(spirites.spirites[categoryIndex], boundry, 0.5);
+  const clip = new Clip(index, spirites.spirites[categoryIndex], boundry, 0.5);
   clip.setAnimationClip(categoryIndex, animeIndex, top, left, start)
   return clip;
 }
 
-export function createDefaultAnimationClip(animeIndex: number, top: number, left: number, start: number) {
-  return createAnimationClip(MEME_DEFAULT_CATEGORY, animeIndex, top, left, start);
+export function createDefaultAnimationClip(index: number, animeIndex: number, top: number, left: number, start: number) {
+  return createAnimationClip(index, MEME_DEFAULT_CATEGORY, animeIndex, top, left, start);
 }

@@ -6,7 +6,6 @@ import {
   setTargetMemeIndex,
 } from "../../data/puppy_party/properties";
 import { loadAudio } from "../audio";
-import { MemeSeasonCurrent } from "../config";
 import background from "../images/landing/landing_bg.png";
 import titleImage from "../images/landing/landing_title.png";
 import peopleBackground from "../images/landing/people.png";
@@ -25,12 +24,16 @@ import JoinButton from "./buttons/JoinButton";
 import MemeIcon from "./MemeIcon";
 import Grid from "./Grid";
 import MemeRankingIcon from "./MemeRankingIcon";
-import { selectPreviousMemeDatas } from "../../data/puppy_party/memeDatas";
+import {
+  selectCurrentMemes,
+  selectPreviousMemes,
+} from "../../data/puppy_party/memeDatas";
 
 const LandingPage = () => {
   const dispatch = useAppDispatch();
   const memeList = useAppSelector(selectMemeList);
-  const previousMemeDatas = useAppSelector(selectPreviousMemeDatas);
+  const previousMemes = useAppSelector(selectPreviousMemes);
+  const currentMemes = useAppSelector(selectCurrentMemes);
   const rankingContainerRef = useRef<HTMLDivElement>(null);
   const [memeRankingIconElementWidth, setMemeRankingIconElementWidth] =
     useState<number>(0);
@@ -71,7 +74,7 @@ const LandingPage = () => {
 
   function startGame(index: number) {
     console.log(index);
-    if (index < MemeSeasonCurrent.memeInfoList.length) {
+    if (index < currentMemes.length) {
       dispatch(setTargetMemeIndex(index));
       dispatch(AccountSlice.loginL2AccountAsync(account!));
       loadAudio((ele) => {
@@ -136,18 +139,16 @@ const LandingPage = () => {
               elementHeight={memeRankingIconElementWidth}
               columnCount={4}
               rowCount={3}
-              elements={MemeSeasonCurrent.memeInfoList
-                .slice(0, 12)
-                .map((memeInfo, index) => (
-                  <MemeRankingIcon
-                    key={index}
-                    height={memeRankingIconElementWidth}
-                    width={memeRankingIconElementWidth}
-                    fontSize={fontSize}
-                    image={memeInfo.cover}
-                    rank={memeList[memeInfo.index].rank}
-                  />
-                ))}
+              elements={currentMemes.slice(0, 12).map((memeData, index) => (
+                <MemeRankingIcon
+                  key={index}
+                  height={memeRankingIconElementWidth}
+                  width={memeRankingIconElementWidth}
+                  fontSize={fontSize}
+                  image={memeData.cover}
+                  rank={memeList[memeData.index].rank}
+                />
+              ))}
             />
           </div>
         </div>
@@ -169,16 +170,14 @@ const LandingPage = () => {
               elementHeight={memeIconElementWidth}
               columnCount={3}
               rowCount={4}
-              elements={previousMemeDatas
-                .slice(0, 12)
-                .map((memeInfo, index) => (
-                  <MemeIcon
-                    key={index}
-                    height={memeIconElementWidth}
-                    width={memeIconElementWidth}
-                    image={memeInfo.cover}
-                  />
-                ))}
+              elements={previousMemes.slice(0, 12).map((memeData, index) => (
+                <MemeIcon
+                  key={index}
+                  height={memeIconElementWidth}
+                  width={memeIconElementWidth}
+                  image={memeData.cover}
+                />
+              ))}
             />
           </div>
         </div>

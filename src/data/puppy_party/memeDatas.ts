@@ -1,27 +1,33 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
-import { MemeData } from '../../games/config';
+import { emptySeasonData, SeasonData } from '../../games/season';
 
 interface MemeDatasState {
-    previousMemeDatas: MemeData[];
+    previousSeason: SeasonData;
+    currentSeason: SeasonData;
 }
 
 const initialState: MemeDatasState = {
-    previousMemeDatas: [],
+  previousSeason: emptySeasonData,
+  currentSeason: emptySeasonData,
 };
 
 export const memeDatasSlice = createSlice({
     name: 'memeDatas',
     initialState,
     reducers: {
-      setPreviousMemeDatas: (state, action) => {
-        state.previousMemeDatas = action.payload.previousMemeDatas;
+      setPreviousSeason: (state, action) => {
+        state.previousSeason = action.payload.previousSeason;
+      },
+      setCurrentSeason: (state, action) => {
+        state.currentSeason = action.payload.currentSeason;
       },
     },
   },
 );
 
-export const selectPreviousMemeDatas = (state: RootState) => state.puppyParty.memeDatas.previousMemeDatas;
+export const selectPreviousMemes = (state: RootState) => state.puppyParty.memeDatas.previousSeason.memes;
+export const selectCurrentMemes = (state: RootState) => state.puppyParty.memeDatas.currentSeason.memes;
     
-export const { setPreviousMemeDatas } = memeDatasSlice.actions;
+export const { setPreviousSeason, setCurrentSeason } = memeDatasSlice.actions;
 export default memeDatasSlice.reducer;

@@ -9,10 +9,10 @@ import {
   UIState,
 } from "../../data/puppy_party/properties";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { MemeSeasonCurrent } from "../config";
 import DepositButton from "./buttons/DepositButton";
 import ticketIcon from "../images/ticket_icon.png";
 import balanceIcon from "../images/balance_icon.png";
+import { selectCurrentMemes } from "../../data/puppy_party/memeDatas";
 
 interface Props {
   targetMemeIndex: number;
@@ -22,6 +22,7 @@ interface Props {
 function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
   const dispatch = useAppDispatch();
   const uiState = useAppSelector(selectUIState);
+  const currentMemes = useAppSelector(selectCurrentMemes);
   const balance = useAppSelector(selectBalance);
   const ticket = useAppSelector(selectTicket);
   const onClickWithdraw = () => {
@@ -51,7 +52,7 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
       <img src={balanceIcon} className="top-menu-balance-icon"></img>
       <div className="top-menu-vote-text">Vote: {targetMemeRank}</div>
       <img
-        src={MemeSeasonCurrent.getCover(targetMemeIndex)}
+        src={currentMemes[targetMemeIndex].cover}
         className="top-menu-vote-icon"
       ></img>
     </div>

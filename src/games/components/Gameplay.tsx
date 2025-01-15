@@ -34,6 +34,7 @@ import {
   getDanceTransactionParameter,
 } from "../api";
 import { Scenario } from "../scenario";
+import { selectCurrentMemes } from "../../data/puppy_party/memeDatas";
 
 const COOL_DOWN = 2;
 const PROGRESS_LOTTERY_THRESHOLD = 1000;
@@ -53,7 +54,8 @@ const Gameplay = () => {
   const dispatch = useAppDispatch();
   const l2account = useAppSelector(AccountSlice.selectL2Account);
   const uIState = useAppSelector(selectUIState);
-  const [scenario, setScenario] = useState(new Scenario());
+  const currentMemes = useAppSelector(selectCurrentMemes);
+  const [scenario, setScenario] = useState(new Scenario(currentMemes));
   const [inc, setInc] = useState(0);
   const nonce = useAppSelector(selectNonce);
   const progress = useAppSelector(selectProgress);

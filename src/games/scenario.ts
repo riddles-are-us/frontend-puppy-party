@@ -4,9 +4,9 @@ import {
   processShakeEffect
 } from "./draw";
 import { ShapeBuilder } from "./ShapeBuilder";
-import { MemeSeasonCurrent } from "./config";
 import { BackgroundDisco } from "./components/backgrounds/BackgroundDisco";
 import { BackgroundBase, ShapeProps } from "./components/backgrounds/BackgroundBase";
+import { MemeData } from "./season";
 
 function getRandomNumber(range: number): number {
     return Math.floor(Math.random() * range);
@@ -26,17 +26,17 @@ export class Scenario {
   background: BackgroundBase;
   context?: CanvasRenderingContext2D;
 
-  constructor() {
+  constructor(currentMemes: MemeData[]) {
     this.status = "play";
     this.clips = [];
-    for (let i = 0; i< MemeSeasonCurrent.memeInfoList.length; i++) {
-      const info = MemeSeasonCurrent.memeInfoList[i];
+    for (let i = 0; i< currentMemes.length; i++) {
+      const info = currentMemes[i];
       if (info.animationIndex != -1) {
-        const clip = createAnimationClip(0, info.animationIndex, 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24);
+        const clip = createAnimationClip(i, 0, info.animationIndex, 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24);
         this.clips.push(clip);
         clip.name = info.name;
       } else {
-        const clip = createDefaultAnimationClip(getRandomNumber(4), 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24);
+        const clip = createDefaultAnimationClip(i, getRandomNumber(4), 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24);
         clip.name = info.name;
         this.clips.push(clip);
       }
@@ -74,9 +74,8 @@ export class Scenario {
         this.actor.focus = false;
         clip.focus = true;
         this.actor = clip;
-        const index = MemeSeasonCurrent.getMemeIndex(clip.name);
         this.focusTorch.resetFrame();
-        return index;
+        return clip.index;
       }
     }
     return null
