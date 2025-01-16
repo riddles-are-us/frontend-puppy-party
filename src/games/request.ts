@@ -16,7 +16,7 @@ interface SendTransactionParams {
 
 interface QueryStateRes {
     player: any;
-    memeList: any;
+    memeRanks: any;
     globalTimer: any;
 }
 
@@ -30,7 +30,9 @@ export const getConfig = createAsyncThunk(
     async () => {
         const res = await query_config();
         const data = JSON.parse(res.data);
-        return data;
+        return {
+            memeRanks: data
+        };
     }
 )
 
@@ -59,11 +61,11 @@ export const sendTransaction = createAsyncThunk<
                         if (jobStatus.finishedOn != undefined && jobStatus.failedReason == undefined ) {
                           const datas = jobStatus.returnvalue;
                           const player = datas.player;
-                          const memeList= datas.state.meme_list;
+                          const memeRanks= datas.state.meme_list;
                           const counter = datas.state.counter;
                           return {
                             player,
-                            memeList,
+                            memeRanks,
                             globalTimer: counter,
                           };
 
@@ -92,11 +94,11 @@ export const queryState = createAsyncThunk<
                 const datas = JSON.parse(res.data);
                 console.log("query state data", datas);
                 const player = datas.player;
-                const memeList= datas.state.meme_list;
+                const memeRanks= datas.state.meme_list;
                 const counter = datas.state.counter;
                 return {
                     player,
-                    memeList,
+                    memeRanks,
                     globalTimer: counter,
                 };
             } catch (err: any) {

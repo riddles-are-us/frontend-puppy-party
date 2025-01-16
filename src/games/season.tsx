@@ -18,5 +18,5 @@ export interface MemeData {
   name: string;
   avatar: string;
   spriteSheet: string;
-  index: number;
+  rank: number;
 }

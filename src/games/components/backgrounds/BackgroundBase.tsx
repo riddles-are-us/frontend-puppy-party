@@ -1,6 +1,6 @@
-import { MemeListElement } from "../../../data/puppy_party/properties";
 import { Clip, ClipRect } from "../../animations/meme";
 import { Beat, FocusTorch, HEIGHT, Light, Torch, WIDTH } from "../../draw";
+import { MemeData } from "../../season";
 import { ShapeBuilder } from "../../ShapeBuilder";
 
 export class BackgroundBase {
@@ -36,7 +36,7 @@ export class BackgroundBase {
 
   draw(
     ratioArray: Array<Beat>,
-    memeList: MemeListElement[],
+    memes: MemeData[],
     shapeProps: ShapeProps
   ): void {
     /* */

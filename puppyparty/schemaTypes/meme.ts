@@ -18,16 +18,6 @@ export default {
         name: 'spriteSheet',
         title: 'Sprite Sheet',
         type: 'image',
-      },
-      {
-        title: 'index',
-        name: 'index',
-        type: 'number'
-      },
-      {
-        title: 'animationIndex',
-        name: 'animationIndex',
-        type: 'number'
       }
     ],
   };

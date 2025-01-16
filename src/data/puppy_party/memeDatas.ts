@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
 import { emptySeasonData, SeasonData } from '../../games/season';
+import { getConfig, queryState, sendTransaction } from '../../games/request';
 
 interface MemeDatasState {
     previousSeason: SeasonData;
@@ -23,6 +24,24 @@ export const memeDatasSlice = createSlice({
         state.currentSeason = action.payload.currentSeason;
       },
     },
+    extraReducers: (builder) => {
+      builder
+      .addCase(getConfig.fulfilled, (state, action) => {
+        state.currentSeason.memes.forEach((meme, index) => {
+          meme.rank = action.payload.memeRanks[index].rank
+        });
+      })
+      .addCase(sendTransaction.fulfilled, (state, action) => {
+        state.currentSeason.memes.forEach((meme, index) => {
+          meme.rank = action.payload.memeRanks[index].rank
+        });
+      })
+      .addCase(queryState.fulfilled, (state, action) => {
+        state.currentSeason.memes.forEach((meme, index) => {
+          meme.rank = action.payload.memeRanks[index].rank
+        });
+      })
+      }
   },
 );
 

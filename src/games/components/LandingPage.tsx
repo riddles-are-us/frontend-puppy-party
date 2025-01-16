@@ -1,10 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { AccountSlice } from "zkwasm-minirollup-browser";
-import {
-  selectMemeList,
-  setTargetMemeIndex,
-} from "../../data/puppy_party/properties";
+import { setTargetMemeIndex } from "../../data/puppy_party/properties";
 import { loadAudio } from "../audio";
 import background from "../images/landing/landing_bg.png";
 import titleImage from "../images/landing/landing_title.png";
@@ -31,7 +28,6 @@ import {
 
 const LandingPage = () => {
   const dispatch = useAppDispatch();
-  const memeList = useAppSelector(selectMemeList);
   const previousMemes = useAppSelector(selectPreviousMemes);
   const currentMemes = useAppSelector(selectCurrentMemes);
   const rankingContainerRef = useRef<HTMLDivElement>(null);
@@ -146,7 +142,7 @@ const LandingPage = () => {
                   width={memeRankingIconElementWidth}
                   fontSize={fontSize}
                   image={memeData.avatar}
-                  rank={memeList[memeData.index].rank}
+                  rank={memeData.rank}
                 />
               ))}
             />

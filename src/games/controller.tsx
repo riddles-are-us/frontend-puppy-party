@@ -118,15 +118,16 @@ export function GameController() {
       sanityClient
         .fetch(query)
         .then((result: SeasonData[]) => {
-          console.log("season", result);
           const previousSeason = result.find(
             (season) => season.isPreviousSeason
           );
           const currentSeason = result.find((season) => season.isCurrentSeason);
           if (previousSeason) {
+            console.log("season", previousSeason);
             dispatch(setPreviousSeason({ previousSeason: previousSeason }));
           }
           if (currentSeason) {
+            console.log("season", currentSeason);
             dispatch(setCurrentSeason({ currentSeason: currentSeason }));
           }
           dispatch(setUIState({ uIState: UIState.Preloading }));

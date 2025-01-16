@@ -12,10 +12,10 @@ import {
   FocusTorch,
   HEIGHT,
 } from "../../draw";
+import { MemeData } from "../../season";
 import { ShapeBuilder } from "../../ShapeBuilder";
 import spirits from "../../spirite";
 import { BackgroundBase, ShapeProps, ShapeState } from "./BackgroundBase";
-import { MemeListElement } from "../../../data/puppy_party/properties";
 
 export class BackgroundDisco extends BackgroundBase {
   fixedLights: Array<FixedLight>;
@@ -36,7 +36,7 @@ export class BackgroundDisco extends BackgroundBase {
 
   draw(
     ratioArray: Array<Beat>,
-    memeList: MemeListElement[],
+    memes: MemeData[],
     shapeProps: ShapeProps
   ): void {
     if (!this.context) {
@@ -76,7 +76,7 @@ export class BackgroundDisco extends BackgroundBase {
       (a, b) => a.getBottom() - b.getBottom()
     );
     for (const obj of sortedClips) {
-      obj.draw(this.context, memeList);
+      obj.draw(this.context, memes);
     }
     for (const light of this.lights) {
       light.drawLight(ratioArray, this.context);

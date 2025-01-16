@@ -38,17 +38,12 @@ interface PlayerState {
   }
 }
 
-export interface MemeListElement {
-  rank: number,
-}
-
 interface PropertiesState {
   uIState: UIState;
   player: PlayerState;
   lastTxResult: string | number,
   globalTimer: number;
   targetMemeIndex: number;
-  memeList: MemeListElement[];
   giftboxShake: boolean;
   progressReset: boolean;
   popupDescription: string;
@@ -76,7 +71,6 @@ const initialState: PropertiesState = {
     lastTxResult: "",
     globalTimer: 0,
     targetMemeIndex: 0,
-    memeList: [],
     giftboxShake: false,
     progressReset: false,
     popupDescription: "",
@@ -121,7 +115,6 @@ export const propertiesSlice = createSlice({
     builder
       .addCase(getConfig.fulfilled, (state, action) => {
         state.uIState = UIState.WelcomePage;
-        state.memeList = action.payload;
         console.log("query config fulfilled");
       })
       .addCase(getConfig.rejected, (state, action) => {
@@ -132,7 +125,6 @@ export const propertiesSlice = createSlice({
         if (state.uIState == UIState.CreatePlayer){
           state.uIState = UIState.QueryState;
         }
-        state.memeList = action.payload.memeList;
         state.globalTimer = action.payload.globalTimer;
         state.lotteryInfoDiff = state.player.data.lottery_info == 0 
           ? 0 
@@ -153,7 +145,6 @@ export const propertiesSlice = createSlice({
           state.uIState = UIState.Idle;
         }
 
-        state.memeList = action.payload.memeList;
         state.globalTimer = action.payload.globalTimer;
         state.lotteryInfoDiff = state.player.data.lottery_info == 0 
           ? 0 
@@ -174,7 +165,6 @@ export const propertiesSlice = createSlice({
 export const selectUIState = (state: RootState) => state.puppyParty.properties.uIState;
 export const selectGlobalTimer = (state: RootState) => state.puppyParty.properties.globalTimer;
 export const selectNonce = (state: RootState) => BigInt(state.puppyParty.properties.player.nonce);
-export const selectMemeList = (state: RootState) => state.puppyParty.properties.memeList;
 export const selectBalance = (state: RootState) => state.puppyParty.properties.player.data.balance;
 export const selectTicket = (state: RootState) => state.puppyParty.properties.player.data.ticket ?? 0;
 export const selectLotteryInfo = (state: RootState) => state.puppyParty.properties.player.data.lottery_info;
