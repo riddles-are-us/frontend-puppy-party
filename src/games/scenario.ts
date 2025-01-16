@@ -31,11 +31,9 @@ export class Scenario {
     this.clips = [];
     for (let i = 0; i< currentMemes.length; i++) {
       const info = currentMemes[i];
-      if (info.animationIndex != -1) {
-        const clip = createAnimationClip(i, info.spriteSheet, info.animationIndex, 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24);
-        this.clips.push(clip);
-        clip.name = info.name;
-      }
+      const clip = createAnimationClip(i, info.spriteSheet, 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24);
+      this.clips.push(clip);
+      clip.name = info.name;
     }
     this.clips[0].focus = true;
     this.lights = [

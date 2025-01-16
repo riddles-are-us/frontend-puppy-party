@@ -186,7 +186,7 @@ export class Clip {
     }
   }
 
-  setAnimationClip(animeIndex: number, top: number, left: number, start: number) {
+  setAnimationClip(top: number, left: number, start: number) {
     const spiriteHeight = 200;
     const spiriteWeight = 200;
     const clips = [];
@@ -202,11 +202,12 @@ export class Clip {
 }
 
 
-export function createAnimationClip(index: number, spriteSheet: string, animeIndex: number, top:number, left:number, start: number) {
+export function createAnimationClip(index: number, spriteSheet: string, top:number, left:number, start: number) {
   const boundry = new ClipRect(HEIGHT/2 - 40, 50, WIDTH-100, HEIGHT-200);
   const spriteSheetImage = new Image();
+  spriteSheetImage.setAttribute('crossOrigin', '');
   spriteSheetImage.src = spriteSheet;
   const clip = new Clip(index, spriteSheetImage, boundry, 0.5);
-  clip.setAnimationClip(animeIndex, top, left, start)
+  clip.setAnimationClip(top, left, start)
   return clip;
 }
