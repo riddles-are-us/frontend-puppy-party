@@ -145,7 +145,7 @@ const LandingPage = () => {
                   height={memeRankingIconElementWidth}
                   width={memeRankingIconElementWidth}
                   fontSize={fontSize}
-                  image={memeData.cover}
+                  image={memeData.avatar}
                   rank={memeList[memeData.index].rank}
                 />
               ))}
@@ -175,7 +175,7 @@ const LandingPage = () => {
                   key={index}
                   height={memeIconElementWidth}
                   width={memeIconElementWidth}
-                  image={memeData.cover}
+                  image={memeData.avatar}
                 />
               ))}
             />

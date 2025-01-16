@@ -52,7 +52,7 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
       <img src={balanceIcon} className="top-menu-balance-icon"></img>
       <div className="top-menu-vote-text">Vote: {targetMemeRank}</div>
       <img
-        src={currentMemes[targetMemeIndex].cover}
+        src={currentMemes[targetMemeIndex].avatar}
         className="top-menu-vote-icon"
       ></img>
     </div>

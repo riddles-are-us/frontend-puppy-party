@@ -16,7 +16,8 @@ export const emptySeasonData: SeasonData = {
 
 export interface MemeData {
   name: string;
-  cover: string;
+  avatar: string;
+  spriteSheet: string;
   animationIndex: number | -1;
   index: number;
 }

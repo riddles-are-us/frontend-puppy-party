@@ -1,7 +1,5 @@
 import BackGround from "./images/background.png";
 import Screen from "./images/screen.png";
-import DiscoDog from "./images/discodog.png";
-import DiscoMeme from "../images/season2/discomeme.png";
 import Horn from "./images/horn.png";
 import AudNoLight from "./images/audnolight.png";
 import AudLight from "./images/audlight.png";
@@ -21,14 +19,6 @@ leftEcoImage.src = LeftEco;
 
 const rightEcoImage = new Image();
 rightEcoImage.src = RightEco;
-
-const discodogImage = new Image();
-discodogImage.src = DiscoDog;
-
-const discoMemeImage = new Image();
-discoMemeImage.src = DiscoMeme;
-
-
 
 const hornImage = new Image();
 hornImage.src = Horn;
@@ -50,7 +40,6 @@ export default {
   leftEcoImage: leftEcoImage,
   rightEcoImage: rightEcoImage,
   backgroundImage: backgroundImage,
-  spirites: [discoMemeImage, discodogImage],
   audience: [audNoLight, audLight],
   horn: hornImage,
   progressBar: progress,

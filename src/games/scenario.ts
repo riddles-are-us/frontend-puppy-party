@@ -1,4 +1,4 @@
-import { Clip, createAnimationClip, createDefaultAnimationClip } from "./animations/meme";
+import { Clip, createAnimationClip } from "./animations/meme";
 import {
   Torch, Light, HEIGHT, WIDTH, Beat, FocusTorch,
   processShakeEffect
@@ -32,13 +32,9 @@ export class Scenario {
     for (let i = 0; i< currentMemes.length; i++) {
       const info = currentMemes[i];
       if (info.animationIndex != -1) {
-        const clip = createAnimationClip(i, 0, info.animationIndex, 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24);
+        const clip = createAnimationClip(i, info.spriteSheet, info.animationIndex, 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24);
         this.clips.push(clip);
         clip.name = info.name;
-      } else {
-        const clip = createDefaultAnimationClip(i, getRandomNumber(4), 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24);
-        clip.name = info.name;
-        this.clips.push(clip);
       }
     }
     this.clips[0].focus = true;

@@ -5,9 +5,6 @@ import {
 
 import spirites from "../spirite";
 
-const MEME_DEFAULT_CATEGORY = spirites.spirites.length - 1; // the last animation are of default dogs
-
-
 export class ClipRect {
   top: number;
   left: number;
@@ -189,14 +186,12 @@ export class Clip {
     }
   }
 
-  setAnimationClip(categoryIndex: number, animeIndex: number, top: number, left: number, start: number) {
+  setAnimationClip(animeIndex: number, top: number, left: number, start: number) {
     const spiriteHeight = 200;
     const spiriteWeight = 200;
-    this.src = spirites.spirites[categoryIndex];
     const clips = [];
     for (let i=0; i< 24; i++) {
-      const clipTop = animeIndex*spiriteHeight;
-      clips.push(new ClipRect(clipTop, spiriteWeight*i, spiriteWeight*(i+1), clipTop + spiriteHeight));
+      clips.push(new ClipRect(0, spiriteWeight*i, spiriteWeight*(i+1), spiriteHeight));
     }
     this.clips.set("normal", clips);
     this.top = top;
@@ -207,13 +202,11 @@ export class Clip {
 }
 
 
-export function createAnimationClip(index: number, categoryIndex: number, animeIndex: number, top:number, left:number, start: number) {
+export function createAnimationClip(index: number, spriteSheet: string, animeIndex: number, top:number, left:number, start: number) {
   const boundry = new ClipRect(HEIGHT/2 - 40, 50, WIDTH-100, HEIGHT-200);
-  const clip = new Clip(index, spirites.spirites[categoryIndex], boundry, 0.5);
-  clip.setAnimationClip(categoryIndex, animeIndex, top, left, start)
+  const spriteSheetImage = new Image();
+  spriteSheetImage.src = spriteSheet;
+  const clip = new Clip(index, spriteSheetImage, boundry, 0.5);
+  clip.setAnimationClip(animeIndex, top, left, start)
   return clip;
-}
-
-export function createDefaultAnimationClip(index: number, animeIndex: number, top: number, left: number, start: number) {
-  return createAnimationClip(index, MEME_DEFAULT_CATEGORY, animeIndex, top, left, start);
 }

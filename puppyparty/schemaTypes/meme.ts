@@ -10,8 +10,13 @@ export default {
         description: 'Enter the name',
       },
       {
-        name: 'mainImage',
-        title: 'Main Image',
+        name: 'avatar',
+        title: 'Avatar',
+        type: 'image',
+      },
+      {
+        name: 'spriteSheet',
+        title: 'Sprite Sheet',
         type: 'image',
       },
       {

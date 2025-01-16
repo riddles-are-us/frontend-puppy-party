@@ -108,7 +108,8 @@ export function GameController() {
         "isPreviousSeason": coalesce(isPreviousSeason, false),
         "memes": coalesce(memes[]->{
           name,
-          "cover": mainImage.asset->url,
+          "avatar": avatar.asset->url,
+          "spriteSheet": spriteSheet.asset->url,
           animationIndex,
           index
         }, [])
