@@ -113,13 +113,22 @@
 .landing-page-panel-play-button{
     position: absolute;
     top: 70%;
-    left: 50%;
+    left: 70%;
     height: 40%;
     width: auto;
-    aspect-ratio: 142 / 42;
+    aspect-ratio: 152 / 45;
     transform: translate(-50%, -50%);
 }
 
+.landing-page-panel-join-button{
+    position: absolute;
+    top: 70%;
+    left: 30%;
+    height: 40%;
+    width: auto;
+    aspect-ratio: 206 / 45;
+    transform: translate(-50%, -50%);
+}
 
 .landing-page-ranking-container {
     position: absolute;

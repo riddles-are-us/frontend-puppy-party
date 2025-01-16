@@ -84,7 +84,7 @@ const LandingPage = () => {
   };
 
   const onClickJoin = () => {
-    /**/
+    window.open("/upload-meme", "_blank");
   };
 
   return (
@@ -112,10 +112,9 @@ const LandingPage = () => {
           <div className="landing-page-panel-play-button">
             <PlayButton onClick={onClickPlay} />
           </div>
-          {/* disable join meme temporary  */}
-          {/* <div className="landing-page-panel-join-button">
+          <div className="landing-page-panel-join-button">
             <JoinButton onClick={onClickJoin} />
-          </div> */}
+          </div>
         </div>
         <div
           ref={rankingContainerRef}
