@@ -38,23 +38,20 @@ const UploadMemePopup = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    setMessage("");
   };
 
   const onClickConfirm = () => {
     if (uIState == UIState.UploadMemePopup) {
-      try {
-        uploadImage(
-          formData.name,
-          formData.avatar!,
-          formData.spriteSheet!
-        ).then(() => {
-          setMessage("Meme uploaded successfully!");
-          setFormData({ name: "", avatar: null, spriteSheet: null });
-          dispatch(setUIState({ uIState: UIState.Idle }));
-        });
-      } catch (error) {
-        dispatch(setUIState({ uIState: UIState.Idle }));
+      if (formData.name != "" && formData.avatar && formData.spriteSheet) {
+        setMessage("Uploading");
+        uploadImage(formData.name, formData.avatar, formData.spriteSheet).then(
+          () => {
+            setFormData({ name: "", avatar: null, spriteSheet: null });
+            dispatch(setUIState({ uIState: UIState.Idle }));
+          }
+        );
+      } else {
+        setMessage("Please fill in name, avatar, and sprite sheet");
       }
     }
   };
@@ -108,6 +105,9 @@ const UploadMemePopup = () => {
             onChange={handleFileChange}
             required
           />
+        </div>
+        <div className="upload-meme-popup-warning-text">
+          <p>{message}</p>
         </div>
         <div className="upload-meme-popup-confirm-button">
           <ConfirmButton onClick={onClickConfirm} />

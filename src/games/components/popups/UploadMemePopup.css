@@ -141,3 +141,20 @@
   border-radius: 4px;
   font-size: 14px;
 }
+
+.upload-meme-popup-warning-text {
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    text-align: center;
+    line-height: 24px;
+    margin: 0px;
+    width: 80%;
+    height: 35%;
+    animation: 0.3s ease-in forwards;
+    color: red;
+    font-family: "mishmash";
+    user-select: none;
+}
