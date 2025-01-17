@@ -13,6 +13,7 @@ import DepositButton from "./buttons/DepositButton";
 import ticketIcon from "../images/ticket_icon.png";
 import balanceIcon from "../images/balance_icon.png";
 import { selectCurrentMemes } from "../../data/puppy_party/memeDatas";
+import JoinButton from "./buttons/JoinButton";
 
 interface Props {
   targetMemeIndex: number;
@@ -25,6 +26,13 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
   const currentMemes = useAppSelector(selectCurrentMemes);
   const balance = useAppSelector(selectBalance);
   const ticket = useAppSelector(selectTicket);
+
+  const onClickJoin = () => {
+    if (uiState == UIState.Idle) {
+      dispatch(setUIState({ uIState: UIState.UploadMemePopup }));
+    }
+  };
+
   const onClickWithdraw = () => {
     if (uiState == UIState.Idle) {
       dispatch(setUIState({ uIState: UIState.WithdrawPopup }));
@@ -40,6 +48,9 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
   return (
     <div className="top-menu-container">
       <div className="top-menu-background" />
+      <div className="top-menu-join-button">
+        <JoinButton onClick={onClickJoin} />
+      </div>
       <div className="top-menu-withdraw-button">
         <WithdrawButton onClick={onClickWithdraw} />
       </div>

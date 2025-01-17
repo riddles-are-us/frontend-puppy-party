@@ -68,23 +68,16 @@ const LandingPage = () => {
 
   const account = useAppSelector(AccountSlice.selectL1Account);
 
-  function startGame(index: number) {
-    console.log(index);
-    if (index < currentMemes.length) {
-      dispatch(setTargetMemeIndex(index));
-      dispatch(AccountSlice.loginL2AccountAsync(account!));
-      loadAudio((ele) => {
-        return ele;
-      });
-    }
+  function startGame() {
+    dispatch(setTargetMemeIndex(0));
+    dispatch(AccountSlice.loginL2AccountAsync(account!));
+    loadAudio((ele) => {
+      return ele;
+    });
   }
 
   const onClickPlay = () => {
-    startGame(0);
-  };
-
-  const onClickJoin = () => {
-    window.open("/upload-meme", "_blank");
+    startGame();
   };
 
   return (
@@ -111,9 +104,6 @@ const LandingPage = () => {
           </p>
           <div className="landing-page-panel-play-button">
             <PlayButton onClick={onClickPlay} />
-          </div>
-          <div className="landing-page-panel-join-button">
-            <JoinButton onClick={onClickJoin} />
           </div>
         </div>
         <div

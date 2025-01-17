@@ -1,4 +1,5 @@
 .join-button-scale{
-    width: 100%;
-    height: 100%;
+    width: 206px;
+    height: 45px;
+    transform: scale(50%);
 }

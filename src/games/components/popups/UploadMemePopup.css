@@ -1,0 +1,143 @@
+.upload-meme-popup-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+}
+
+.upload-meme-popup-mask {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  user-select: none;
+}
+
+.upload-meme-popup-main-container {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+  width: 550px;
+  height: 688px;
+}
+
+.upload-meme-popup-main-background {
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  background-color: rgb(47, 227, 230);
+}
+
+.upload-meme-popup-confirm-button {
+  position: absolute;
+  top: 85%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.upload-meme-popup-title-text {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    text-align: center;
+    line-height: 24px;
+    margin: 0px;
+    width: 80%;
+    height: 35%;
+    animation: 0.3s ease-in forwards;
+    color: black;
+    font-family: "mishmash";
+    user-select: none;
+}
+
+.upload-meme-popup-name-label-text {
+    position: absolute;
+    top: 35%;
+    left: 10%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    text-align: center;
+    line-height: 24px;
+    margin: 0px;
+    width: 80%;
+    height: 35%;
+    animation: 0.3s ease-in forwards;
+    color: black;
+    font-family: "mishmash";
+    user-select: none;
+}
+
+.upload-meme-popup-name-input {
+  position: absolute;
+  top: 20%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  padding: 3%;
+  border: 1px solid black;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.upload-meme-popup-avatar-label-text {
+    position: absolute;
+    top: 55%;
+    left: 10%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    text-align: center;
+    line-height: 24px;
+    margin: 0px;
+    width: 80%;
+    height: 35%;
+    animation: 0.3s ease-in forwards;
+    color: black;
+    font-family: "mishmash";
+    user-select: none;
+}
+
+.upload-meme-popup-avatar-input {
+  position: absolute;
+  top: 40%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  padding: 3%;
+  border: 1px solid black;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.upload-meme-popup-sprite-sheet-label-text {
+    position: absolute;
+    top: 75%;
+    left: 10%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    text-align: center;
+    line-height: 24px;
+    margin: 0px;
+    width: 80%;
+    height: 35%;
+    animation: 0.3s ease-in forwards;
+    color: black;
+    font-family: "mishmash";
+    user-select: none;
+}
+
+.upload-meme-popup-sprite-sheet-input {
+  position: absolute;
+  top: 60%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  padding: 3%;
+  border: 1px solid black;
+  border-radius: 4px;
+  font-size: 14px;
+}
