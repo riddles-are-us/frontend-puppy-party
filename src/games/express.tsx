@@ -6,7 +6,7 @@ const protocol = currentLocation.protocol; // e.g., 'http:' or 'https:'
 const hostname = currentLocation.hostname; // e.g., 'sinka' or 'localhost'
 
 const instance = axios.create({
-  baseURL: `${protocol}//${hostname}` + ":3030",
+  baseURL: `${protocol}//${hostname}` + ":3000",
   headers: {
     "Content-Type": "multipart/form-data",
   },
