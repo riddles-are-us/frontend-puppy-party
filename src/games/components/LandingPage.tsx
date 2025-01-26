@@ -2,9 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { AccountSlice } from "zkwasm-minirollup-browser";
 import {
-  selectMemeList,
-  setTargetMemeIndex,
-} from "../../data/puppy_party/properties";
+  selectUserState,
+} from "../../data/state";
 import { loadAudio } from "../audio";
 import { MemeSeasonCurrent, MemeSeasonPrevious } from "../config";
 import background from "../images/landing/landing_bg.png";
@@ -28,7 +27,7 @@ import MemeRankingIcon from "./MemeRankingIcon";
 
 const LandingPage = () => {
   const dispatch = useAppDispatch();
-  const memeList = useAppSelector(selectMemeList);
+  const userState = useAppSelector(selectUserState);
   const rankingContainerRef = useRef<HTMLDivElement>(null);
   const [memeRankingIconElementWidth, setMemeRankingIconElementWidth] =
     useState<number>(0);
@@ -70,8 +69,7 @@ const LandingPage = () => {
   function startGame(index: number) {
     console.log(index);
     if (index < MemeSeasonCurrent.memeInfoList.length) {
-      dispatch(setTargetMemeIndex(index));
-      dispatch(AccountSlice.loginL2AccountAsync(account!));
+      dispatch(AccountSlice.loginL2AccountAsync(account!.address));
       loadAudio((ele) => {
         return ele;
       });
@@ -143,7 +141,7 @@ const LandingPage = () => {
                     width={memeRankingIconElementWidth}
                     fontSize={fontSize}
                     image={memeInfo.cover}
-                    rank={memeList[memeInfo.index].rank}
+                    rank={userState!.state.meme_list[memeInfo.index].rank}
                   />
                 ))}
             />

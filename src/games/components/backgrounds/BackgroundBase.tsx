@@ -1,4 +1,4 @@
-import { MemeListElement } from "../../../data/puppy_party/properties";
+import {MemeListElement} from "../../../data/state";
 import { Clip, ClipRect } from "../../animations/meme";
 import { Beat, FocusTorch, HEIGHT, Light, Torch, WIDTH } from "../../draw";
 import { ShapeBuilder } from "../../ShapeBuilder";

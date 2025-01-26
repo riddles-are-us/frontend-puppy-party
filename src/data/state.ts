@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { RootState } from "../../app/store";
-import { getConfig, sendTransaction, queryState } from "../../games/request"
-import {scenario} from '../../games/scenario';
+import { createStateSlice, PropertiesState, ConnectState } from "zkwasm-minirollup-browser";
+import {RootState} from '../app/store';
+import { scenario} from '../games/scenario';
 
+/*
 export enum UIState{
   Init,
   Preloading,
@@ -24,8 +25,9 @@ export enum UIState{
   ConfirmPopup,
   ErrorPopup,
 }
+*/
 
-interface PlayerState {
+interface PlayerInfo {
   nonce: number;
   data: {
     balance: number;
@@ -35,6 +37,7 @@ interface PlayerState {
     last_lottery_timestamp: number;
     last_action_timestamp: number;
     progress: number;
+    stack: number[];
   }
 }
 
@@ -42,49 +45,29 @@ export interface MemeListElement {
   rank: number,
 }
 
-interface PropertiesState {
-  uIState: UIState;
-  player: PlayerState;
-  lastTxResult: string | number,
-  globalTimer: number;
-  targetMemeIndex: number;
-  memeList: MemeListElement[];
-  giftboxShake: boolean;
-  progressReset: boolean;
-  popupDescription: string;
-  showProgressBarGoodJob: boolean;
-  showProgressBarNice: boolean;
-  lotteryInfoDiff: number;
+interface GlobalState {
+  meme_list: MemeListElement[],
+  counter: number,
 }
 
-const SWAY = 0n;
+const initialState: PropertiesState<PlayerInfo, GlobalState, any> = {
+    connectState: ConnectState.Init,
+    userState: null,
+    lastError: null,
+    config: null,
+};
 
-const initialState: PropertiesState = {
-    uIState: UIState.Init,
-    player: {
-      nonce: 0,
-      data: {
-        balance: 0,
-        lottery_info: 0,
-        ticket: 0,
-        action: SWAY,
-        last_lottery_timestamp: 0,
-        last_action_timestamp: 0,
-        progress: 0,
-      }
-    },
-    lastTxResult: "",
-    globalTimer: 0,
-    targetMemeIndex: 0,
-    memeList: [],
-    giftboxShake: false,
-    progressReset: false,
-    popupDescription: "",
-    showProgressBarGoodJob: false,
-    showProgressBarNice: false,
-    lotteryInfoDiff: 0,
-  };
 
+export const propertiesSlice = createStateSlice(initialState);
+
+export const selectConnectState = (state: RootState) => state.puppyParty.connectState;
+export const selectUserState = (state: RootState) => state.puppyParty.userState;
+export const selectConfig = (state: RootState) => state.puppyParty.config;
+
+export const { setConnectState } = propertiesSlice.actions;
+export default propertiesSlice.reducer;
+
+/*
 export const propertiesSlice = createSlice({
   name: 'properties',
   initialState,
@@ -195,3 +178,4 @@ export const selectShowProgressBarNice = (state: RootState) => state.puppyParty.
 
 export const { setTargetMemeIndex, setUIState, setLastTxResult, setGiftboxShake, setProgressReset, setPopupDescription, setShowProgressBarGoodJob, setShowProgressBarNice, resetLotteryInfoDiff } = propertiesSlice.actions;
 export default propertiesSlice.reducer;
+*/

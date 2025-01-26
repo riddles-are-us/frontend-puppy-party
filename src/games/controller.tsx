@@ -1,28 +1,25 @@
 import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { scenario } from "./scenario";
-import { getConfig, sendTransaction, queryState } from "./request";
-import {
-  UIState,
-  selectUIState,
-  setUIState,
-  selectNonce,
-} from "../data/puppy_party/properties";
-import { AccountSlice } from "zkwasm-minirollup-browser";
+import {selectConfig, selectConnectState, selectUserState, setConnectState} from "../data/state";
+import { AccountSlice, ConnectState } from "zkwasm-minirollup-browser";
 import "./style.scss";
 import Gameplay from "./components/Gameplay";
 import WelcomePage from "./components/WelcomePage";
-import { getCreatePlayerTransactionParameter } from "./api";
+import { CREATE_PLAYER, getCreatePlayerTransactionParameter } from "./api";
+import {getConfig, queryInitialState, queryState, sendTransaction} from "zkwasm-minirollup-browser/src/connect";
+import {createCommand} from "zkwasm-minirollup-rpc";
 
 //import cover from "./images/towerdefence.jpg";
 
 export function GameController() {
   const dispatch = useAppDispatch();
-  const account = useAppSelector(AccountSlice.selectL1Account);
+  const l1account = useAppSelector(AccountSlice.selectL1Account);
   const l2account = useAppSelector(AccountSlice.selectL2Account);
-  const uIState = useAppSelector(selectUIState);
+  const connectState = useAppSelector(selectConnectState);
+  const userState = useAppSelector(selectUserState);
+  const gameConfig = useAppSelector(selectConfig);
   const [inc, setInc] = useState(0);
-  const nonce = useAppSelector(selectNonce);
   const [progress, setProgress] = useState(0);
 
   const preloadImages = (urls: string[], onReady: () => void) => {
@@ -49,68 +46,15 @@ export function GameController() {
     });
   };
 
-  useEffect(() => {
-    dispatch(AccountSlice.loginL1AccountAsync());
-  }, []);
-
-  useEffect(() => {
-    if (uIState == UIState.Init) {
-      dispatch(setUIState({ uIState: UIState.Preloading }));
-    }
-  }, [account]);
-
-  function createPlayer() {
-    try {
-      dispatch(
-        sendTransaction(getCreatePlayerTransactionParameter(l2account!, nonce))
-      );
-    } catch (e) {
-      console.log("Error at create player " + e);
-    }
-  }
-
+  // update State
   function updateState() {
-    if (l2account) {
-      if (uIState >= UIState.Idle) {
-        dispatch(queryState({ cmd: [], prikey: l2account!.address }));
-      }
+    if (connectState == ConnectState.Idle) {
+      dispatch(queryState(l2account!.address));
+    } else if (connectState == ConnectState.Init && userState == null) {
+      dispatch(queryInitialState("1"));
     }
     setInc(inc + 1);
   }
-
-  function loginProcess() {
-    if (uIState == UIState.QueryState) {
-      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
-    } else if (uIState == UIState.CreatePlayer) {
-      createPlayer();
-    }
-  }
-
-  useEffect(() => {
-    loginProcess();
-  }, [uIState]);
-
-  useEffect(() => {
-    if (l2account) {
-      dispatch(setUIState({ uIState: UIState.QueryState }));
-      scenario.status = "play";
-    }
-  }, [l2account]);
-
-  useEffect(() => {
-    if (uIState == UIState.Preloading) {
-      const requireContext = require.context(
-        "./images",
-        true,
-        /\.(png|jpg|jpeg|gif)$/
-      );
-      const urls = requireContext.keys().map(requireContext) as string[];
-      preloadImages(urls, () => {
-        dispatch(setUIState({ uIState: UIState.QueryConfig }));
-        dispatch(getConfig());
-      });
-    }
-  }, [uIState]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -118,7 +62,63 @@ export function GameController() {
     }, 5000);
   }, [inc]);
 
-  if (uIState >= UIState.Idle) {
+
+
+  // login L2 account
+  useEffect(() => {
+    if (l2account && connectState == ConnectState.QueryState) {
+      dispatch(queryState(l2account!.address));
+    } else {
+      dispatch(queryInitialState("1"));
+    }
+  }, [l2account]);
+
+
+  // login L1 account
+  useEffect(() => {
+    dispatch(AccountSlice.loginL1AccountAsync());
+  }, []);
+
+  useEffect(() => {
+    if (connectState == ConnectState.Init) {
+      dispatch(setConnectState(ConnectState.Loading));
+    }
+  }, [l1account]);
+
+  useEffect(() => {
+    if (connectState == ConnectState.InstallPlayer) {
+      const command = createCommand(0n, CREATE_PLAYER, []);
+      dispatch(sendTransaction({
+        cmd: command,
+        prikey: l2account!.address
+      }));
+    }
+  }, [connectState]);
+
+
+  useEffect(() => {
+    if (l2account) {
+      scenario.status = "play";
+    }
+  }, [l2account]);
+
+  useEffect(() => {
+//    if (connectState == ConnectState.Loading) {
+      const requireContext = require.context(
+        "./images",
+        true,
+        /\.(png|jpg|jpeg|gif)$/
+      );
+      const urls = requireContext.keys().map(requireContext) as string[];
+      preloadImages(urls, () => {
+        dispatch(getConfig());
+        // switch to get state
+      });
+//  }
+  }, []);
+
+
+  if (gameConfig && userState?.player) {
     return <Gameplay />;
   } else {
     return <WelcomePage progress={progress} />;

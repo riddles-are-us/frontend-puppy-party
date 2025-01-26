@@ -2,17 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import background from "../../images/withdraw_frame.png";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import "./GiftboxPopup.css";
-import { queryState, sendTransaction } from "../../request";
 import { AccountSlice } from "zkwasm-minirollup-browser";
-import {
-  selectLotteryInfo,
-  selectNonce,
-  selectUIState,
-  setGiftboxShake,
-  setProgressReset,
-  setUIState,
-  UIState,
-} from "../../../data/puppy_party/properties";
 import GiftboxConfirmButton from "../buttons/GiftboxConfirmButton";
 import giftbox_image from "../../images/animations/giftbox.png";
 import giftbox_bonus from "../../images/bonus.png";
@@ -27,11 +17,11 @@ import note7 from "../../images/note/note7.png";
 import note8 from "../../images/note/note8.png";
 import note9 from "../../images/note/note9.png";
 import note10 from "../../images/note/note10.png";
-import { getTransactionCommandArray } from "../../rpc";
 import GiftboxNotes from "./GiftboxNotes";
 import { getLotteryransactionParameter } from "../../api";
-
-const LOTTERY = 6n;
+import {selectUIState, setGiftboxShake, setProgressReset, setUIState, UIState} from "../../../data/ui";
+import {selectUserState} from "../../../data/state";
+import {sendTransaction} from "zkwasm-minirollup-browser/src/connect";
 
 interface GiftboxNoteProps {
   startPosition: { x: number; y: number };
@@ -128,12 +118,11 @@ const giftboxNotesProps: GiftboxNoteProps[] = [
 const GiftboxPopup = () => {
   const dispatch = useAppDispatch();
   const uIState = useAppSelector(selectUIState);
-  const nonce = useAppSelector(selectNonce);
+  const userState = useAppSelector(selectUserState);
   const l2account = useAppSelector(AccountSlice.selectL2Account);
   const [rewardAnimation, setRewardAnimation] = useState(false);
   const [finishQuery, setFinishQuery] = useState(false);
   const parentRef = useRef<HTMLDivElement | null>(null);
-  const lotteryInfo = useAppSelector(selectLotteryInfo);
   const [preLotteryInfo, setPreLotterInfo] = useState(0);
 
   const getEndPosition = (parentContainer: HTMLDivElement | null) => {
@@ -155,20 +144,10 @@ const GiftboxPopup = () => {
       setRewardAnimation(true);
       dispatch(setUIState({ uIState: UIState.QueryGiftbox }));
       dispatch(setProgressReset({ progressReset: true }));
-      setPreLotterInfo(lotteryInfo);
+      setPreLotterInfo(userState!.player!.data.lottery_info);
       dispatch(
-        sendTransaction(getLotteryransactionParameter(l2account!, nonce))
-      ).then((action) => {
-        if (sendTransaction.fulfilled.match(action)) {
-          dispatch(queryState({ cmd: [], prikey: l2account!.address })).then(
-            (action) => {
-              if (queryState.fulfilled.match(action)) {
-                setFinishQuery(true);
-              }
-            }
-          );
-        }
-      });
+        sendTransaction(getLotteryransactionParameter(l2account!, BigInt(userState!.player!.nonce)))
+      );
     }
   };
 
@@ -181,7 +160,7 @@ const GiftboxPopup = () => {
 
   useEffect(() => {
     if (!rewardAnimation && finishQuery) {
-      if (lotteryInfo > preLotteryInfo) {
+      if (userState!.player!.data.lottery_info > preLotteryInfo) {
         dispatch(setUIState({ uIState: UIState.SponsorPopup }));
       } else {
         dispatch(setUIState({ uIState: UIState.Idle }));

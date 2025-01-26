@@ -1,27 +1,19 @@
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import "./LotteryHeatPopup.css";
-import { sendTransaction } from "../../request";
 import { AccountSlice } from "zkwasm-minirollup-browser";
-import {
-  resetLotteryInfoDiff,
-  selectLotteryInfo,
-  selectLotteryInfoDiff,
-  selectNonce,
-  selectUIState,
-  setUIState,
-  UIState,
-} from "../../../data/puppy_party/properties";
 import GiftboxConfirmButton from "../buttons/GiftboxConfirmButton";
 import sponsor_image from "../../images/animations/sponsor.png";
 import { getWithdrawLotteryTransactionParameter } from "../../api";
+import {resetLotteryInfoDiff, selectUIState, setUIState, UIState} from "../../../data/ui";
+import {selectUserState} from "../../../data/state";
+import {sendTransaction} from "zkwasm-minirollup-browser/src/connect";
 
 const LotteryHeatPopup = () => {
   const dispatch = useAppDispatch();
-  const nonce = useAppSelector(selectNonce);
+  const userState = useAppSelector(selectUserState);
   const uIState = useAppSelector(selectUIState);
   const l2account = useAppSelector(AccountSlice.selectL2Account);
   const l1account = useAppSelector(AccountSlice.selectL1Account);
-  const lotteryInfo = useAppSelector(selectLotteryInfo);
 
   const withdrawLottery = () => {
     dispatch(
@@ -29,8 +21,8 @@ const LotteryHeatPopup = () => {
         getWithdrawLotteryTransactionParameter(
           l1account!,
           l2account!,
-          BigInt(lotteryInfo),
-          nonce
+          BigInt(userState!.player!.data.lottery_info),
+          BigInt(userState!.player!.nonce),
         )
       )
     ).then((action) => {
@@ -55,7 +47,7 @@ const LotteryHeatPopup = () => {
         <div className="lottery-heat-popup-main-container">
           <div className="lottery-heat-popup-main-animation" />
           <p className="lottery-heat-popup-sponsor-text">Cash out</p>
-          <p className="lottery-heat-popup-description-text">{lotteryInfo}</p>
+          <p className="lottery-heat-popup-description-text">{userState!.player!.data.lottery_info}</p>
           <div className="lottery-heat-popup-confirm-button">
             <GiftboxConfirmButton onClick={onClickConfirm} />
           </div>

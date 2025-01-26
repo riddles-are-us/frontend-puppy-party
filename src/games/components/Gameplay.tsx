@@ -4,29 +4,8 @@ import TopMenu from "./TopMenu";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { scenario } from "../scenario";
 import { audioSystem } from "../audio";
-import {
-  UIState,
-  selectUIState,
-  setUIState,
-  selectNonce,
-  selectProgress,
-  selectLastActionTimestamp,
-  selectGlobalTimer,
-  selectMemeList,
-  selectLastLotteryTimestamp,
-  selectTargetMemeIndex,
-  selectGiftboxShake,
-  setGiftboxShake,
-  setTargetMemeIndex,
-  selectTicket,
-  setPopupDescription,
-  selectProgressReset,
-  setProgressReset,
-  MemeListElement,
-} from "../../data/puppy_party/properties";
 import { AccountSlice } from "zkwasm-minirollup-browser";
 import { getBeat } from "../draw";
-import { queryState, sendTransaction, SERVER_TICK_TO_SECOND } from "../request";
 import "./Gameplay.css";
 import StageButtons from "./StageButtons";
 import ProgressBar from "./ProgressBar";
@@ -34,12 +13,17 @@ import {
   getCancelLotteryransactionParameter,
   getDanceTransactionParameter,
 } from "../api";
+import {MemeListElement, selectConnectState, selectUserState} from "../../data/state";
+import {sendTransaction} from "zkwasm-minirollup-browser/src/connect";
+import {selectGiftboxShake, selectProgressReset, selectTargetMemeIndex, setGiftboxShake, setPopupDescription, setProgressReset, setTargetMemeIndex, setUIState, UIState} from "../../data/ui";
 
 const COOL_DOWN = 2;
 const PROGRESS_LOTTERY_THRESHOLD = 1000;
 const MIN_PROGRESS_UPDATE = 30;
 const PROGRESS_UPDATE_RATE = 0.2;
 const PROGRESS_COUNTING_DOWN_SPEED = 10;
+
+const SERVER_TICK_TO_SECOND = 5;
 
 export enum DanceType {
   None,
@@ -52,22 +36,17 @@ export enum DanceType {
 const Gameplay = () => {
   const dispatch = useAppDispatch();
   const l2account = useAppSelector(AccountSlice.selectL2Account);
-  const uIState = useAppSelector(selectUIState);
+  const connectState = useAppSelector(selectConnectState);
+  const userState = useAppSelector(selectUserState);
   const [inc, setInc] = useState(0);
-  const nonce = useAppSelector(selectNonce);
-  const progress = useAppSelector(selectProgress);
-  const progressRef = useRef(progress);
-  const displayProgressRef = useRef(progress);
   const isCountingDownRef = useRef(false);
   const [displayProgress, setDisplayProgress] = useState(0);
-  const [lastDanceActionTimeCache, setLastDanceActionTimeCache] = useState(0);
-  const lastLotteryTimestamp = useAppSelector(selectLastLotteryTimestamp);
-  const lastActionTimestamp = useAppSelector(selectLastActionTimestamp);
-  const memeList = useAppSelector(selectMemeList);
   const memeListRef = useRef<MemeListElement[]>([]);
+
   const giftboxShake = useAppSelector(selectGiftboxShake);
   const progressReset = useAppSelector(selectProgressReset);
   const targetMemeIndex = useAppSelector(selectTargetMemeIndex);
+
   const [targetMemeRank, setTargetMemeRank] = useState(0);
   const isDanceButtonCoolDownLocalRef = useRef(false);
   const isDanceButtonCoolDownGlobalRef = useRef(false);
@@ -77,8 +56,6 @@ const Gameplay = () => {
   const [danceButtonProgress, setDanceButtonProgress] = useState(0);
 
   const [danceType, setDanceType] = useState(DanceType.None);
-  const ticket = useAppSelector(selectTicket);
-  const globalTimer = useAppSelector(selectGlobalTimer);
 
   const giftboxShakeRef = useRef(false);
   const progressResetRef = useRef(false);
@@ -86,39 +63,37 @@ const Gameplay = () => {
   const canvasRef = React.createRef<HTMLCanvasElement>();
 
   const updateDisplayProgressRef = () => {
-    if (progressRef.current == 0) {
-      displayProgressRef.current = 0;
-      setDisplayProgress(displayProgressRef.current);
+    if (userState!.player!.data.progress == 0) {
+      //displayProgressRef.current = 0;
+      setDisplayProgress(userState!.player!.data.progress);
       return;
     }
 
     if (isCountingDownRef.current) {
-      displayProgressRef.current -= PROGRESS_COUNTING_DOWN_SPEED;
+      setDisplayProgress(displayProgress - PROGRESS_COUNTING_DOWN_SPEED);
+      /*
       if (displayProgressRef.current <= 0) {
         handleCancelRewards();
         displayProgressRef.current = 0;
         progressRef.current = 0;
         isCountingDownRef.current = false;
         dispatch(setUIState({ uIState: UIState.Idle }));
+        throw("Progress is zero");
       }
+      */
     } else {
       if (
-        progressResetRef.current == false &&
-        progressRef.current > displayProgressRef.current
+        userState!.player!.data.progress > displayProgress
       ) {
-        const progressStep =
-          (progressRef.current - displayProgressRef.current) *
-          PROGRESS_UPDATE_RATE;
-        displayProgressRef.current = Math.min(
-          displayProgressRef.current +
-            Math.max(progressStep, MIN_PROGRESS_UPDATE),
-          PROGRESS_LOTTERY_THRESHOLD
-        );
+        const progressStep = (userState!.player!.data.progress - displayProgress) * PROGRESS_UPDATE_RATE;
+        setDisplayProgress(Math.min(
+            displayProgress + Math.max(progressStep, MIN_PROGRESS_UPDATE),
+            PROGRESS_LOTTERY_THRESHOLD
+        ));
       }
     }
 
-    setDisplayProgress(displayProgressRef.current);
-    if (displayProgressRef.current == PROGRESS_LOTTERY_THRESHOLD) {
+    if (displayProgress == PROGRESS_LOTTERY_THRESHOLD) {
       isCountingDownRef.current = true;
       dispatch(setUIState({ uIState: UIState.GiftboxPopup }));
     }
@@ -183,44 +158,42 @@ const Gameplay = () => {
   }, [giftboxShake]);
 
   useEffect(() => {
-    memeListRef.current = memeList;
-  }, [memeList]);
+    memeListRef.current = userState!.state.meme_list;
+  }, [userState]);
 
   useEffect(() => {
     progressResetRef.current = progressReset;
     if (progressReset) {
       isCountingDownRef.current = false;
-      displayProgressRef.current = 0;
-      setDisplayProgress(displayProgressRef.current);
+      setDisplayProgress(0);
     }
   }, [progressReset]);
 
   useEffect(() => {
-    progressRef.current = progress;
+    setDisplayProgress(userState!.player!.data.progress);
     dispatch(setProgressReset({ progressReset: false }));
-  }, [progress]);
+  }, [userState]);
 
   useEffect(() => {
-    if (memeList[targetMemeIndex] != undefined) {
-      setTargetMemeRank(memeList[targetMemeIndex].rank);
+    if (userState!.state.meme_list[targetMemeIndex] != undefined) {
+      setTargetMemeRank(userState!.state.meme_list[targetMemeIndex].rank);
     }
-  }, [targetMemeIndex, memeList]);
+  }, [targetMemeIndex, userState]);
 
   useEffect(() => {
     isDanceButtonCoolDownGlobalRef.current =
-      globalTimer < lastActionTimestamp + COOL_DOWN;
-  }, [lastActionTimestamp, globalTimer]);
+      userState!.state.counter * SERVER_TICK_TO_SECOND < userState!.player!.data.last_action_timestamp + COOL_DOWN;
+  }, [userState]);
 
   function handleCancelRewards() {
     dispatch(
-      sendTransaction(getCancelLotteryransactionParameter(l2account!, nonce))
+      sendTransaction(getCancelLotteryransactionParameter(l2account!, BigInt(userState!.player!.nonce)))
     );
-    dispatch(queryState({ cmd: [], prikey: l2account!.address }));
   }
 
   const onClickDanceButton = (danceType: DanceType) => () => {
     if (isDanceButtonCoolDownLocalRef.current == false) {
-      if (ticket == 0) {
+      if (userState!.player!.data.ticket == 0) {
         dispatch(
           setPopupDescription({
             popupDescription: "Not Enough Ticket",
@@ -247,12 +220,11 @@ const Gameplay = () => {
               l2account!,
               danceType,
               BigInt(targetMemeIndex),
-              nonce
+              BigInt(userState!.player!.nonce)
             )
           )
         );
 
-        dispatch(queryState({ cmd: [], prikey: l2account!.address }));
         setTimeout(() => {
           scenario.restoreActor();
         }, 8000);

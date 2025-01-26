@@ -1,10 +1,10 @@
-import { MemeListElement } from "../../data/puppy_party/properties";
 import {
   HEIGHT, WIDTH,
 }  from "../draw";
 
 import spirites from "../spirite";
 import { MemeSeasonCurrent } from "../config";
+import {MemeListElement} from "../../data/state";
 
 const MEME_DEFAULT_CATEGORY = spirites.spirites.length - 1; // the last animation are of default dogs
 

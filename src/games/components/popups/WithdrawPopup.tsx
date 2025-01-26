@@ -1,35 +1,21 @@
 import { useState } from "react";
 import background from "../../images/withdraw_frame.png";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import "./WithdrawPopup.css";
-import { sendTransaction } from "../../request";
 import { AccountSlice } from "zkwasm-minirollup-browser";
-import {
-  selectBalance,
-  selectNonce,
-  selectUIState,
-  setPopupDescription,
-  setUIState,
-  UIState,
-} from "../../../data/puppy_party/properties";
 import ConfirmButton from "../buttons/WithdrawConfirmButton";
 import CancelButton from "../buttons/WithdrawCancelButton";
 import { getWithdrawTransactionParameter } from "../../api";
-
-const WITHDRAW = 8n;
-function bytesToHex(bytes: Array<number>): string {
-  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join(
-    ""
-  );
-}
+import "./WithdrawPopup.css";
+import {selectUIState, setPopupDescription, setUIState, UIState} from "../../../data/ui";
+import {selectUserState} from "../../../data/state";
+import {sendTransaction} from "zkwasm-minirollup-browser/src/connect";
 
 const WithdrawPopup = () => {
   const dispatch = useAppDispatch();
   const uIState = useAppSelector(selectUIState);
-  const nonce = useAppSelector(selectNonce);
   const l2account = useAppSelector(AccountSlice.selectL2Account);
   const l1account = useAppSelector(AccountSlice.selectL1Account);
-  const balance = useAppSelector(selectBalance);
+  const userState = useAppSelector(selectUserState);
   const [amountString, setAmountString] = useState("");
 
   async function withdrawRewards(amount: bigint, nonce: bigint) {
@@ -52,7 +38,7 @@ const WithdrawPopup = () => {
   const withdraw = (amountString: string) => {
     try {
       const amount = Number(amountString);
-      if (amount > balance) {
+      if (amount > userState!.player!.data.balance) {
         dispatch(
           setPopupDescription({
             popupDescription: "Not Enough Balance",
@@ -61,7 +47,7 @@ const WithdrawPopup = () => {
         dispatch(setUIState({ uIState: UIState.ErrorPopup }));
       } else {
         dispatch(setUIState({ uIState: UIState.QueryWithdraw }));
-        withdrawRewards(BigInt(amount), nonce);
+        withdrawRewards(BigInt(amount), BigInt(userState!.player!.nonce));
       }
     } catch (e) {
       console.log("Error at withdraw " + e);
@@ -86,7 +72,7 @@ const WithdrawPopup = () => {
       <div className="withdraw-popup-main-container">
         <img src={background} className="withdraw-popup-main-background" />
         <p className="withdraw-popup-amount-text">
-          Please enter a number between 0 and {balance}.
+          Please enter a number between 0 and {userState!.player!.data.balance}.
         </p>
         <input
           type="number"

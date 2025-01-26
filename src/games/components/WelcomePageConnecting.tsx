@@ -4,10 +4,10 @@ import frame from "../images/progress_bar/frame.png";
 import bar from "../images/progress_bar/bar.png";
 import "./WelcomePageConnecting.css";
 import { useAppSelector } from "../../app/hooks";
-import { selectUIState, UIState } from "../../data/puppy_party/properties";
+import {selectConnectState} from "../../data/state";
 
 const WelcomePageConnecting = () => {
-  const uIState = useAppSelector(selectUIState);
+  const connectState = useAppSelector(selectConnectState);
 
   return (
     <>

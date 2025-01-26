@@ -5,16 +5,10 @@ import goodJobImage from "../images/good_job.png";
 
 import "./ProgressBar.css";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import {
-  selectLotteryInfo,
-  selectShowProgressBarGoodJob,
-  selectShowProgressBarNice,
-  setUIState,
-  UIState,
-} from "../../data/puppy_party/properties";
-import Grid from "./Grid";
 import ProgressBarElement from "./ProgressBarElement";
 import LotteryHeatButton from "./buttons/LotteryHeatButton";
+import {selectShowProgressBarGoodJob, selectShowProgressBarNice, setUIState, UIState} from "../../data/ui";
+import {selectUserState} from "../../data/state";
 
 const colorMap = [
   "#4747D6",
@@ -45,7 +39,7 @@ const ProgressBar = ({ progress }: Props) => {
   const dispatch = useAppDispatch();
   const showProgressBarGoodJob = useAppSelector(selectShowProgressBarGoodJob);
   const showProgressBarNice = useAppSelector(selectShowProgressBarNice);
-  const lotteryInfo = useAppSelector(selectLotteryInfo);
+  const userState = useAppSelector(selectUserState);
   const [colorOffset, setColorOffset] = useState(0);
   const colorOffsetRef = useRef(0);
 
@@ -82,13 +76,13 @@ const ProgressBar = ({ progress }: Props) => {
       <img src={progressBarBackground} className="progress-bar-background" />
       <div className="progress-bar-lottery-heat-button">
         <LotteryHeatButton
-          isDisabled={lotteryInfo <= 0}
+          isDisabled={userState!.player!.data.lottery_info <= 0}
           onClick={onClickLotteryHeatButton}
         />
       </div>
       <div className="progress-bar-lottery-text">
-        {lotteryInfo > 0
-          ? `Lottery Heat: ${lotteryInfo}`
+        {userState!.player!.data.lottery_info > 0
+          ? `Lottery Heat: ${userState!.player!.data.lottery_info}`
           : "Nothing to Cashout"}
       </div>
       {showProgressBarGoodJob && (

@@ -1,3 +1,4 @@
+import {MemeListElement} from "../../../data/state";
 import { Clip } from "../../animations/meme";
 import {
   Torch,
@@ -15,7 +16,6 @@ import {
 import { ShapeBuilder } from "../../ShapeBuilder";
 import spirits from "../../spirite";
 import { BackgroundBase, ShapeProps, ShapeState } from "./BackgroundBase";
-import { MemeListElement } from "../../../data/puppy_party/properties";
 
 export class BackgroundDisco extends BackgroundBase {
   fixedLights: Array<FixedLight>;

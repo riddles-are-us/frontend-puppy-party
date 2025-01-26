@@ -1,32 +1,38 @@
 import React from "react";
 import { useAppSelector } from "../../app/hooks";
-import { selectUIState, UIState } from "../../data/puppy_party/properties";
+import { selectConfig, selectConnectState } from "../../data/state";
 import WelcomePageConnecting from "./WelcomePageConnecting";
 import WelcomePageProgressBar from "./WelcomePageProgressBar";
 import "./WelcomePage.css";
 import LandingPage from "./LandingPage";
+import {ConnectState} from "zkwasm-minirollup-browser";
+import {selectUIState, UIState} from "../../data/ui";
 
 interface Props {
   progress: number;
 }
 
 const WelcomePage = ({ progress }: Props) => {
-  const uIState = useAppSelector(selectUIState);
+  const connectState = useAppSelector(selectConnectState);
+  const uiState = useAppSelector(selectUIState);
+  const config = useAppSelector(selectConfig);
 
-  if (uIState == UIState.Init) {
+  if (connectState == ConnectState.Init) {
     return <WelcomePageConnecting />;
-  } else if (uIState == UIState.ConnectionError) {
+  } else if (connectState == ConnectState.ConnectionError) {
     return <WelcomePageConnecting />;
-  } else if (uIState == UIState.Preloading) {
+  } else if (connectState == ConnectState.Loading) {
     return <WelcomePageProgressBar progress={progress} />;
-  } else if (uIState == UIState.QueryConfig) {
+  } else if (connectState == ConnectState.QueryConfig) {
     return <WelcomePageProgressBar progress={80} />;
-  } else if (uIState == UIState.QueryState) {
+  } else if (connectState == ConnectState.QueryState) {
     return <WelcomePageProgressBar progress={90} />;
-  } else if (uIState == UIState.WelcomePage) {
+  //} else if (uiState == UIState.WelcomePage) {
+  } else if (config) {
     return <LandingPage />;
   } else {
-    return null;
+    return <LandingPage />;
+    //return null;
   }
 };
 

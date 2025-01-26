@@ -1,14 +1,9 @@
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import "./SponsorPopup.css";
-import {
-  resetLotteryInfoDiff,
-  selectLotteryInfoDiff,
-  setUIState,
-  UIState,
-} from "../../../data/puppy_party/properties";
 import GiftboxConfirmButton from "../buttons/GiftboxConfirmButton";
 import sponsor_image from "../../images/animations/sponsor.png";
 import { SponsorLogo } from "../../config";
+import {resetLotteryInfoDiff, selectLotteryInfoDiff, setUIState, UIState} from "../../../data/ui";
 
 const SponsorPopup = () => {
   const dispatch = useAppDispatch();

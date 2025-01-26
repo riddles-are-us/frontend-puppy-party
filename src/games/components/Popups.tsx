@@ -1,11 +1,6 @@
 import React from "react";
 import "./Popups.css";
 import WithdrawPopup from "./popups/WithdrawPopup";
-import {
-  selectPopupDescription,
-  selectUIState,
-  UIState,
-} from "../../data/puppy_party/properties";
 import { useAppSelector } from "../../app/hooks";
 import GiftboxPopup from "./popups/GiftboxPopup";
 import DepositPopup from "./popups/DepositPopup";
@@ -13,6 +8,7 @@ import ConfirmPopup from "./popups/ConfirmPopup";
 import ErrorPopup from "./popups/ErrorPopup";
 import SponsorPopup from "./popups/SponsorPopup";
 import LotteryHeatPopup from "./popups/LotteryHeatPopup";
+import {selectPopupDescription, selectUIState, UIState} from "../../data/ui";
 
 const Popups = () => {
   const uIState = useAppSelector(selectUIState);

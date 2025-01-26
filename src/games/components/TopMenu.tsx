@@ -1,18 +1,14 @@
 import React, { useEffect } from "react";
 import "./TopMenu.css";
 import WithdrawButton from "./buttons/WithdrawButton";
-import {
-  selectBalance,
-  selectTicket,
-  selectUIState,
-  setUIState,
-  UIState,
-} from "../../data/puppy_party/properties";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { MemeSeasonCurrent } from "../config";
 import DepositButton from "./buttons/DepositButton";
 import ticketIcon from "../images/ticket_icon.png";
 import balanceIcon from "../images/balance_icon.png";
+import {selectUIState, setUIState, UIState} from "../../data/ui";
+import {selectConnectState, selectUserState} from "../../data/state";
+import {ConnectState} from "zkwasm-minirollup-browser";
 
 interface Props {
   targetMemeIndex: number;
@@ -22,16 +18,16 @@ interface Props {
 function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
   const dispatch = useAppDispatch();
   const uiState = useAppSelector(selectUIState);
-  const balance = useAppSelector(selectBalance);
-  const ticket = useAppSelector(selectTicket);
+  const userState = useAppSelector(selectUserState);
+  const connectState = useAppSelector(selectConnectState);
   const onClickWithdraw = () => {
-    if (uiState == UIState.Idle) {
+    if (connectState == ConnectState.Idle) {
       dispatch(setUIState({ uIState: UIState.WithdrawPopup }));
     }
   };
 
   const onClickDeposit = () => {
-    if (uiState == UIState.Idle) {
+    if (connectState == ConnectState.Idle) {
       dispatch(setUIState({ uIState: UIState.DepositPopup }));
     }
   };
@@ -45,9 +41,9 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
       <div className="top-menu-deposit-button">
         <DepositButton onClick={onClickDeposit} />
       </div>
-      <div className="top-menu-ticket-text">Ticket: {ticket}</div>
+      <div className="top-menu-ticket-text">Ticket: {userState!.player!.data.ticket}</div>
       <img src={ticketIcon} className="top-menu-ticket-icon"></img>
-      <div className="top-menu-balance-text">DiscoNote: {balance}</div>
+      <div className="top-menu-balance-text">DiscoNote: {userState!.player!.data.ticket}</div>
       <img src={balanceIcon} className="top-menu-balance-icon"></img>
       <div className="top-menu-vote-text">Vote: {targetMemeRank}</div>
       <img

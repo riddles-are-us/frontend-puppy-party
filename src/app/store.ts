@@ -1,7 +1,8 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { AccountSliceReducer } from 'zkwasm-minirollup-browser';
 import endpointReducer from "../data/endpoint";
-import puppyPartyReducer from "../data/puppy_party/puppy_party";
+import stateReducer from "../data/state";
+import uiReducer from "../data/ui";
 
 export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
@@ -22,7 +23,8 @@ export const store = configureStore({
   reducer: {
     account: AccountSliceReducer,
     endpoint: endpointReducer,
-    puppyParty: puppyPartyReducer
+    puppyParty: stateReducer,
+    uiux: uiReducer,
   },
 });
 

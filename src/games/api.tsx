@@ -1,13 +1,13 @@
 import BN from "bn.js";
 import { AccountSlice } from "zkwasm-minirollup-browser";
-import { getTransactionCommandArray } from "./rpc";
 import { DanceType } from "./components/Gameplay";
+import { createWithdrawCommand, createCommand } from "zkwasm-minirollup-rpc";
 
-const CREATE_PLAYER = 1n;
-const DANCE_MUSIC = 2n;
-const DANCE_SIDE = 3n;
-const DANCE_TURN = 4n;
-const DANCE_UP = 5n;
+export const CREATE_PLAYER = 1n;
+const VOTE = 2n;
+const STAKE = 3n;
+const BET = 4n;
+const COMMENT = 5n;
 const LOTTERY = 6n;
 const CANCELL_LOTTERY = 7n;
 const WITHDRAW = 8n;
@@ -24,7 +24,7 @@ export function getCreatePlayerTransactionParameter(
   nonce: bigint
 ) {
   return {
-    cmd: getTransactionCommandArray(CREATE_PLAYER, nonce, [0n, 0n, 0n]),
+    cmd: createCommand(CREATE_PLAYER, nonce, [0n, 0n, 0n]),
     prikey: l2account.address,
   };
 }
@@ -37,16 +37,15 @@ export function getDanceTransactionParameter(
 ) {
   const danceCommand =
     danceType == DanceType.Music
-      ? DANCE_MUSIC
+      ? VOTE
       : danceType == DanceType.Side
-      ? DANCE_SIDE
+      ? STAKE
       : danceType == DanceType.Turn
-      ? DANCE_TURN
-      : DANCE_UP;
+      ? BET
+      : COMMENT
   return {
-    cmd: getTransactionCommandArray(danceCommand, nonce, [
+    cmd: createCommand(nonce, danceCommand, [
       BigInt(targetMemeIndex),
-      0n,
       0n,
     ]),
     prikey: l2account.address,
@@ -58,7 +57,7 @@ export function getLotteryransactionParameter(
   nonce: bigint
 ) {
   return {
-    cmd: getTransactionCommandArray(LOTTERY, nonce, [0n, 0n, 0n]),
+    cmd: createCommand(nonce, LOTTERY, []),
     prikey: l2account!.address,
   };
 }
@@ -68,7 +67,7 @@ export function getCancelLotteryransactionParameter(
   nonce: bigint
 ) {
   return {
-    cmd: getTransactionCommandArray(CANCELL_LOTTERY, nonce, [0n, 0n, 0n]),
+    cmd: createCommand(nonce, CANCELL_LOTTERY, []),
     prikey: l2account!.address,
   };
 }
@@ -82,26 +81,14 @@ export function getWithdrawTransactionParameter(
   const address = l1account.address.slice(2);
   const addressBN = new BN(address, 16);
   const addressBE = addressBN.toArray("be", 20); // 20 bytes = 160 bits and split into 4, 8, 8
-  //   console.log("address is", address);
-  //   console.log("address big endian is", addressBE);
   const firstLimb = BigInt("0x" + bytesToHex(addressBE.slice(0, 4).reverse()));
   const sndLimb = BigInt("0x" + bytesToHex(addressBE.slice(4, 12).reverse()));
   const thirdLimb = BigInt(
     "0x" + bytesToHex(addressBE.slice(12, 20).reverse())
   );
 
-  /*
-    (32 bit amount | 32 bit highbit of address)
-    (64 bit mid bit of address (be))
-    (64 bit tail bit of address (be))
-    */
-
-  //   console.log("first is", firstLimb);
-  //   console.log("snd is", sndLimb);
-  //   console.log("third is", thirdLimb);
-
   return {
-    cmd: getTransactionCommandArray(WITHDRAW, nonce, [
+    cmd: createCommand (nonce, WITHDRAW, [
       (firstLimb << 32n) + amount,
       sndLimb,
       thirdLimb,
@@ -125,14 +112,8 @@ export function getWithdrawLotteryTransactionParameter(
     "0x" + bytesToHex(addressBE.slice(12, 20).reverse())
   );
 
-  /*
-      (32 bit amount | 32 bit highbit of address)
-      (64 bit mid bit of address (be))
-      (64 bit tail bit of address (be))
-      */
-
   return {
-    cmd: getTransactionCommandArray(WITHDRAW_LOTTERY, nonce, [
+    cmd: createCommand(nonce, WITHDRAW_LOTTERY, [
       (firstLimb << 32n) + amount,
       sndLimb,
       thirdLimb,

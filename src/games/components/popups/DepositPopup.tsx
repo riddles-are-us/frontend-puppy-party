@@ -2,25 +2,11 @@ import { useState } from "react";
 import background from "../../images/deposit_frame.png";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import "./DepositPopup.css";
-import { sendTransaction } from "../../request";
 import { AccountSlice } from "zkwasm-minirollup-browser";
-import {
-  selectBalance,
-  selectNonce,
-  selectUIState,
-  setPopupDescription,
-  setUIState,
-  UIState,
-} from "../../../data/puppy_party/properties";
 import ConfirmButton from "../buttons/WithdrawConfirmButton";
 import CancelButton from "../buttons/WithdrawCancelButton";
-
-const WITHDRAW = 8n;
-function bytesToHex(bytes: Array<number>): string {
-  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join(
-    ""
-  );
-}
+import {selectUIState, setPopupDescription, setUIState, UIState} from "../../../data/ui";
+import {depositAsync} from "zkwasm-minirollup-browser/src/reduxstate";
 
 function getFirst10Words(input: string): string {
   const words = input.split(/\s+/);
@@ -34,10 +20,8 @@ function getFirst10Words(input: string): string {
 const DepositPopup = () => {
   const dispatch = useAppDispatch();
   const uIState = useAppSelector(selectUIState);
-  const nonce = useAppSelector(selectNonce);
   const l2account = useAppSelector(AccountSlice.selectL2Account);
   const l1account = useAppSelector(AccountSlice.selectL1Account);
-  const balance = useAppSelector(selectBalance);
   const [amountString, setAmountString] = useState("");
 
   const deposit = (amount: string) => {
@@ -51,7 +35,7 @@ const DepositPopup = () => {
           l1account: l1account!,
         })
       ).then((action) => {
-        if (sendTransaction.fulfilled.match(action)) {
+        if (depositAsync.fulfilled.match(action)) {
           dispatch(setUIState({ uIState: UIState.Idle }));
           //setErrorMessage("");
         } else if (AccountSlice.depositAsync.rejected.match(action)) {
@@ -62,7 +46,7 @@ const DepositPopup = () => {
           }
         }
 
-        if (sendTransaction.fulfilled.match(action)) {
+        if (depositAsync.fulfilled.match(action)) {
           dispatch(
             setPopupDescription({
               popupDescription: "Hash Number : (TBD)",
