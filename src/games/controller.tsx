@@ -48,7 +48,7 @@ export function GameController() {
 
   // update State
   function updateState() {
-    if (connectState == ConnectState.Idle) {
+    if (connectState == ConnectState.Idle && l2account) {
       dispatch(queryState(l2account!.address));
     } else if (connectState == ConnectState.Init && userState == null) {
       dispatch(queryInitialState("1"));
