@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useAppSelector } from "../../app/hooks";
 import { selectConfig, selectConnectState } from "../../data/state";
 import WelcomePageConnecting from "./WelcomePageConnecting";
 import WelcomePageProgressBar from "./WelcomePageProgressBar";
 import "./WelcomePage.css";
 import LandingPage from "./LandingPage";
-import {ConnectState} from "zkwasm-minirollup-browser";
-import {selectUIState, UIState} from "../../data/ui";
+import { ConnectState } from "zkwasm-minirollup-browser";
+import { selectUIState, UIState } from "../../data/ui";
 
 interface Props {
   progress: number;
@@ -14,8 +14,11 @@ interface Props {
 
 const WelcomePage = ({ progress }: Props) => {
   const connectState = useAppSelector(selectConnectState);
-  const uiState = useAppSelector(selectUIState);
   const config = useAppSelector(selectConfig);
+
+  useEffect(() => {
+    console.log("connectState", ConnectState[connectState]);
+  }, [connectState]);
 
   if (connectState == ConnectState.Init) {
     return <WelcomePageConnecting />;
@@ -27,7 +30,7 @@ const WelcomePage = ({ progress }: Props) => {
     return <WelcomePageProgressBar progress={80} />;
   } else if (connectState == ConnectState.QueryState) {
     return <WelcomePageProgressBar progress={90} />;
-  //} else if (uiState == UIState.WelcomePage) {
+    //} else if (uiState == UIState.WelcomePage) {
   } else if (config) {
     return <LandingPage />;
   } else {

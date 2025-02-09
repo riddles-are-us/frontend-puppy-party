@@ -25,7 +25,7 @@ export function getCreatePlayerTransactionParameter(
 ) {
   return {
     cmd: createCommand(CREATE_PLAYER, nonce, [0n, 0n, 0n]),
-    prikey: l2account.address,
+    prikey: l2account.getPrivateKey(),
   };
 }
 
@@ -42,13 +42,10 @@ export function getDanceTransactionParameter(
       ? STAKE
       : danceType == DanceType.Turn
       ? BET
-      : COMMENT
+      : COMMENT;
   return {
-    cmd: createCommand(nonce, danceCommand, [
-      BigInt(targetMemeIndex),
-      0n,
-    ]),
-    prikey: l2account.address,
+    cmd: createCommand(nonce, danceCommand, [BigInt(targetMemeIndex), 0n]),
+    prikey: l2account.getPrivateKey(),
   };
 }
 
@@ -58,7 +55,7 @@ export function getLotteryransactionParameter(
 ) {
   return {
     cmd: createCommand(nonce, LOTTERY, []),
-    prikey: l2account!.address,
+    prikey: l2account!.getPrivateKey(),
   };
 }
 
@@ -68,7 +65,7 @@ export function getCancelLotteryransactionParameter(
 ) {
   return {
     cmd: createCommand(nonce, CANCELL_LOTTERY, []),
-    prikey: l2account!.address,
+    prikey: l2account!.getPrivateKey(),
   };
 }
 
@@ -88,12 +85,12 @@ export function getWithdrawTransactionParameter(
   );
 
   return {
-    cmd: createCommand (nonce, WITHDRAW, [
+    cmd: createCommand(nonce, WITHDRAW, [
       (firstLimb << 32n) + amount,
       sndLimb,
       thirdLimb,
     ]),
-    prikey: l2account.address,
+    prikey: l2account.getPrivateKey(),
   };
 }
 
@@ -118,6 +115,6 @@ export function getWithdrawLotteryTransactionParameter(
       sndLimb,
       thirdLimb,
     ]),
-    prikey: l2account.address,
+    prikey: l2account.getPrivateKey(),
   };
 }

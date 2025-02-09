@@ -59,7 +59,7 @@ export function GameController() {
   // update State
   function updateState() {
     if (connectState == ConnectState.Idle && l2account) {
-      dispatch(queryState(l2account!.address));
+      dispatch(queryState(l2account!.getPrivateKey()));
     } else if (connectState == ConnectState.Init && userState == null) {
       dispatch(queryInitialState("1"));
     }
@@ -74,10 +74,8 @@ export function GameController() {
 
   // login L2 account
   useEffect(() => {
-    if (l2account && connectState == ConnectState.QueryState) {
-      dispatch(queryState(l2account!.address));
-    } else {
-      dispatch(queryInitialState("1"));
+    if (l2account) {
+      dispatch(queryState(l2account!.getPrivateKey()));
     }
   }, [l2account]);
 
@@ -104,7 +102,7 @@ export function GameController() {
       dispatch(
         sendTransaction({
           cmd: command,
-          prikey: l2account!.address,
+          prikey: l2account!.getPrivateKey(),
         })
       );
     }
