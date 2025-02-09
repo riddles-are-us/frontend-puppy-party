@@ -1,4 +1,4 @@
-.welcome-page-connecting-container {
+.loading-page-connecting-container {
     position: absolute;
     top: 46.5%;
     left: 50%;
@@ -7,7 +7,7 @@
     height: 7%;
 }
 
-.welcome-page-connecting-background {
+.loading-page-connecting-background {
     position: absolute;
     width: 335px;
     height: 197px;
@@ -17,7 +17,7 @@
     user-select: none;
 }
 
-.welcome-page-connecting-frame {
+.loading-page-connecting-frame {
     position: absolute;
     width: 255px;
     height: 17px;
@@ -27,7 +27,7 @@
     user-select: none;
 }
 
-.welcome-page-connecting-bar {
+.loading-page-connecting-bar {
     position: absolute;
     width: 255px;
     height: 17px;

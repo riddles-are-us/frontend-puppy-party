@@ -10,7 +10,7 @@ import {
 import { AccountSlice, ConnectState } from "zkwasm-minirollup-browser";
 import "./style.scss";
 import Gameplay from "./components/Gameplay";
-import WelcomePage from "./components/WelcomePage";
+import LoadingPage from "./components/LoadingPage";
 import { CREATE_PLAYER, getCreatePlayerTransactionParameter } from "./api";
 import {
   getConfig,
@@ -21,6 +21,7 @@ import {
 import { createCommand } from "zkwasm-minirollup-rpc";
 import { getMemeList } from "./express";
 import { setMemeList } from "../data/ui";
+import LandingPage from "./components/LandingPage";
 
 export function GameController() {
   const dispatch = useAppDispatch();
@@ -129,9 +130,19 @@ export function GameController() {
     //  }
   }, []);
 
-  if (gameConfig && userState?.player) {
+  if (connectState == ConnectState.Init) {
+    return <LoadingPage progress={0} />;
+  } else if (connectState == ConnectState.ConnectionError) {
+    return <LoadingPage progress={0} />;
+  } else if (connectState == ConnectState.Loading) {
+    return <LoadingPage progress={progress} />;
+  } else if (connectState == ConnectState.QueryConfig) {
+    return <LoadingPage progress={80} />;
+  } else if (connectState == ConnectState.QueryState) {
+    return <LoadingPage progress={90} />;
+  } else if (gameConfig && userState?.player) {
     return <Gameplay />;
   } else {
-    return <WelcomePage progress={progress} />;
+    return <LandingPage />;
   }
 }

@@ -1,4 +1,4 @@
-.welcome-page-progress-bar-container {
+.loading-page-progress-bar-container {
     position: absolute;
     top: 46.5%;
     left: 50%;
@@ -7,7 +7,7 @@
     height: 7%;
 }
 
-.welcome-page-progress-bar-background {
+.loading-page-progress-bar-background {
     position: absolute;
     width: 335px;
     height: 197px;
@@ -17,7 +17,7 @@
     user-select: none;
 }
 
-.welcome-page-progress-bar-frame {
+.loading-page-progress-bar-frame {
     position: absolute;
     width: 255px;
     height: 17px;
@@ -27,7 +27,7 @@
     user-select: none;
 }
 
-.welcome-page-progress-bar-bar {
+.loading-page-progress-bar-bar {
     position: absolute;
     width: 255px;
     height: 17px;
