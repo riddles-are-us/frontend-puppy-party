@@ -1,9 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { AccountSlice } from "zkwasm-minirollup-browser";
-import {
-  selectUserState,
-} from "../../data/state";
+import { selectUserState } from "../../data/state";
 import { loadAudio } from "../audio";
 import { MemeSeasonCurrent, MemeSeasonPrevious } from "../config";
 import background from "../images/landing/landing_bg.png";
@@ -24,10 +22,12 @@ import JoinButton from "./buttons/JoinButton";
 import MemeIcon from "./MemeIcon";
 import Grid from "./Grid";
 import MemeRankingIcon from "./MemeRankingIcon";
+import { selectMemeList } from "../../data/ui";
 
 const LandingPage = () => {
   const dispatch = useAppDispatch();
   const userState = useAppSelector(selectUserState);
+  const memeList = useAppSelector(selectMemeList);
   const rankingContainerRef = useRef<HTMLDivElement>(null);
   const [memeRankingIconElementWidth, setMemeRankingIconElementWidth] =
     useState<number>(0);
@@ -111,8 +111,8 @@ const LandingPage = () => {
           </div>
           {/* disable join meme temporary  */}
           {/* <div className="landing-page-panel-join-button">
-            <JoinButton onClick={onClickJoin} />
-          </div> */}
+						<JoinButton onClick={onClickJoin} />
+					</div> */}
         </div>
         <div
           ref={rankingContainerRef}
@@ -141,7 +141,7 @@ const LandingPage = () => {
                     width={memeRankingIconElementWidth}
                     fontSize={fontSize}
                     image={memeInfo.cover}
-                    rank={userState!.state.meme_list[memeInfo.index].rank}
+                    rank={memeList[memeInfo.index].rank}
                   />
                 ))}
             />

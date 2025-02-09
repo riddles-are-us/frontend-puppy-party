@@ -1,16 +1,26 @@
 import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { scenario } from "./scenario";
-import {selectConfig, selectConnectState, selectUserState, setConnectState} from "../data/state";
+import {
+  selectConfig,
+  selectConnectState,
+  selectUserState,
+  setConnectState,
+} from "../data/state";
 import { AccountSlice, ConnectState } from "zkwasm-minirollup-browser";
 import "./style.scss";
 import Gameplay from "./components/Gameplay";
 import WelcomePage from "./components/WelcomePage";
 import { CREATE_PLAYER, getCreatePlayerTransactionParameter } from "./api";
-import {getConfig, queryInitialState, queryState, sendTransaction} from "zkwasm-minirollup-browser/src/connect";
-import {createCommand} from "zkwasm-minirollup-rpc";
-
-//import cover from "./images/towerdefence.jpg";
+import {
+  getConfig,
+  queryInitialState,
+  queryState,
+  sendTransaction,
+} from "zkwasm-minirollup-browser/src/connect";
+import { createCommand } from "zkwasm-minirollup-rpc";
+import { getMemeList } from "./express";
+import { setMemeList } from "../data/ui";
 
 export function GameController() {
   const dispatch = useAppDispatch();
@@ -62,8 +72,6 @@ export function GameController() {
     }, 5000);
   }, [inc]);
 
-
-
   // login L2 account
   useEffect(() => {
     if (l2account && connectState == ConnectState.QueryState) {
@@ -73,10 +81,15 @@ export function GameController() {
     }
   }, [l2account]);
 
-
   // login L1 account
   useEffect(() => {
     dispatch(AccountSlice.loginL1AccountAsync());
+  }, []);
+
+  useEffect(() => {
+    getMemeList().then((res) => {
+      dispatch(setMemeList({ memeList: res.data }));
+    });
   }, []);
 
   useEffect(() => {
@@ -88,13 +101,14 @@ export function GameController() {
   useEffect(() => {
     if (connectState == ConnectState.InstallPlayer) {
       const command = createCommand(0n, CREATE_PLAYER, []);
-      dispatch(sendTransaction({
-        cmd: command,
-        prikey: l2account!.address
-      }));
+      dispatch(
+        sendTransaction({
+          cmd: command,
+          prikey: l2account!.address,
+        })
+      );
     }
   }, [connectState]);
-
 
   useEffect(() => {
     if (l2account) {
@@ -103,20 +117,19 @@ export function GameController() {
   }, [l2account]);
 
   useEffect(() => {
-//    if (connectState == ConnectState.Loading) {
-      const requireContext = require.context(
-        "./images",
-        true,
-        /\.(png|jpg|jpeg|gif)$/
-      );
-      const urls = requireContext.keys().map(requireContext) as string[];
-      preloadImages(urls, () => {
-        dispatch(getConfig());
-        // switch to get state
-      });
-//  }
+    //    if (connectState == ConnectState.Loading) {
+    const requireContext = require.context(
+      "./images",
+      true,
+      /\.(png|jpg|jpeg|gif)$/
+    );
+    const urls = requireContext.keys().map(requireContext) as string[];
+    preloadImages(urls, () => {
+      dispatch(getConfig());
+      // switch to get state
+    });
+    //  }
   }, []);
-
 
   if (gameConfig && userState?.player) {
     return <Gameplay />;

@@ -13,9 +13,24 @@ import {
   getCancelLotteryransactionParameter,
   getDanceTransactionParameter,
 } from "../api";
-import {MemeListElement, selectConnectState, selectUserState} from "../../data/state";
-import {sendTransaction} from "zkwasm-minirollup-browser/src/connect";
-import {selectGiftboxShake, selectProgressReset, selectTargetMemeIndex, setGiftboxShake, setPopupDescription, setProgressReset, setTargetMemeIndex, setUIState, UIState} from "../../data/ui";
+import {
+  MemeListElement,
+  selectConnectState,
+  selectUserState,
+} from "../../data/state";
+import { sendTransaction } from "zkwasm-minirollup-browser/src/connect";
+import {
+  selectGiftboxShake,
+  selectMemeList,
+  selectProgressReset,
+  selectTargetMemeIndex,
+  setGiftboxShake,
+  setPopupDescription,
+  setProgressReset,
+  setTargetMemeIndex,
+  setUIState,
+  UIState,
+} from "../../data/ui";
 
 const COOL_DOWN = 2;
 const PROGRESS_LOTTERY_THRESHOLD = 1000;
@@ -38,6 +53,7 @@ const Gameplay = () => {
   const l2account = useAppSelector(AccountSlice.selectL2Account);
   const connectState = useAppSelector(selectConnectState);
   const userState = useAppSelector(selectUserState);
+  const memeList = useAppSelector(selectMemeList);
   const [inc, setInc] = useState(0);
   const isCountingDownRef = useRef(false);
   const [displayProgress, setDisplayProgress] = useState(0);
@@ -72,24 +88,26 @@ const Gameplay = () => {
     if (isCountingDownRef.current) {
       setDisplayProgress(displayProgress - PROGRESS_COUNTING_DOWN_SPEED);
       /*
-      if (displayProgressRef.current <= 0) {
-        handleCancelRewards();
-        displayProgressRef.current = 0;
-        progressRef.current = 0;
-        isCountingDownRef.current = false;
-        dispatch(setUIState({ uIState: UIState.Idle }));
-        throw("Progress is zero");
-      }
-      */
+			if (displayProgressRef.current <= 0) {
+				handleCancelRewards();
+				displayProgressRef.current = 0;
+				progressRef.current = 0;
+				isCountingDownRef.current = false;
+				dispatch(setUIState({ uIState: UIState.Idle }));
+				throw("Progress is zero");
+			}
+			*/
     } else {
-      if (
-        userState!.player!.data.progress > displayProgress
-      ) {
-        const progressStep = (userState!.player!.data.progress - displayProgress) * PROGRESS_UPDATE_RATE;
-        setDisplayProgress(Math.min(
+      if (userState!.player!.data.progress > displayProgress) {
+        const progressStep =
+          (userState!.player!.data.progress - displayProgress) *
+          PROGRESS_UPDATE_RATE;
+        setDisplayProgress(
+          Math.min(
             displayProgress + Math.max(progressStep, MIN_PROGRESS_UPDATE),
             PROGRESS_LOTTERY_THRESHOLD
-        ));
+          )
+        );
       }
     }
 
@@ -158,8 +176,8 @@ const Gameplay = () => {
   }, [giftboxShake]);
 
   useEffect(() => {
-    memeListRef.current = userState!.state.meme_list;
-  }, [userState]);
+    memeListRef.current = memeList;
+  }, [memeList]);
 
   useEffect(() => {
     progressResetRef.current = progressReset;
@@ -175,19 +193,23 @@ const Gameplay = () => {
   }, [userState]);
 
   useEffect(() => {
-    if (userState!.state.meme_list[targetMemeIndex] != undefined) {
-      setTargetMemeRank(userState!.state.meme_list[targetMemeIndex].rank);
-    }
-  }, [targetMemeIndex, userState]);
+    setTargetMemeRank(memeList[targetMemeIndex].rank);
+  }, [targetMemeIndex, memeList]);
 
   useEffect(() => {
     isDanceButtonCoolDownGlobalRef.current =
-      userState!.state.counter * SERVER_TICK_TO_SECOND < userState!.player!.data.last_action_timestamp + COOL_DOWN;
+      userState!.state.counter * SERVER_TICK_TO_SECOND <
+      userState!.player!.data.last_action_timestamp + COOL_DOWN;
   }, [userState]);
 
   function handleCancelRewards() {
     dispatch(
-      sendTransaction(getCancelLotteryransactionParameter(l2account!, BigInt(userState!.player!.nonce)))
+      sendTransaction(
+        getCancelLotteryransactionParameter(
+          l2account!,
+          BigInt(userState!.player!.nonce)
+        )
+      )
     );
   }
 

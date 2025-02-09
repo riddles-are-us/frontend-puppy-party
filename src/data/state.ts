@@ -60,9 +60,9 @@ const initialState: PropertiesState<PlayerInfo, GlobalState, any> = {
 
 export const propertiesSlice = createStateSlice(initialState);
 
-export const selectConnectState = (state: RootState) => state.puppyParty.connectState;
-export const selectUserState = (state: RootState) => state.puppyParty.userState;
-export const selectConfig = (state: RootState) => state.puppyParty.config;
+export const selectConnectState = (state: RootState) => state.state.connectState;
+export const selectUserState = (state: RootState) => state.state.userState;
+export const selectConfig = (state: RootState) => state.state.config;
 
 export const { setConnectState } = propertiesSlice.actions;
 export default propertiesSlice.reducer;

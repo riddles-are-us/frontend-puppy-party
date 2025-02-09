@@ -23,7 +23,7 @@ export const store = configureStore({
   reducer: {
     account: AccountSliceReducer,
     endpoint: endpointReducer,
-    puppyParty: stateReducer,
+    state: stateReducer,
     uiux: uiReducer,
   },
 });
