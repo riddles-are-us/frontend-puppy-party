@@ -19,11 +19,14 @@ import {
   sendTransaction,
 } from "zkwasm-minirollup-browser/src/connect";
 import { createCommand } from "zkwasm-minirollup-rpc";
-import { getMemeList } from "./express";
-import { setMemeList } from "../data/ui";
 import LandingPage from "./components/LandingPage";
 
-export function GameController() {
+interface Props {
+  onStart: () => Promise<void>;
+  progress: number;
+}
+
+export function GameController({ onStart, progress }: Props) {
   const dispatch = useAppDispatch();
   const l1account = useAppSelector(AccountSlice.selectL1Account);
   const l2account = useAppSelector(AccountSlice.selectL2Account);
@@ -31,31 +34,12 @@ export function GameController() {
   const userState = useAppSelector(selectUserState);
   const gameConfig = useAppSelector(selectConfig);
   const [inc, setInc] = useState(0);
-  const [progress, setProgress] = useState(0);
 
-  const preloadImages = (urls: string[], onReady: () => void) => {
-    let loadedCount = 0;
-    urls.forEach((url) => {
-      const img = new Image();
-      img.src = url;
-
-      img.onload = () => {
-        loadedCount++;
-        setProgress(Math.ceil((loadedCount / urls.length) * 8000) / 100);
-        if (loadedCount === urls.length) {
-          onReady();
-        }
-      };
-
-      img.onerror = () => {
-        console.error(`Failed to load image: ${url}`);
-        loadedCount++;
-        if (loadedCount === urls.length) {
-          onReady();
-        }
-      };
+  useEffect(() => {
+    onStart().then(() => {
+      dispatch(getConfig());
     });
-  };
+  }, []);
 
   // update State
   function updateState() {
@@ -73,22 +57,9 @@ export function GameController() {
     }, 5000);
   }, [inc]);
 
-  // login L2 account
-  useEffect(() => {
-    if (l2account) {
-      dispatch(queryState(l2account!.getPrivateKey()));
-    }
-  }, [l2account]);
-
   // login L1 account
   useEffect(() => {
     dispatch(AccountSlice.loginL1AccountAsync());
-  }, []);
-
-  useEffect(() => {
-    getMemeList().then((res) => {
-      dispatch(setMemeList({ memeList: res.data }));
-    });
   }, []);
 
   useEffect(() => {
@@ -97,6 +68,20 @@ export function GameController() {
     }
   }, [l1account]);
 
+  // login L2 account
+  useEffect(() => {
+    if (l2account) {
+      dispatch(queryState(l2account!.getPrivateKey()));
+    }
+  }, [l2account]);
+
+  useEffect(() => {
+    if (l2account) {
+      scenario.status = "play";
+    }
+  }, [l2account]);
+
+  // install new player
   useEffect(() => {
     if (connectState == ConnectState.InstallPlayer) {
       const command = createCommand(0n, CREATE_PLAYER, []);
@@ -108,27 +93,6 @@ export function GameController() {
       );
     }
   }, [connectState]);
-
-  useEffect(() => {
-    if (l2account) {
-      scenario.status = "play";
-    }
-  }, [l2account]);
-
-  useEffect(() => {
-    //    if (connectState == ConnectState.Loading) {
-    const requireContext = require.context(
-      "./images",
-      true,
-      /\.(png|jpg|jpeg|gif)$/
-    );
-    const urls = requireContext.keys().map(requireContext) as string[];
-    preloadImages(urls, () => {
-      dispatch(getConfig());
-      // switch to get state
-    });
-    //  }
-  }, []);
 
   if (connectState == ConnectState.Init) {
     return <LoadingPage progress={0} />;
