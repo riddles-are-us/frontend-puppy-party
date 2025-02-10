@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { getMemeList } from "./express";
 import { setMemeList } from "../data/ui";
-import { GameController } from "../games/controller";
-import { useAppDispatch } from "../app/hooks";
-import { getConfig } from "zkwasm-minirollup-browser/src/connect";
+import { ConnectController } from "./ConnectController";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { selectConfig, selectUserState } from "../data/state";
+import Gameplay from "./components/Gameplay";
+import LoadingPage from "./components/LoadingPage";
+import LandingPage from "./components/LandingPage";
+import { scenario } from "./scenario";
+import { AccountSlice } from "zkwasm-minirollup-browser";
 
 export function LoadingController() {
   const dispatch = useAppDispatch();
   const [progress, setProgress] = useState(0);
+  const userState = useAppSelector(selectUserState);
+  const gameConfig = useAppSelector(selectConfig);
+  const l2account = useAppSelector(AccountSlice.selectL2Account);
 
   async function preloadImages(imageUrls: string[]): Promise<void> {
     let loadedCount = 0;
@@ -50,5 +58,22 @@ export function LoadingController() {
     await loadImages();
   };
 
-  return <GameController onStart={onStart} progress={progress} />;
+  useEffect(() => {
+    if (l2account) {
+      scenario.status = "play";
+    }
+  }, [l2account]);
+
+  if (gameConfig && userState?.player) {
+    return <Gameplay />;
+  } else {
+    return (
+      <ConnectController
+        LoadingComponent={LoadingPage}
+        WelcomeComponent={LandingPage}
+        onStart={onStart}
+        progress={progress}
+      />
+    );
+  }
 }

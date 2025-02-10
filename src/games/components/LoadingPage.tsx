@@ -9,10 +9,11 @@ import { ConnectState } from "zkwasm-minirollup-browser";
 import { selectUIState, UIState } from "../../data/ui";
 
 interface Props {
+  message: string;
   progress: number;
 }
 
-const LoadingPage = ({ progress }: Props) => {
+const LoadingPage = ({ message, progress }: Props) => {
   return progress == 0 ? (
     <LoadingPageConnecting />
   ) : (

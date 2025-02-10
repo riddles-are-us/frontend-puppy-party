@@ -51,10 +51,11 @@ interface GlobalState {
 }
 
 const initialState: PropertiesState<PlayerInfo, GlobalState, any> = {
-    connectState: ConnectState.Init,
-    userState: null,
-    lastError: null,
-    config: null,
+		connectState: ConnectState.Init,
+		isConnected: false,
+		userState: null,
+		lastError: null,
+		config: null,
 };
 
 

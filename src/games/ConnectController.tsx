@@ -1,17 +1,13 @@
 import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
-import { scenario } from "./scenario";
 import {
-  selectConfig,
   selectConnectState,
   selectUserState,
   setConnectState,
 } from "../data/state";
 import { AccountSlice, ConnectState } from "zkwasm-minirollup-browser";
 import "./style.scss";
-import Gameplay from "./components/Gameplay";
-import LoadingPage from "./components/LoadingPage";
-import { CREATE_PLAYER, getCreatePlayerTransactionParameter } from "./api";
+import { CREATE_PLAYER } from "./api";
 import {
   getConfig,
   queryInitialState,
@@ -19,20 +15,25 @@ import {
   sendTransaction,
 } from "zkwasm-minirollup-browser/src/connect";
 import { createCommand } from "zkwasm-minirollup-rpc";
-import LandingPage from "./components/LandingPage";
 
 interface Props {
+  LoadingComponent: React.ComponentType<{ message: string; progress: number }>;
+  WelcomeComponent: React.ComponentType;
   onStart: () => Promise<void>;
   progress: number;
 }
 
-export function GameController({ onStart, progress }: Props) {
+export function ConnectController({
+  LoadingComponent,
+  WelcomeComponent,
+  onStart,
+  progress,
+}: Props) {
   const dispatch = useAppDispatch();
   const l1account = useAppSelector(AccountSlice.selectL1Account);
   const l2account = useAppSelector(AccountSlice.selectL2Account);
   const connectState = useAppSelector(selectConnectState);
   const userState = useAppSelector(selectUserState);
-  const gameConfig = useAppSelector(selectConfig);
   const [inc, setInc] = useState(0);
 
   useEffect(() => {
@@ -62,22 +63,16 @@ export function GameController({ onStart, progress }: Props) {
     dispatch(AccountSlice.loginL1AccountAsync());
   }, []);
 
-  useEffect(() => {
-    if (connectState == ConnectState.Init) {
-      dispatch(setConnectState(ConnectState.Loading));
-    }
-  }, [l1account]);
+  // useEffect(() => {
+  //   if (connectState == ConnectState.Init) {
+  //     dispatch(setConnectState(ConnectState.Pre));
+  //   }
+  // }, [l1account]);
 
   // login L2 account
   useEffect(() => {
     if (l2account) {
       dispatch(queryState(l2account!.getPrivateKey()));
-    }
-  }, [l2account]);
-
-  useEffect(() => {
-    if (l2account) {
-      scenario.status = "play";
     }
   }, [l2account]);
 
@@ -95,18 +90,20 @@ export function GameController({ onStart, progress }: Props) {
   }, [connectState]);
 
   if (connectState == ConnectState.Init) {
-    return <LoadingPage progress={0} />;
-  } else if (connectState == ConnectState.ConnectionError) {
-    return <LoadingPage progress={0} />;
-  } else if (connectState == ConnectState.Loading) {
-    return <LoadingPage progress={progress} />;
+    return <LoadingComponent message={"Initialising"} progress={0} />;
+  } else if (connectState == ConnectState.Preloading) {
+    return (
+      <LoadingComponent message={"Preloading Textures"} progress={progress} />
+    );
+  } else if (connectState == ConnectState.Idle) {
+    return <WelcomeComponent />;
   } else if (connectState == ConnectState.QueryConfig) {
-    return <LoadingPage progress={80} />;
+    return <LoadingComponent message={"Querying Config"} progress={0} />;
   } else if (connectState == ConnectState.QueryState) {
-    return <LoadingPage progress={90} />;
-  } else if (gameConfig && userState?.player) {
-    return <Gameplay />;
+    return <LoadingComponent message={"Querying State"} progress={0} />;
+  } else if (connectState == ConnectState.ConnectionError) {
+    return <LoadingComponent message={"Error"} progress={0} />;
   } else {
-    return <LandingPage />;
+    return <LoadingComponent message={"Loading"} progress={0} />;
   }
 }
