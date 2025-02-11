@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { AccountSlice } from "zkwasm-minirollup-browser";
-import { selectUserState } from "../../data/state";
 import { loadAudio } from "../audio";
 import { MemeSeasonCurrent, MemeSeasonPrevious } from "../config";
 import background from "../images/landing/landing_bg.png";
@@ -26,7 +25,6 @@ import { selectMemeList } from "../../data/ui";
 
 const LandingPage = () => {
   const dispatch = useAppDispatch();
-  const userState = useAppSelector(selectUserState);
   const memeList = useAppSelector(selectMemeList);
   const rankingContainerRef = useRef<HTMLDivElement>(null);
   const [memeRankingIconElementWidth, setMemeRankingIconElementWidth] =
@@ -67,7 +65,6 @@ const LandingPage = () => {
   const account = useAppSelector(AccountSlice.selectL1Account);
 
   function startGame(index: number) {
-    console.log(index);
     if (index < MemeSeasonCurrent.memeInfoList.length) {
       dispatch(AccountSlice.loginL2AccountAsync(account!.address));
       loadAudio((ele) => {

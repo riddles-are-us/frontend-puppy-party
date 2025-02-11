@@ -3,19 +3,19 @@ import { getMemeList } from "./express";
 import { setMemeList } from "../data/ui";
 import { ConnectController } from "./ConnectController";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { selectConfig, selectUserState } from "../data/state";
+import { selectNullableConfig, selectNullableUserState } from "../data/state";
 import Gameplay from "./components/Gameplay";
 import LoadingPage from "./components/LoadingPage";
 import LandingPage from "./components/LandingPage";
 import { scenario } from "./scenario";
-import { AccountSlice } from "zkwasm-minirollup-browser";
+import { selectL2Account } from "zkwasm-minirollup-browser/src/reduxstate";
 
 export function LoadingController() {
   const dispatch = useAppDispatch();
   const [progress, setProgress] = useState(0);
-  const userState = useAppSelector(selectUserState);
-  const gameConfig = useAppSelector(selectConfig);
-  const l2account = useAppSelector(AccountSlice.selectL2Account);
+  const userState = useAppSelector(selectNullableUserState);
+  const config = useAppSelector(selectNullableConfig);
+  const l2account = useAppSelector(selectL2Account);
 
   async function preloadImages(imageUrls: string[]): Promise<void> {
     let loadedCount = 0;
@@ -53,7 +53,6 @@ export function LoadingController() {
 
   const onStart = async () => {
     const res = await getMemeList();
-
     dispatch(setMemeList({ memeList: res.data }));
     await loadImages();
   };
@@ -64,7 +63,7 @@ export function LoadingController() {
     }
   }, [l2account]);
 
-  if (gameConfig && userState?.player) {
+  if (config && userState?.player && Object.keys(userState.player).length > 0) {
     return <Gameplay />;
   } else {
     return (

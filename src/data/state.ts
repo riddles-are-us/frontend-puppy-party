@@ -62,8 +62,11 @@ const initialState: PropertiesState<PlayerInfo, GlobalState, any> = {
 export const propertiesSlice = createStateSlice(initialState);
 
 export const selectConnectState = (state: RootState) => state.state.connectState;
-export const selectUserState = (state: RootState) => state.state.userState;
-export const selectConfig = (state: RootState) => state.state.config;
+export const selectNullableUserState = (state: RootState) => state.state.userState;
+export const selectUserState = (state: RootState) => state.state.userState!;
+export const selectLastError = (state: RootState) => state.state.lastError;
+export const selectNullableConfig = (state: RootState) => state.state.config;
+export const selectConfig = (state: RootState) => state.state.config!;
 
 export const { setConnectState } = propertiesSlice.actions;
 export default propertiesSlice.reducer;

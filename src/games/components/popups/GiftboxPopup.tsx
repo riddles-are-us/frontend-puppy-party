@@ -19,9 +19,15 @@ import note9 from "../../images/note/note9.png";
 import note10 from "../../images/note/note10.png";
 import GiftboxNotes from "./GiftboxNotes";
 import { getLotteryransactionParameter } from "../../api";
-import {selectUIState, setGiftboxShake, setProgressReset, setUIState, UIState} from "../../../data/ui";
-import {selectUserState} from "../../../data/state";
-import {sendTransaction} from "zkwasm-minirollup-browser/src/connect";
+import {
+  selectUIState,
+  setGiftboxShake,
+  setProgressReset,
+  setUIState,
+  UIState,
+} from "../../../data/ui";
+import { selectUserState } from "../../../data/state";
+import { sendTransaction } from "zkwasm-minirollup-browser/src/connect";
 
 interface GiftboxNoteProps {
   startPosition: { x: number; y: number };
@@ -144,9 +150,14 @@ const GiftboxPopup = () => {
       setRewardAnimation(true);
       dispatch(setUIState({ uIState: UIState.QueryGiftbox }));
       dispatch(setProgressReset({ progressReset: true }));
-      setPreLotterInfo(userState!.player!.data.lottery_info);
+      setPreLotterInfo(userState.player.data.lottery_info);
       dispatch(
-        sendTransaction(getLotteryransactionParameter(l2account!, BigInt(userState!.player!.nonce)))
+        sendTransaction(
+          getLotteryransactionParameter(
+            l2account!,
+            BigInt(userState.player.nonce)
+          )
+        )
       );
     }
   };
@@ -160,7 +171,7 @@ const GiftboxPopup = () => {
 
   useEffect(() => {
     if (!rewardAnimation && finishQuery) {
-      if (userState!.player!.data.lottery_info > preLotteryInfo) {
+      if (userState.player.data.lottery_info > preLotteryInfo) {
         dispatch(setUIState({ uIState: UIState.SponsorPopup }));
       } else {
         dispatch(setUIState({ uIState: UIState.Idle }));

@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
-import {
-  selectConnectState,
-  selectUserState,
-  setConnectState,
-} from "../data/state";
+import { selectConnectState, selectNullableUserState } from "../data/state";
 import { AccountSlice, ConnectState } from "zkwasm-minirollup-browser";
 import "./style.scss";
 import { CREATE_PLAYER } from "./api";
@@ -33,7 +29,7 @@ export function ConnectController({
   const l1account = useAppSelector(AccountSlice.selectL1Account);
   const l2account = useAppSelector(AccountSlice.selectL2Account);
   const connectState = useAppSelector(selectConnectState);
-  const userState = useAppSelector(selectUserState);
+  const userState = useAppSelector(selectNullableUserState);
   const [inc, setInc] = useState(0);
 
   useEffect(() => {
