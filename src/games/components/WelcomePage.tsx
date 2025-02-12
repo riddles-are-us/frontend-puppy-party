@@ -1,42 +1,216 @@
-import React, { useEffect } from "react";
-import { useAppSelector } from "../../app/hooks";
-import { selectConfig, selectConnectState } from "../../data/state";
-import WelcomePageConnecting from "./WelcomePageConnecting";
-import WelcomePageProgressBar from "./WelcomePageProgressBar";
+import React, { useEffect, useRef, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { AccountSlice } from "zkwasm-minirollup-browser";
+import { loadAudio } from "../audio";
+import { MemeSeasonCurrent, MemeSeasonPrevious } from "../config";
+import background from "../images/welcome/welcome_bg.png";
+import titleImage from "../images/welcome/welcome_title.png";
+import peopleBackground from "../images/welcome/people.png";
+import stageBackground from "../images/welcome/stage_bg.png";
+import dog1 from "../images/welcome/dog1.png";
+import dog2 from "../images/welcome/dog2.png";
+import speakerGreenLeft from "../images/animations/welcome/green.png";
+import speakerGreenRight from "../images/animations/welcome/green1.png";
+import speakerPinkLeft from "../images/animations/welcome/pink.png";
+import speakerPinkRight from "../images/animations/welcome/pink1.png";
+import speakerYellowLeft from "../images/animations/welcome/yellow.png";
+import speakerYellowRight from "../images/animations/welcome/yellow1.png";
 import "./WelcomePage.css";
-import LandingPage from "./LandingPage";
-import { ConnectState } from "zkwasm-minirollup-browser";
-import { selectUIState, UIState } from "../../data/ui";
+import PlayButton from "./buttons/PlayButton";
+import MemeIcon from "./MemeIcon";
+import Grid from "./Grid";
+import MemeRankingIcon from "./MemeRankingIcon";
+import { selectMemeList } from "../../data/ui";
 
 interface Props {
-  progress: number;
+  onStartGame: () => void;
 }
 
-const WelcomePage = ({ progress }: Props) => {
-  const connectState = useAppSelector(selectConnectState);
-  const config = useAppSelector(selectConfig);
+const WelcomePage = ({ onStartGame }: Props) => {
+  const memeList = useAppSelector(selectMemeList);
+  const rankingContainerRef = useRef<HTMLDivElement>(null);
+  const [memeRankingIconElementWidth, setMemeRankingIconElementWidth] =
+    useState<number>(0);
+  const nextSeasonContainerRef = useRef<HTMLDivElement>(null);
+  const [memeIconElementWidth, setMemeIconElementWidth] = useState<number>(0);
+  const textRef = useRef<HTMLParagraphElement>(null);
+  const [fontSize, setFontSize] = useState<number>(0);
+  const animationContainerRef = useRef<HTMLDivElement>(null);
+  const [scaleSize, setScaleSize] = useState<number>(0);
+
+  const adjustSize = () => {
+    if (textRef.current) {
+      const parentWidth = textRef.current.offsetWidth;
+      setFontSize(parentWidth / 25);
+    }
+    if (rankingContainerRef.current) {
+      setMemeRankingIconElementWidth(
+        rankingContainerRef.current.offsetWidth / 4
+      );
+    }
+    if (nextSeasonContainerRef.current) {
+      setMemeIconElementWidth(nextSeasonContainerRef.current.offsetWidth / 3);
+    }
+    if (animationContainerRef.current) {
+      setScaleSize(animationContainerRef.current.offsetWidth / 300);
+    }
+  };
 
   useEffect(() => {
-    console.log("connectState", ConnectState[connectState]);
-  }, [connectState]);
+    adjustSize();
+    window.addEventListener("resize", adjustSize);
+    return () => {
+      window.removeEventListener("resize", adjustSize);
+    };
+  }, []);
 
-  if (connectState == ConnectState.Init) {
-    return <WelcomePageConnecting />;
-  } else if (connectState == ConnectState.ConnectionError) {
-    return <WelcomePageConnecting />;
-  } else if (connectState == ConnectState.Loading) {
-    return <WelcomePageProgressBar progress={progress} />;
-  } else if (connectState == ConnectState.QueryConfig) {
-    return <WelcomePageProgressBar progress={80} />;
-  } else if (connectState == ConnectState.QueryState) {
-    return <WelcomePageProgressBar progress={90} />;
-    //} else if (uiState == UIState.WelcomePage) {
-  } else if (config) {
-    return <LandingPage />;
-  } else {
-    return <LandingPage />;
-    //return null;
+  function startGame() {
+    loadAudio((ele) => {
+      return ele;
+    });
+    onStartGame();
   }
+
+  const onClickPlay = () => {
+    startGame();
+  };
+
+  return (
+    <div className="welcome-page-container">
+      <img className="welcome-page-background" src={background} />
+      <div className="welcome-page-stage-container">
+        <img className="welcome-page-title" src={titleImage} />
+        <img
+          className="welcome-page-people-background"
+          src={peopleBackground}
+        />
+        <img className="welcome-page-stage-background" src={stageBackground} />
+        <img className="welcome-page-stage-dog-1-image" src={dog1} />
+        <img className="welcome-page-stage-dog-2-image" src={dog2} />
+        <div className="welcome-page-panel-container">
+          <p
+            ref={textRef}
+            className="welcome-page-panel-text"
+            style={{
+              fontSize: `${fontSize}px`,
+            }}
+          >
+            Current season runs until Jan 30, 2025
+          </p>
+          <div className="welcome-page-panel-play-button">
+            <PlayButton onClick={onClickPlay} />
+          </div>
+        </div>
+        <div
+          ref={rankingContainerRef}
+          className="welcome-page-ranking-container"
+        >
+          <p
+            className="welcome-page-ranking-text"
+            style={{
+              fontSize: `${fontSize}px`,
+            }}
+          >
+            Current Season Ranking
+          </p>
+          <div className="welcome-page-ranking-grid">
+            <Grid
+              elementWidth={memeRankingIconElementWidth}
+              elementHeight={memeRankingIconElementWidth}
+              columnCount={4}
+              rowCount={3}
+              elements={MemeSeasonCurrent.memeInfoList
+                .slice(0, 12)
+                .map((memeInfo, index) => (
+                  <MemeRankingIcon
+                    key={index}
+                    height={memeRankingIconElementWidth}
+                    width={memeRankingIconElementWidth}
+                    fontSize={fontSize}
+                    image={memeInfo.cover}
+                    rank={memeList[memeInfo.index].rank}
+                  />
+                ))}
+            />
+          </div>
+        </div>
+        <div
+          ref={nextSeasonContainerRef}
+          className="welcome-page-next-season-container"
+        >
+          <p
+            className="welcome-page-next-season-text"
+            style={{
+              fontSize: `${fontSize}px`,
+            }}
+          >
+            Previous Season
+          </p>
+          <div className="welcome-page-next-season-grid">
+            <Grid
+              elementWidth={memeIconElementWidth}
+              elementHeight={memeIconElementWidth}
+              columnCount={3}
+              rowCount={4}
+              elements={MemeSeasonPrevious.memeInfoList
+                .slice(0, 12)
+                .map((memeInfo, index) => (
+                  <MemeIcon
+                    key={index}
+                    height={memeIconElementWidth}
+                    width={memeIconElementWidth}
+                    image={memeInfo.cover}
+                  />
+                ))}
+            />
+          </div>
+        </div>
+        <img
+          className="welcome-page-speaker-green-left-image"
+          src={speakerGreenLeft}
+        />
+        <img
+          className="welcome-page-speaker-green-right-image"
+          src={speakerGreenRight}
+        />
+        <img
+          className="welcome-page-speaker-pink-left-image"
+          src={speakerPinkLeft}
+        />
+        <img
+          className="welcome-page-speaker-pink-right-image"
+          src={speakerPinkRight}
+        />
+        <img
+          className="welcome-page-speaker-yellow-left-image"
+          src={speakerYellowLeft}
+        />
+        <img
+          className="welcome-page-speaker-yellow-right-image"
+          src={speakerYellowRight}
+        />
+        <div
+          ref={animationContainerRef}
+          className="welcome-page-left-white-light-left-animation-container"
+        >
+          <div
+            className="welcome-page-left-white-light-left-animation"
+            style={{
+              transform: `translate(-50%, -50%) scale(${scaleSize * 100}%)`,
+            }}
+          />
+        </div>
+        <div className="welcome-page-left-white-light-right-animation-container">
+          <div
+            className="welcome-page-left-white-light-right-animation"
+            style={{
+              transform: `translate(-50%, -50%) scale(${scaleSize * 100}%)`,
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default WelcomePage;

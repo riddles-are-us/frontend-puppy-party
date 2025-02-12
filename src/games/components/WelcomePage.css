@@ -1,0 +1,316 @@
+.welcome-page-container {
+    aspect-ratio: 2560 / 1600;
+    width: 100vw;
+    height: auto;
+    max-width: 100vw;
+    max-height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+
+.welcome-page-stage-container {
+    position: absolute;
+    width: auto;
+    height: 100%;
+    aspect-ratio: 2560 / 1600;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.welcome-page-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.welcome-page-stage-dog-1-image {
+    position: absolute;
+    width: auto;
+    height: 16.7%;
+    aspect-ratio: 383 / 267;
+    top: 9.5%;
+    left: 33%;
+}
+
+.welcome-page-stage-dog-2-image {
+    position: absolute;
+    width: auto;
+    height: 17.1%;
+    aspect-ratio: 322 / 273;
+    top: 10.5%;
+    left: 55%;
+}
+
+@keyframes people-animation {
+    0% {
+      bottom: -35%;
+    }
+    50% {
+      bottom: -25%;
+    }
+    100% {
+      bottom: -25%;
+    }
+}
+
+.welcome-page-people-background {
+    position: absolute;
+    height: 81.5%;
+    width: auto;
+    object-fit: cover;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    animation: people-animation 1.2s infinite steps(1);
+}
+
+.welcome-page-title {
+    position: absolute;
+    left: 50%;
+    width: auto;
+    height: 12.5%;
+    transform: translate(-50%, 0%);
+}
+
+.welcome-page-stage-background {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: auto;
+    height: 100%;
+    transform: translate(-50%, 0%);
+}
+
+.welcome-page-panel-container {
+    position: absolute;
+    left: 51%;
+    bottom: 61.7%;
+    height: 8%;
+    width: auto;
+    aspect-ratio: 6.2 / 1;
+    transform: translate(-50%, -50%);
+}
+
+.welcome-page-panel-text {
+    position: absolute;
+    left: 50%;
+    top: 25%;
+    width: 90%;
+    height: 40%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    margin: 0px;
+    color: white;
+    font-family: "Allerta";
+    pointer-events: none;
+    user-select: none;
+}
+
+.welcome-page-panel-play-button{
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    height: 40%;
+    width: auto;
+    aspect-ratio: 142 / 42;
+    transform: translate(-50%, -50%);
+}
+
+
+.welcome-page-ranking-container {
+    position: absolute;
+    left: 41.7%;
+    bottom: 10%;
+    height: 30%;
+    width: auto;
+    aspect-ratio: 1.3 / 1;
+    transform: translate(-50%, -50%);
+}
+
+.welcome-page-ranking-grid {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.welcome-page-ranking-text {
+    position: absolute;
+    left: 50%;
+    top: -8%;
+    width: 90%;
+    height: 10%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    margin: 0px;
+    color: white;
+    font-family: "Allerta";
+    pointer-events: none;
+    user-select: none;
+}
+
+.welcome-page-next-season-text {
+    position: absolute;
+    left: 50%;
+    top: -8%;
+    width: 90%;
+    height: 10%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    margin: 0px;
+    color: white;
+    font-family: "Allerta";
+    pointer-events: none;
+    user-select: none;
+}
+
+.welcome-page-next-season-container {
+    position: absolute;
+    left: 65.5%;
+    bottom: 10%;
+    height: 30%;
+    width: auto;
+    aspect-ratio: 0.7 / 1;
+    transform: translate(-50%, -50%);
+}
+
+.welcome-page-next-season-grid {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes speaker-animation {
+    0% {
+      transform: scale(1);
+    }
+    30% {
+      transform: scale(1.2);
+    }
+    60% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(1);
+    }
+}
+
+.welcome-page-speaker-green-left-image {
+    position: absolute;
+    left: 17.3%;
+    bottom: 21.8%;
+    height: 17.19%;
+    width: auto;
+    aspect-ratio: 228 / 275;
+    animation: speaker-animation 0.5s infinite;
+}
+
+.welcome-page-speaker-green-right-image {
+    position: absolute;
+    left: 76%;
+    bottom: 21.7%;
+    height: 16.68%;
+    width: auto;
+    aspect-ratio: 235 / 267;
+    animation: speaker-animation 0.5s infinite;
+}
+
+.welcome-page-speaker-pink-left-image {
+    position: absolute;
+    left: 19%;
+    bottom: 52.5%;
+    height: 13.56%;
+    width: auto;
+    aspect-ratio: 169 / 217;
+    animation: speaker-animation 0.5s infinite;
+}
+
+.welcome-page-speaker-pink-right-image {
+    position: absolute;
+    left: 76%;
+    bottom: 52.5%;
+    height: 13.56%;
+    width: auto;
+    aspect-ratio: 169 / 217;
+    animation: speaker-animation 0.5s infinite;
+}
+
+.welcome-page-speaker-yellow-left-image {
+    position: absolute;
+    left: 21%;
+    bottom: 68%;
+    height: 4.94%;
+    width: auto;
+    aspect-ratio: 80 / 79;
+    animation: speaker-animation 0.5s infinite;
+}
+
+.welcome-page-speaker-yellow-right-image {
+    position: absolute;
+    left: 77.3%;
+    bottom: 68%;
+    height: 4.94%;
+    width: auto;
+    aspect-ratio: 79 / 79;
+    animation: speaker-animation 0.5s infinite;
+}
+
+@keyframes WhitelightAnimation {
+    from { background-position: 0px; }
+    to { background-position: -3600px; }
+}
+
+.welcome-page-left-white-light-left-animation-container {
+    position: absolute;
+    left: 18.15%;
+    bottom: 37.4%;
+    height: 13.56%;
+    width: auto;
+    aspect-ratio: 1 / 1;
+    transform: scale(135%);
+}
+
+.welcome-page-left-white-light-left-animation {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    height: 300px;
+    width: 300px;
+    aspect-ratio: 1 / 1;
+    animation: WhitelightAnimation 1s steps(12) forwards infinite;
+    background-image: url("../images/animations/whitelight_left.png");
+    background-size: cover;
+    user-select: none;
+}
+
+.welcome-page-left-white-light-right-animation-container {
+    position: absolute;
+    left: 74.8%;
+    bottom: 37.4%;
+    height: 13.56%;
+    width: auto;
+    aspect-ratio: 1 / 1;
+    transform: scale(135%);
+}
+
+.welcome-page-left-white-light-right-animation {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    height: 300px;
+    width: 300px;
+    aspect-ratio: 1 / 1;
+    animation: WhitelightAnimation 1s steps(12) forwards infinite;
+    background-image: url("../images/animations/whitelight_right.png");
+    background-size: cover;
+    user-select: none;
+}

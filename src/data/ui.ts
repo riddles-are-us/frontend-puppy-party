@@ -57,7 +57,7 @@ export const uiuxSlice = createSlice({
 			state.uiState = action.payload.uIState;
 		},
 		setMemeList: (state, action) => {
-			const memeRankList = action.payload.memeList;
+			const memeRankList = action.payload.memeList.map((meme: any) => meme.rank);
 			while (memeRankList.length < 12) { // 12 is the number of meme images, change it later
 				memeRankList.push(0);
 			}

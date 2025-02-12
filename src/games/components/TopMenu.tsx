@@ -6,9 +6,9 @@ import { MemeSeasonCurrent } from "../config";
 import DepositButton from "./buttons/DepositButton";
 import ticketIcon from "../images/ticket_icon.png";
 import balanceIcon from "../images/balance_icon.png";
-import {selectUIState, setUIState, UIState} from "../../data/ui";
-import {selectConnectState, selectUserState} from "../../data/state";
-import {ConnectState} from "zkwasm-minirollup-browser";
+import { selectUIState, setUIState, UIState } from "../../data/ui";
+import { selectConnectState, selectUserState } from "../../data/state";
+import { ConnectState } from "zkwasm-minirollup-browser";
 
 interface Props {
   targetMemeIndex: number;
@@ -17,7 +17,6 @@ interface Props {
 
 function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
   const dispatch = useAppDispatch();
-  const uiState = useAppSelector(selectUIState);
   const userState = useAppSelector(selectUserState);
   const connectState = useAppSelector(selectConnectState);
   const onClickWithdraw = () => {
@@ -41,9 +40,13 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
       <div className="top-menu-deposit-button">
         <DepositButton onClick={onClickDeposit} />
       </div>
-      <div className="top-menu-ticket-text">Ticket: {userState!.player!.data.ticket}</div>
+      <div className="top-menu-ticket-text">
+        Ticket: {userState.player.data.ticket}
+      </div>
       <img src={ticketIcon} className="top-menu-ticket-icon"></img>
-      <div className="top-menu-balance-text">DiscoNote: {userState!.player!.data.ticket}</div>
+      <div className="top-menu-balance-text">
+        DiscoNote: {userState.player.data.ticket}
+      </div>
       <img src={balanceIcon} className="top-menu-balance-icon"></img>
       <div className="top-menu-vote-text">Vote: {targetMemeRank}</div>
       <img

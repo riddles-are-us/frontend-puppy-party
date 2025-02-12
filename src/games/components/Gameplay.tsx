@@ -10,14 +10,10 @@ import "./Gameplay.css";
 import StageButtons from "./StageButtons";
 import ProgressBar from "./ProgressBar";
 import {
-  getCancelLotteryransactionParameter,
   getDanceTransactionParameter,
+  getLotteryransactionParameter,
 } from "../api";
-import {
-  MemeListElement,
-  selectConnectState,
-  selectUserState,
-} from "../../data/state";
+import { MemeListElement, selectUserState } from "../../data/state";
 import { sendTransaction } from "zkwasm-minirollup-browser/src/connect";
 import {
   selectGiftboxShake,
@@ -51,11 +47,11 @@ export enum DanceType {
 const Gameplay = () => {
   const dispatch = useAppDispatch();
   const l2account = useAppSelector(AccountSlice.selectL2Account);
-  const connectState = useAppSelector(selectConnectState);
   const userState = useAppSelector(selectUserState);
   const memeList = useAppSelector(selectMemeList);
-  const [inc, setInc] = useState(0);
   const isCountingDownRef = useRef(false);
+  const progressRef = useRef(userState.player.data.progress);
+  const displayProgressRef = useRef(userState.player.data.progress);
   const [displayProgress, setDisplayProgress] = useState(0);
   const memeListRef = useRef<MemeListElement[]>([]);
 
@@ -79,39 +75,39 @@ const Gameplay = () => {
   const canvasRef = React.createRef<HTMLCanvasElement>();
 
   const updateDisplayProgressRef = () => {
-    if (userState!.player!.data.progress == 0) {
-      //displayProgressRef.current = 0;
-      setDisplayProgress(userState!.player!.data.progress);
+    if (progressRef.current == 0) {
+      displayProgressRef.current = 0;
+      setDisplayProgress(0);
       return;
     }
 
     if (isCountingDownRef.current) {
-      setDisplayProgress(displayProgress - PROGRESS_COUNTING_DOWN_SPEED);
-      /*
-			if (displayProgressRef.current <= 0) {
-				handleCancelRewards();
-				displayProgressRef.current = 0;
-				progressRef.current = 0;
-				isCountingDownRef.current = false;
-				dispatch(setUIState({ uIState: UIState.Idle }));
-				throw("Progress is zero");
-			}
-			*/
+      displayProgressRef.current -= PROGRESS_COUNTING_DOWN_SPEED;
+      if (displayProgressRef.current <= 0) {
+        handleCancelRewards();
+        displayProgressRef.current = 0;
+        progressRef.current = 0;
+        isCountingDownRef.current = false;
+        dispatch(setUIState({ uIState: UIState.Idle }));
+      }
     } else {
-      if (userState!.player!.data.progress > displayProgress) {
+      if (
+        progressResetRef.current == false &&
+        progressRef.current > displayProgressRef.current
+      ) {
         const progressStep =
-          (userState!.player!.data.progress - displayProgress) *
+          (progressRef.current - displayProgressRef.current) *
           PROGRESS_UPDATE_RATE;
-        setDisplayProgress(
-          Math.min(
-            displayProgress + Math.max(progressStep, MIN_PROGRESS_UPDATE),
-            PROGRESS_LOTTERY_THRESHOLD
-          )
+        displayProgressRef.current = Math.min(
+          displayProgressRef.current +
+            Math.max(progressStep, MIN_PROGRESS_UPDATE),
+          PROGRESS_LOTTERY_THRESHOLD
         );
       }
     }
 
-    if (displayProgress == PROGRESS_LOTTERY_THRESHOLD) {
+    setDisplayProgress(displayProgressRef.current);
+    if (displayProgressRef.current == PROGRESS_LOTTERY_THRESHOLD) {
       isCountingDownRef.current = true;
       dispatch(setUIState({ uIState: UIState.GiftboxPopup }));
     }
@@ -183,31 +179,29 @@ const Gameplay = () => {
     progressResetRef.current = progressReset;
     if (progressReset) {
       isCountingDownRef.current = false;
+      displayProgressRef.current = 0;
       setDisplayProgress(0);
     }
   }, [progressReset]);
 
   useEffect(() => {
-    setDisplayProgress(userState!.player!.data.progress);
+    progressRef.current = userState.player.data.progress;
     dispatch(setProgressReset({ progressReset: false }));
+    isDanceButtonCoolDownGlobalRef.current =
+      userState.state.counter * SERVER_TICK_TO_SECOND <
+      userState.player.data.last_action_timestamp + COOL_DOWN;
   }, [userState]);
 
   useEffect(() => {
     setTargetMemeRank(memeList[targetMemeIndex].rank);
   }, [targetMemeIndex, memeList]);
 
-  useEffect(() => {
-    isDanceButtonCoolDownGlobalRef.current =
-      userState!.state.counter * SERVER_TICK_TO_SECOND <
-      userState!.player!.data.last_action_timestamp + COOL_DOWN;
-  }, [userState]);
-
   function handleCancelRewards() {
     dispatch(
       sendTransaction(
-        getCancelLotteryransactionParameter(
+        getLotteryransactionParameter(
           l2account!,
-          BigInt(userState!.player!.nonce)
+          BigInt(userState.player.nonce)
         )
       )
     );
@@ -215,7 +209,7 @@ const Gameplay = () => {
 
   const onClickDanceButton = (danceType: DanceType) => () => {
     if (isDanceButtonCoolDownLocalRef.current == false) {
-      if (userState!.player!.data.ticket == 0) {
+      if (userState.player.data.ticket == 0) {
         dispatch(
           setPopupDescription({
             popupDescription: "Not Enough Ticket",
@@ -242,7 +236,7 @@ const Gameplay = () => {
               l2account!,
               danceType,
               BigInt(targetMemeIndex),
-              BigInt(userState!.player!.nonce)
+              BigInt(userState.player.nonce)
             )
           )
         );
