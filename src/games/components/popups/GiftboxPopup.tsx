@@ -158,7 +158,11 @@ const GiftboxPopup = () => {
             BigInt(userState.player.nonce)
           )
         )
-      );
+      ).then((action) => {
+        if (sendTransaction.fulfilled.match(action)) {
+          setFinishQuery(true);
+        }
+      });
     }
   };
 

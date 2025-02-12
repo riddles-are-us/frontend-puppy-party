@@ -9,8 +9,9 @@ const STAKE = 3n;
 const BET = 4n;
 const COMMENT = 5n;
 const LOTTERY = 6n;
-const CANCELL_LOTTERY = 7n;
+const INSTALL_MEME = 7n;
 const WITHDRAW = 8n;
+const DEPOSIT = 9n;
 const WITHDRAW_LOTTERY = 10n;
 
 function bytesToHex(bytes: Array<number>): string {
@@ -55,16 +56,6 @@ export function getLotteryransactionParameter(
 ) {
   return {
     cmd: createCommand(nonce, LOTTERY, []),
-    prikey: l2account!.getPrivateKey(),
-  };
-}
-
-export function getCancelLotteryransactionParameter(
-  l2account: AccountSlice.L2AccountInfo,
-  nonce: bigint
-) {
-  return {
-    cmd: createCommand(nonce, CANCELL_LOTTERY, []),
     prikey: l2account!.getPrivateKey(),
   };
 }

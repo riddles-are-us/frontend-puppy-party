@@ -10,8 +10,8 @@ import "./Gameplay.css";
 import StageButtons from "./StageButtons";
 import ProgressBar from "./ProgressBar";
 import {
-  getCancelLotteryransactionParameter,
   getDanceTransactionParameter,
+  getLotteryransactionParameter,
 } from "../api";
 import {
   MemeListElement,
@@ -208,7 +208,7 @@ const Gameplay = () => {
   function handleCancelRewards() {
     dispatch(
       sendTransaction(
-        getCancelLotteryransactionParameter(
+        getLotteryransactionParameter(
           l2account!,
           BigInt(userState.player.nonce)
         )
