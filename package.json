@@ -21,7 +21,7 @@
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
     "web3subscriber": "git+https://github.com/DelphinusLab/delphinus-web3subscriber.git",
-    "zkwasm-minirollup-browser": "github:DelphinusLab/zkWasm-minirollup-browser#1b23f789c3a7c97d70f49b4142d8869e5aa737db",
+    "zkwasm-minirollup-browser": "github:DelphinusLab/zkWasm-minirollup-browser#8cc697071735cafbe942dfafad7426c614e9b4b8",
     "zkwasm-minirollup-rpc": "github:DelphinusLab/zkWasm-minirollup-rpc#52bd36c3d6f31c152175016a1d5e3a910738a1ae",
     "zkwasm-service-helper": "github:DelphinusLab/zkWasm-service-helper"
   },
@@ -66,7 +66,8 @@
     "@types/express": "^4.17.13",
     "@types/jest": "^29.2.4",
     "@types/qrcode": "^1.5.0",
-    "@types/react-dom": "^18.0.10",
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
     "@types/sha256": "^0.2.2",
     "@types/webpack-env": "^1.18.5",
     "typescript": "^4.3.4"

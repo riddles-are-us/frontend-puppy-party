@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { getMemeList } from "./express";
 import { setMemeList } from "../data/ui";
-import { ConnectController } from "./ConnectController";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
   selectConnectState,
   selectNullableConfig,
   selectNullableUserState,
+  setConnectState,
 } from "../data/state";
 import Gameplay from "./components/Gameplay";
 import LoadingPage from "./components/LoadingPage";
@@ -18,6 +18,8 @@ import {
   queryState,
 } from "zkwasm-minirollup-browser/src/connect";
 import { ConnectState } from "zkwasm-minirollup-browser";
+import { ConnectController } from "zkwasm-minirollup-browser/src/connect_controller";
+import "./style.scss";
 
 export function LoadingController() {
   const dispatch = useAppDispatch();
@@ -43,6 +45,13 @@ export function LoadingController() {
     }, 5000);
   }, [inc]);
 
+  const requireContext = require.context(
+    "./images",
+    true,
+    /\.(png|jpg|jpeg|gif)$/
+  );
+  const imageUrls = requireContext.keys().map(requireContext) as string[];
+
   const onStart = async () => {
     const res = await getMemeList();
     dispatch(setMemeList({ memeList: res.data }));
@@ -57,10 +66,15 @@ export function LoadingController() {
   } else {
     return (
       <ConnectController
+        imageUrls={imageUrls}
         LoadingComponent={LoadingPage}
         WelcomeComponent={WelcomePage}
         onStart={onStart}
         onStartGameplay={onStartGameplay}
+        useAppSelector={useAppSelector}
+        useAppDispatch={useAppDispatch}
+        selectConnectState={selectConnectState}
+        setConnectState={setConnectState}
       />
     );
   }

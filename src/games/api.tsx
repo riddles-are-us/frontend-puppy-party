@@ -3,7 +3,7 @@ import { AccountSlice } from "zkwasm-minirollup-browser";
 import { DanceType } from "./components/Gameplay";
 import { createWithdrawCommand, createCommand } from "zkwasm-minirollup-rpc";
 
-export const CREATE_PLAYER = 1n;
+const CREATE_PLAYER = 1n;
 const VOTE = 2n;
 const STAKE = 3n;
 const BET = 4n;
