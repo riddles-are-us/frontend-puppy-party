@@ -13,11 +13,7 @@ import {
   getDanceTransactionParameter,
   getLotteryransactionParameter,
 } from "../api";
-import {
-  MemeListElement,
-  selectLastError,
-  selectUserState,
-} from "../../data/state";
+import { MemeListElement, selectUserState } from "../../data/state";
 import { sendTransaction } from "zkwasm-minirollup-browser/src/connect";
 import {
   selectGiftboxShake,
@@ -199,11 +195,6 @@ const Gameplay = () => {
   useEffect(() => {
     setTargetMemeRank(memeList[targetMemeIndex].rank);
   }, [targetMemeIndex, memeList]);
-
-  const error = useAppSelector(selectLastError);
-  useEffect(() => {
-    console.error(error);
-  }, [error]);
 
   function handleCancelRewards() {
     dispatch(

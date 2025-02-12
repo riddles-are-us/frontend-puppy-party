@@ -1,4 +1,4 @@
-.landing-page-container {
+.welcome-page-container {
     aspect-ratio: 2560 / 1600;
     width: 100vw;
     height: auto;
@@ -11,7 +11,7 @@
 }
 
 
-.landing-page-stage-container {
+.welcome-page-stage-container {
     position: absolute;
     width: auto;
     height: 100%;
@@ -21,14 +21,14 @@
     transform: translate(-50%, -50%);
 }
 
-.landing-page-background {
+.welcome-page-background {
     position: absolute;
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.landing-page-stage-dog-1-image {
+.welcome-page-stage-dog-1-image {
     position: absolute;
     width: auto;
     height: 16.7%;
@@ -37,7 +37,7 @@
     left: 33%;
 }
 
-.landing-page-stage-dog-2-image {
+.welcome-page-stage-dog-2-image {
     position: absolute;
     width: auto;
     height: 17.1%;
@@ -58,7 +58,7 @@
     }
 }
 
-.landing-page-people-background {
+.welcome-page-people-background {
     position: absolute;
     height: 81.5%;
     width: auto;
@@ -68,7 +68,7 @@
     animation: people-animation 1.2s infinite steps(1);
 }
 
-.landing-page-title {
+.welcome-page-title {
     position: absolute;
     left: 50%;
     width: auto;
@@ -76,7 +76,7 @@
     transform: translate(-50%, 0%);
 }
 
-.landing-page-stage-background {
+.welcome-page-stage-background {
     position: absolute;
     left: 50%;
     bottom: 0;
@@ -85,7 +85,7 @@
     transform: translate(-50%, 0%);
 }
 
-.landing-page-panel-container {
+.welcome-page-panel-container {
     position: absolute;
     left: 51%;
     bottom: 61.7%;
@@ -95,7 +95,7 @@
     transform: translate(-50%, -50%);
 }
 
-.landing-page-panel-text {
+.welcome-page-panel-text {
     position: absolute;
     left: 50%;
     top: 25%;
@@ -110,7 +110,7 @@
     user-select: none;
 }
 
-.landing-page-panel-play-button{
+.welcome-page-panel-play-button{
     position: absolute;
     top: 70%;
     left: 50%;
@@ -121,7 +121,7 @@
 }
 
 
-.landing-page-ranking-container {
+.welcome-page-ranking-container {
     position: absolute;
     left: 41.7%;
     bottom: 10%;
@@ -131,7 +131,7 @@
     transform: translate(-50%, -50%);
 }
 
-.landing-page-ranking-grid {
+.welcome-page-ranking-grid {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -140,7 +140,7 @@
     transform: translate(-50%, -50%);
 }
 
-.landing-page-ranking-text {
+.welcome-page-ranking-text {
     position: absolute;
     left: 50%;
     top: -8%;
@@ -155,7 +155,7 @@
     user-select: none;
 }
 
-.landing-page-next-season-text {
+.welcome-page-next-season-text {
     position: absolute;
     left: 50%;
     top: -8%;
@@ -170,7 +170,7 @@
     user-select: none;
 }
 
-.landing-page-next-season-container {
+.welcome-page-next-season-container {
     position: absolute;
     left: 65.5%;
     bottom: 10%;
@@ -180,7 +180,7 @@
     transform: translate(-50%, -50%);
 }
 
-.landing-page-next-season-grid {
+.welcome-page-next-season-grid {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -204,7 +204,7 @@
     }
 }
 
-.landing-page-speaker-green-left-image {
+.welcome-page-speaker-green-left-image {
     position: absolute;
     left: 17.3%;
     bottom: 21.8%;
@@ -214,7 +214,7 @@
     animation: speaker-animation 0.5s infinite;
 }
 
-.landing-page-speaker-green-right-image {
+.welcome-page-speaker-green-right-image {
     position: absolute;
     left: 76%;
     bottom: 21.7%;
@@ -224,7 +224,7 @@
     animation: speaker-animation 0.5s infinite;
 }
 
-.landing-page-speaker-pink-left-image {
+.welcome-page-speaker-pink-left-image {
     position: absolute;
     left: 19%;
     bottom: 52.5%;
@@ -234,7 +234,7 @@
     animation: speaker-animation 0.5s infinite;
 }
 
-.landing-page-speaker-pink-right-image {
+.welcome-page-speaker-pink-right-image {
     position: absolute;
     left: 76%;
     bottom: 52.5%;
@@ -244,7 +244,7 @@
     animation: speaker-animation 0.5s infinite;
 }
 
-.landing-page-speaker-yellow-left-image {
+.welcome-page-speaker-yellow-left-image {
     position: absolute;
     left: 21%;
     bottom: 68%;
@@ -254,7 +254,7 @@
     animation: speaker-animation 0.5s infinite;
 }
 
-.landing-page-speaker-yellow-right-image {
+.welcome-page-speaker-yellow-right-image {
     position: absolute;
     left: 77.3%;
     bottom: 68%;
@@ -269,7 +269,7 @@
     to { background-position: -3600px; }
 }
 
-.landing-page-left-white-light-left-animation-container {
+.welcome-page-left-white-light-left-animation-container {
     position: absolute;
     left: 18.15%;
     bottom: 37.4%;
@@ -279,7 +279,7 @@
     transform: scale(135%);
 }
 
-.landing-page-left-white-light-left-animation {
+.welcome-page-left-white-light-left-animation {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -292,7 +292,7 @@
     user-select: none;
 }
 
-.landing-page-left-white-light-right-animation-container {
+.welcome-page-left-white-light-right-animation-container {
     position: absolute;
     left: 74.8%;
     bottom: 37.4%;
@@ -302,7 +302,7 @@
     transform: scale(135%);
 }
 
-.landing-page-left-white-light-right-animation {
+.welcome-page-left-white-light-right-animation {
     position: absolute;
     left: 50%;
     top: 50%;

@@ -3,28 +3,30 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { AccountSlice } from "zkwasm-minirollup-browser";
 import { loadAudio } from "../audio";
 import { MemeSeasonCurrent, MemeSeasonPrevious } from "../config";
-import background from "../images/landing/landing_bg.png";
-import titleImage from "../images/landing/landing_title.png";
-import peopleBackground from "../images/landing/people.png";
-import stageBackground from "../images/landing/stage_bg.png";
-import dog1 from "../images/landing/dog1.png";
-import dog2 from "../images/landing/dog2.png";
-import speakerGreenLeft from "../images/animations/landing/green.png";
-import speakerGreenRight from "../images/animations/landing/green1.png";
-import speakerPinkLeft from "../images/animations/landing/pink.png";
-import speakerPinkRight from "../images/animations/landing/pink1.png";
-import speakerYellowLeft from "../images/animations/landing/yellow.png";
-import speakerYellowRight from "../images/animations/landing/yellow1.png";
-import "./LandingPage.css";
+import background from "../images/welcome/welcome_bg.png";
+import titleImage from "../images/welcome/welcome_title.png";
+import peopleBackground from "../images/welcome/people.png";
+import stageBackground from "../images/welcome/stage_bg.png";
+import dog1 from "../images/welcome/dog1.png";
+import dog2 from "../images/welcome/dog2.png";
+import speakerGreenLeft from "../images/animations/welcome/green.png";
+import speakerGreenRight from "../images/animations/welcome/green1.png";
+import speakerPinkLeft from "../images/animations/welcome/pink.png";
+import speakerPinkRight from "../images/animations/welcome/pink1.png";
+import speakerYellowLeft from "../images/animations/welcome/yellow.png";
+import speakerYellowRight from "../images/animations/welcome/yellow1.png";
+import "./WelcomePage.css";
 import PlayButton from "./buttons/PlayButton";
-import JoinButton from "./buttons/JoinButton";
 import MemeIcon from "./MemeIcon";
 import Grid from "./Grid";
 import MemeRankingIcon from "./MemeRankingIcon";
 import { selectMemeList } from "../../data/ui";
 
-const LandingPage = () => {
-  const dispatch = useAppDispatch();
+interface Props {
+  onStartGame: () => void;
+}
+
+const WelcomePage = ({ onStartGame }: Props) => {
   const memeList = useAppSelector(selectMemeList);
   const rankingContainerRef = useRef<HTMLDivElement>(null);
   const [memeRankingIconElementWidth, setMemeRankingIconElementWidth] =
@@ -62,68 +64,56 @@ const LandingPage = () => {
     };
   }, []);
 
-  const account = useAppSelector(AccountSlice.selectL1Account);
-
-  function startGame(index: number) {
-    if (index < MemeSeasonCurrent.memeInfoList.length) {
-      dispatch(AccountSlice.loginL2AccountAsync(account!.address));
-      loadAudio((ele) => {
-        return ele;
-      });
-    }
+  function startGame() {
+    loadAudio((ele) => {
+      return ele;
+    });
+    onStartGame();
   }
 
   const onClickPlay = () => {
-    startGame(0);
-  };
-
-  const onClickJoin = () => {
-    /**/
+    startGame();
   };
 
   return (
-    <div className="landing-page-container">
-      <img className="landing-page-background" src={background} />
-      <div className="landing-page-stage-container">
-        <img className="landing-page-title" src={titleImage} />
+    <div className="welcome-page-container">
+      <img className="welcome-page-background" src={background} />
+      <div className="welcome-page-stage-container">
+        <img className="welcome-page-title" src={titleImage} />
         <img
-          className="landing-page-people-background"
+          className="welcome-page-people-background"
           src={peopleBackground}
         />
-        <img className="landing-page-stage-background" src={stageBackground} />
-        <img className="landing-page-stage-dog-1-image" src={dog1} />
-        <img className="landing-page-stage-dog-2-image" src={dog2} />
-        <div className="landing-page-panel-container">
+        <img className="welcome-page-stage-background" src={stageBackground} />
+        <img className="welcome-page-stage-dog-1-image" src={dog1} />
+        <img className="welcome-page-stage-dog-2-image" src={dog2} />
+        <div className="welcome-page-panel-container">
           <p
             ref={textRef}
-            className="landing-page-panel-text"
+            className="welcome-page-panel-text"
             style={{
               fontSize: `${fontSize}px`,
             }}
           >
             Current season runs until Jan 30, 2025
           </p>
-          <div className="landing-page-panel-play-button">
+          <div className="welcome-page-panel-play-button">
             <PlayButton onClick={onClickPlay} />
           </div>
-          {/* disable join meme temporary  */}
-          {/* <div className="landing-page-panel-join-button">
-						<JoinButton onClick={onClickJoin} />
-					</div> */}
         </div>
         <div
           ref={rankingContainerRef}
-          className="landing-page-ranking-container"
+          className="welcome-page-ranking-container"
         >
           <p
-            className="landing-page-ranking-text"
+            className="welcome-page-ranking-text"
             style={{
               fontSize: `${fontSize}px`,
             }}
           >
             Current Season Ranking
           </p>
-          <div className="landing-page-ranking-grid">
+          <div className="welcome-page-ranking-grid">
             <Grid
               elementWidth={memeRankingIconElementWidth}
               elementHeight={memeRankingIconElementWidth}
@@ -146,17 +136,17 @@ const LandingPage = () => {
         </div>
         <div
           ref={nextSeasonContainerRef}
-          className="landing-page-next-season-container"
+          className="welcome-page-next-season-container"
         >
           <p
-            className="landing-page-next-season-text"
+            className="welcome-page-next-season-text"
             style={{
               fontSize: `${fontSize}px`,
             }}
           >
             Previous Season
           </p>
-          <div className="landing-page-next-season-grid">
+          <div className="welcome-page-next-season-grid">
             <Grid
               elementWidth={memeIconElementWidth}
               elementHeight={memeIconElementWidth}
@@ -176,43 +166,43 @@ const LandingPage = () => {
           </div>
         </div>
         <img
-          className="landing-page-speaker-green-left-image"
+          className="welcome-page-speaker-green-left-image"
           src={speakerGreenLeft}
         />
         <img
-          className="landing-page-speaker-green-right-image"
+          className="welcome-page-speaker-green-right-image"
           src={speakerGreenRight}
         />
         <img
-          className="landing-page-speaker-pink-left-image"
+          className="welcome-page-speaker-pink-left-image"
           src={speakerPinkLeft}
         />
         <img
-          className="landing-page-speaker-pink-right-image"
+          className="welcome-page-speaker-pink-right-image"
           src={speakerPinkRight}
         />
         <img
-          className="landing-page-speaker-yellow-left-image"
+          className="welcome-page-speaker-yellow-left-image"
           src={speakerYellowLeft}
         />
         <img
-          className="landing-page-speaker-yellow-right-image"
+          className="welcome-page-speaker-yellow-right-image"
           src={speakerYellowRight}
         />
         <div
           ref={animationContainerRef}
-          className="landing-page-left-white-light-left-animation-container"
+          className="welcome-page-left-white-light-left-animation-container"
         >
           <div
-            className="landing-page-left-white-light-left-animation"
+            className="welcome-page-left-white-light-left-animation"
             style={{
               transform: `translate(-50%, -50%) scale(${scaleSize * 100}%)`,
             }}
           />
         </div>
-        <div className="landing-page-left-white-light-right-animation-container">
+        <div className="welcome-page-left-white-light-right-animation-container">
           <div
-            className="landing-page-left-white-light-right-animation"
+            className="welcome-page-left-white-light-right-animation"
             style={{
               transform: `translate(-50%, -50%) scale(${scaleSize * 100}%)`,
             }}
@@ -223,4 +213,4 @@ const LandingPage = () => {
   );
 };
 
-export default LandingPage;
+export default WelcomePage;
