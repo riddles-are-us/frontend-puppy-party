@@ -27,7 +27,7 @@ const MemeRankingIcon = ({ width, height, fontSize, image, rank }: Props) => {
               fontSize: `${fontSize}px`,
             }}
           >
-            {rank}
+            {rank.toString()}
           </p>
         </div>
       </div>

@@ -116,10 +116,9 @@
     left: 50%;
     height: 40%;
     width: auto;
-    aspect-ratio: 142 / 42;
+    aspect-ratio: 152 / 45;
     transform: translate(-50%, -50%);
 }
-
 
 .welcome-page-ranking-container {
     position: absolute;

@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState, MouseEvent } from "react";
 import Popups from "./Popups";
 import TopMenu from "./TopMenu";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { scenario } from "../scenario";
 import { audioSystem } from "../audio";
 import { AccountSlice } from "zkwasm-minirollup-browser";
 import { getBeat } from "../draw";
@@ -17,7 +16,6 @@ import { MemeListElement, selectUserState } from "../../data/state";
 import { sendTransaction } from "zkwasm-minirollup-browser/src/connect";
 import {
   selectGiftboxShake,
-  selectMemeList,
   selectProgressReset,
   selectTargetMemeIndex,
   setGiftboxShake,
@@ -27,6 +25,9 @@ import {
   setUIState,
   UIState,
 } from "../../data/ui";
+import { Scenario } from "../scenario";
+import { selectCurrentMemes } from "../../data/memeDatas";
+import { MemeData } from "../season";
 
 const COOL_DOWN = 2;
 const PROGRESS_LOTTERY_THRESHOLD = 1000;
@@ -48,12 +49,13 @@ const Gameplay = () => {
   const dispatch = useAppDispatch();
   const l2account = useAppSelector(AccountSlice.selectL2Account);
   const userState = useAppSelector(selectUserState);
-  const memeList = useAppSelector(selectMemeList);
   const isCountingDownRef = useRef(false);
   const progressRef = useRef(userState.player.data.progress);
   const displayProgressRef = useRef(userState.player.data.progress);
   const [displayProgress, setDisplayProgress] = useState(0);
-  const memeListRef = useRef<MemeListElement[]>([]);
+  const currentMemes = useAppSelector(selectCurrentMemes);
+  const currentMemesRef = useRef<MemeData[]>([]);
+  const [scenario, setScenario] = useState(new Scenario(currentMemes));
 
   const giftboxShake = useAppSelector(selectGiftboxShake);
   const progressReset = useAppSelector(selectProgressReset);
@@ -145,7 +147,7 @@ const Gameplay = () => {
 
         scenario.draw(ratioArray, {
           l2account,
-          memeList: memeListRef.current,
+          memeList: currentMemesRef.current,
           giftboxShake: giftboxShakeRef.current,
         });
         if (giftboxShakeRef.current) {
@@ -172,8 +174,8 @@ const Gameplay = () => {
   }, [giftboxShake]);
 
   useEffect(() => {
-    memeListRef.current = memeList;
-  }, [memeList]);
+    currentMemesRef.current = currentMemes;
+  }, [currentMemes]);
 
   useEffect(() => {
     progressResetRef.current = progressReset;
@@ -193,8 +195,8 @@ const Gameplay = () => {
   }, [userState]);
 
   useEffect(() => {
-    setTargetMemeRank(memeList[targetMemeIndex].rank);
-  }, [targetMemeIndex, memeList]);
+    setTargetMemeRank(currentMemes[targetMemeIndex].rank);
+  }, [targetMemeIndex, currentMemes]);
 
   function handleCancelRewards() {
     dispatch(

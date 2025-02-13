@@ -3,6 +3,7 @@ import { AccountSliceReducer } from 'zkwasm-minirollup-browser';
 import endpointReducer from "../data/endpoint";
 import stateReducer from "../data/state";
 import uiReducer from "../data/ui";
+import memeDatasReducer from "../data/memeDatas";
 
 export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
@@ -25,6 +26,7 @@ export const store = configureStore({
     endpoint: endpointReducer,
     state: stateReducer,
     uiux: uiReducer,
+    memeDatas: memeDatasReducer,
   },
 });
 

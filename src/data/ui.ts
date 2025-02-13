@@ -1,8 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createStateSlice, PropertiesState, ConnectState } from "zkwasm-minirollup-browser";
-import {RootState} from '../app/store';
-import { scenario} from '../games/scenario';
-import { MemeListElement } from './state';
+import { RootState } from '../app/store';
 
 export enum UIState{
 	Idle,
@@ -16,13 +13,14 @@ export enum UIState{
 	SponsorPopup,
 	LotteryHeatPopup,
 	QueryLotteryHeat,
+	UploadMemePopup,
+	QueryUploadMeme,
 	ConfirmPopup,
 	ErrorPopup,
 }
 
 interface PropertiesUI {
 	uiState: UIState;
-	memeList: MemeListElement[];
 	targetMemeIndex: number;
 	giftboxShake: boolean;
 	progressReset: boolean;
@@ -34,7 +32,6 @@ interface PropertiesUI {
 
 const initialState: PropertiesUI = {
 		uiState: UIState.WelcomePage,
-		memeList: [],
 		targetMemeIndex: 0,
 		giftboxShake: false,
 		progressReset: false,
@@ -50,20 +47,10 @@ export const uiuxSlice = createSlice({
 	reducers: {
 		setTargetMemeIndex: (state, action) => {
 			state.targetMemeIndex = action.payload;
-			scenario.setSelectedMeme(state.targetMemeIndex);
 		},
 
 		setUIState: (state, action) => {
 			state.uiState = action.payload.uIState;
-		},
-		setMemeList: (state, action) => {
-			const memeRankList = action.payload.memeList.map((meme: any) => meme.rank);
-			while (memeRankList.length < 12) { // 12 is the number of meme images, change it later
-				memeRankList.push(0);
-			}
-			state.memeList = memeRankList
-				.slice(0, 12)
-				.map((rank: number) => ({ rank }));
 		},
 		setGiftboxShake: (state, action) => {
 			state.giftboxShake = action.payload.giftboxShake;
@@ -110,7 +97,6 @@ export const uiuxSlice = createSlice({
 
 export const selectUIState = (state: RootState) => state.uiux.uiState;
 //export const selectLotteryInfoDiff = (state: RootState) => state.puppyParty.properties.lotteryInfoDiff;
-export const selectMemeList = (state: RootState) => state.uiux.memeList;
 export const selectTargetMemeIndex = (state: RootState) => state.uiux.targetMemeIndex;
 export const selectGiftboxShake = (state: RootState) => state.uiux.giftboxShake;
 export const selectProgressReset = (state: RootState) => state.uiux.progressReset;
@@ -119,5 +105,5 @@ export const selectShowProgressBarGoodJob = (state: RootState) => state.uiux.sho
 export const selectShowProgressBarNice = (state: RootState) => state.uiux.showProgressBarNice;
 export const selectLotteryInfoDiff= (state: RootState) => state.uiux.lotteryInfoDiff;
 
-export const { setTargetMemeIndex, setUIState, setMemeList, setGiftboxShake, setProgressReset, setPopupDescription, setShowProgressBarGoodJob, setShowProgressBarNice, resetLotteryInfoDiff } = uiuxSlice.actions;
+export const { setTargetMemeIndex, setUIState, setGiftboxShake, setProgressReset, setPopupDescription, setShowProgressBarGoodJob, setShowProgressBarNice, resetLotteryInfoDiff } = uiuxSlice.actions;
 export default uiuxSlice.reducer;

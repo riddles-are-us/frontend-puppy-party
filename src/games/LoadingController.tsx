@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getMemeList } from "./express";
-import { setMemeList } from "../data/ui";
+import sanityClient from "./sanityClient";
+import { SeasonData } from "./season";
+import { setCurrentSeason, setPreviousSeason } from "../data/memeDatas";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
   selectConnectState,
@@ -11,7 +13,6 @@ import {
 import Gameplay from "./components/Gameplay";
 import LoadingPage from "./components/LoadingPage";
 import WelcomePage from "./components/WelcomePage";
-import { scenario } from "./scenario";
 import { selectL2Account } from "zkwasm-minirollup-browser/src/reduxstate";
 import {
   queryInitialState,
@@ -52,13 +53,51 @@ export function LoadingController() {
   );
   const imageUrls = requireContext.keys().map(requireContext) as string[];
 
+  const querySanity = async (ranks: number[]) => {
+    const query = `*[_type == "season"] {
+			name,
+			seasonEndDate,
+			"isCurrentSeason": coalesce(isCurrentSeason, false),
+			"isPreviousSeason": coalesce(isPreviousSeason, false),
+			"memes": coalesce(memes[]->{
+				name,
+				"avatar": avatar.asset->url,
+				"spriteSheet": spriteSheet.asset->url,
+				animationIndex,
+				index
+			}, [])
+		}`;
+
+    const seasonDatas: SeasonData[] = await sanityClient
+      .fetch(query)
+      .catch((error: any) => {
+        console.error("Error fetching data:", error);
+      });
+
+    const previousSeason = seasonDatas.find(
+      (season) => season.isPreviousSeason
+    );
+    const currentSeason = seasonDatas.find((season) => season.isCurrentSeason);
+    if (previousSeason) {
+      console.log("season", previousSeason);
+      dispatch(setPreviousSeason({ previousSeason: previousSeason }));
+    }
+    if (currentSeason) {
+      console.log("season", currentSeason);
+      currentSeason.memes.forEach(
+        (meme, index) => (meme.rank = ranks[index] ?? 0)
+      );
+      dispatch(setCurrentSeason({ currentSeason: currentSeason }));
+    }
+  };
+
   const onStart = async () => {
     const res = await getMemeList();
-    dispatch(setMemeList({ memeList: res.data }));
+    await querySanity(res.data);
   };
 
   const onStartGameplay = () => {
-    scenario.status = "play";
+    /* */
   };
 
   if (config && userState?.player && Object.keys(userState.player).length > 0) {

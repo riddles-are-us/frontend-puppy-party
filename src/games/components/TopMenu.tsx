@@ -2,12 +2,13 @@ import React, { useEffect } from "react";
 import "./TopMenu.css";
 import WithdrawButton from "./buttons/WithdrawButton";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { MemeSeasonCurrent } from "../config";
 import DepositButton from "./buttons/DepositButton";
 import ticketIcon from "../images/ticket_icon.png";
 import balanceIcon from "../images/balance_icon.png";
 import { selectUIState, setUIState, UIState } from "../../data/ui";
 import { selectConnectState, selectUserState } from "../../data/state";
+import { selectCurrentMemes } from "../../data/memeDatas";
+import JoinButton from "./buttons/JoinButton";
 import { ConnectState } from "zkwasm-minirollup-browser";
 
 interface Props {
@@ -19,6 +20,14 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
   const dispatch = useAppDispatch();
   const userState = useAppSelector(selectUserState);
   const connectState = useAppSelector(selectConnectState);
+  const currentMemes = useAppSelector(selectCurrentMemes);
+
+  const onClickJoin = () => {
+    if (connectState == ConnectState.Idle) {
+      dispatch(setUIState({ uIState: UIState.UploadMemePopup }));
+    }
+  };
+
   const onClickWithdraw = () => {
     if (connectState == ConnectState.Idle) {
       dispatch(setUIState({ uIState: UIState.WithdrawPopup }));
@@ -34,6 +43,9 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
   return (
     <div className="top-menu-container">
       <div className="top-menu-background" />
+      <div className="top-menu-join-button">
+        <JoinButton onClick={onClickJoin} />
+      </div>
       <div className="top-menu-withdraw-button">
         <WithdrawButton onClick={onClickWithdraw} />
       </div>
@@ -50,7 +62,7 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
       <img src={balanceIcon} className="top-menu-balance-icon"></img>
       <div className="top-menu-vote-text">Vote: {targetMemeRank}</div>
       <img
-        src={MemeSeasonCurrent.getCover(targetMemeIndex)}
+        src={currentMemes[targetMemeIndex].avatar}
         className="top-menu-vote-icon"
       ></img>
     </div>

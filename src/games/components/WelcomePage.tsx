@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { AccountSlice } from "zkwasm-minirollup-browser";
 import { loadAudio } from "../audio";
-import { MemeSeasonCurrent, MemeSeasonPrevious } from "../config";
 import background from "../images/welcome/welcome_bg.png";
 import titleImage from "../images/welcome/welcome_title.png";
 import peopleBackground from "../images/welcome/people.png";
@@ -20,14 +19,15 @@ import PlayButton from "./buttons/PlayButton";
 import MemeIcon from "./MemeIcon";
 import Grid from "./Grid";
 import MemeRankingIcon from "./MemeRankingIcon";
-import { selectMemeList } from "../../data/ui";
+import { selectCurrentMemes, selectPreviousMemes } from "../../data/memeDatas";
 
 interface Props {
   onStartGame: () => void;
 }
 
 const WelcomePage = ({ onStartGame }: Props) => {
-  const memeList = useAppSelector(selectMemeList);
+  const previousMemes = useAppSelector(selectPreviousMemes);
+  const currentMemes = useAppSelector(selectCurrentMemes);
   const rankingContainerRef = useRef<HTMLDivElement>(null);
   const [memeRankingIconElementWidth, setMemeRankingIconElementWidth] =
     useState<number>(0);
@@ -37,6 +37,8 @@ const WelcomePage = ({ onStartGame }: Props) => {
   const [fontSize, setFontSize] = useState<number>(0);
   const animationContainerRef = useRef<HTMLDivElement>(null);
   const [scaleSize, setScaleSize] = useState<number>(0);
+
+  console.log("test", currentMemes);
 
   const adjustSize = () => {
     if (textRef.current) {
@@ -119,18 +121,16 @@ const WelcomePage = ({ onStartGame }: Props) => {
               elementHeight={memeRankingIconElementWidth}
               columnCount={4}
               rowCount={3}
-              elements={MemeSeasonCurrent.memeInfoList
-                .slice(0, 12)
-                .map((memeInfo, index) => (
-                  <MemeRankingIcon
-                    key={index}
-                    height={memeRankingIconElementWidth}
-                    width={memeRankingIconElementWidth}
-                    fontSize={fontSize}
-                    image={memeInfo.cover}
-                    rank={memeList[memeInfo.index].rank}
-                  />
-                ))}
+              elements={currentMemes.slice(0, 12).map((memeData, index) => (
+                <MemeRankingIcon
+                  key={index}
+                  height={memeRankingIconElementWidth}
+                  width={memeRankingIconElementWidth}
+                  fontSize={fontSize}
+                  image={memeData.avatar}
+                  rank={memeData.rank}
+                />
+              ))}
             />
           </div>
         </div>
@@ -152,16 +152,14 @@ const WelcomePage = ({ onStartGame }: Props) => {
               elementHeight={memeIconElementWidth}
               columnCount={3}
               rowCount={4}
-              elements={MemeSeasonPrevious.memeInfoList
-                .slice(0, 12)
-                .map((memeInfo, index) => (
-                  <MemeIcon
-                    key={index}
-                    height={memeIconElementWidth}
-                    width={memeIconElementWidth}
-                    image={memeInfo.cover}
-                  />
-                ))}
+              elements={previousMemes.slice(0, 12).map((memeData, index) => (
+                <MemeIcon
+                  key={index}
+                  height={memeIconElementWidth}
+                  width={memeIconElementWidth}
+                  image={memeData.avatar}
+                />
+              ))}
             />
           </div>
         </div>

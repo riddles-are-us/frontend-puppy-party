@@ -1,13 +1,9 @@
 import {
   HEIGHT, WIDTH,
 }  from "../draw";
+import { MemeData } from "../season";
 
 import spirites from "../spirite";
-import { MemeSeasonCurrent } from "../config";
-import {MemeListElement} from "../../data/state";
-
-const MEME_DEFAULT_CATEGORY = spirites.spirites.length - 1; // the last animation are of default dogs
-
 
 export class ClipRect {
   top: number;
@@ -24,6 +20,7 @@ export class ClipRect {
 }
 
 export class Clip {
+  index: number;
   name: string;
   src: HTMLImageElement;
   top: number;
@@ -38,7 +35,8 @@ export class Clip {
   focus: boolean;
   hover: boolean;
   target: Array<[number, number]>;
-  constructor(src: HTMLImageElement, boundry: ClipRect, ratio: number) {
+  constructor(index: number, src: HTMLImageElement, boundry: ClipRect, ratio: number) {
+    this.index = index;
     this.name = "NPC";
     this.src = src;
     this.boundry = boundry;
@@ -124,7 +122,7 @@ export class Clip {
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D, memeinfos: MemeListElement[]) {
+  draw(ctx: CanvasRenderingContext2D, memes: MemeData[]) {
     if (this.currentClip != null && this.currentFrame != null) {
       //Set the fill color
       const rect = this.clips.get(this.currentClip)![this.currentFrame];
@@ -138,7 +136,7 @@ export class Clip {
         ctx.fillStyle = "black";  // Red color
       }
 
-      const rank = memeinfos[MemeSeasonCurrent.getMemeIndex(this.name)].rank;
+      const rank = memes[this.index].rank;
       const fullname = `${this.name}:${rank}`;
       {
         ctx.fillRect(this.left + 30, this.top - 13, fullname.length * 7 + 5, 15);
@@ -188,14 +186,12 @@ export class Clip {
     }
   }
 
-  setAnimationClip(categoryIndex: number, animeIndex: number, top: number, left: number, start: number) {
+  setAnimationClip(top: number, left: number, start: number) {
     const spiriteHeight = 200;
     const spiriteWeight = 200;
-    this.src = spirites.spirites[categoryIndex];
     const clips = [];
     for (let i=0; i< 24; i++) {
-      const clipTop = animeIndex*spiriteHeight;
-      clips.push(new ClipRect(clipTop, spiriteWeight*i, spiriteWeight*(i+1), clipTop + spiriteHeight));
+      clips.push(new ClipRect(0, spiriteWeight*i, spiriteWeight*(i+1), spiriteHeight));
     }
     this.clips.set("normal", clips);
     this.top = top;
@@ -206,13 +202,12 @@ export class Clip {
 }
 
 
-export function createAnimationClip(categoryIndex: number, animeIndex: number, top:number, left:number, start: number) {
+export function createAnimationClip(index: number, spriteSheet: string, top:number, left:number, start: number) {
   const boundry = new ClipRect(HEIGHT/2 - 40, 50, WIDTH-100, HEIGHT-200);
-  const clip = new Clip(spirites.spirites[categoryIndex], boundry, 0.5);
-  clip.setAnimationClip(categoryIndex, animeIndex, top, left, start)
+  const spriteSheetImage = new Image();
+  spriteSheetImage.setAttribute('crossOrigin', '');
+  spriteSheetImage.src = spriteSheet;
+  const clip = new Clip(index, spriteSheetImage, boundry, 0.5);
+  clip.setAnimationClip(top, left, start)
   return clip;
-}
-
-export function createDefaultAnimationClip(animeIndex: number, top: number, left: number, start: number) {
-  return createAnimationClip(MEME_DEFAULT_CATEGORY, animeIndex, top, left, start);
 }

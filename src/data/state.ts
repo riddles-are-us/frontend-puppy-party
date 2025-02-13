@@ -1,7 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
 import { createStateSlice, PropertiesState, ConnectState } from "zkwasm-minirollup-browser";
 import {RootState} from '../app/store';
-import { scenario} from '../games/scenario';
 
 /*
 export enum UIState{
