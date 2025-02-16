@@ -38,8 +38,6 @@ const WelcomePage = ({ onStartGame }: Props) => {
   const animationContainerRef = useRef<HTMLDivElement>(null);
   const [scaleSize, setScaleSize] = useState<number>(0);
 
-  console.log("test", currentMemes);
-
   const adjustSize = () => {
     if (textRef.current) {
       const parentWidth = textRef.current.offsetWidth;

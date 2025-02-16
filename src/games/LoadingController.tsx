@@ -79,11 +79,9 @@ export function LoadingController() {
     );
     const currentSeason = seasonDatas.find((season) => season.isCurrentSeason);
     if (previousSeason) {
-      console.log("season", previousSeason);
       dispatch(setPreviousSeason({ previousSeason: previousSeason }));
     }
     if (currentSeason) {
-      console.log("season", currentSeason);
       currentSeason.memes.forEach(
         (meme, index) => (meme.rank = ranks[index] ?? 0)
       );
