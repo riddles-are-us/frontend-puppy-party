@@ -10,7 +10,7 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: ['acccount/deriveL2Account/fulfilled'],
-        ignoredActionPaths: ['payload.web3','payload.seed', 'payload.injector'],
+        ignoredActionPaths: ['payload.web3', 'payload.seed', 'payload.injector', 'meta.arg.cmd'],
         ignoredPaths: [
           "acccount/fetchAccount/fulfilled",
           "account.l1Account.web3",
