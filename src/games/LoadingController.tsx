@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { getMemeList } from "./express";
+import { getMemeMap } from "./express";
 import sanityClient from "./sanityClient";
 import { SeasonData } from "./season";
-import { setCurrentSeason, setPreviousSeason } from "../data/memeDatas";
+import {
+  setCurrentSeason,
+  setPreviousSeason,
+  updateCurrentMemes,
+} from "../data/memeDatas";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
   selectConnectState,
@@ -53,18 +57,18 @@ export function LoadingController() {
   );
   const imageUrls = requireContext.keys().map(requireContext) as string[];
 
-  const querySanity = async (ranks: number[]) => {
-    const query = `*[_type == "season"] {
+  const querySanity = async () => {
+    const query = `
+		*[_type == "season" && (isCurrentSeason == true || isPreviousSeason == true)] {
 			name,
 			seasonEndDate,
 			"isCurrentSeason": coalesce(isCurrentSeason, false),
 			"isPreviousSeason": coalesce(isPreviousSeason, false),
 			"memes": coalesce(memes[]->{
+				id,
 				name,
 				"avatar": avatar.asset->url,
-				"spriteSheet": spriteSheet.asset->url,
-				animationIndex,
-				index
+				"spriteSheet": spriteSheet.asset->url
 			}, [])
 		}`;
 
@@ -82,16 +86,14 @@ export function LoadingController() {
       dispatch(setPreviousSeason({ previousSeason: previousSeason }));
     }
     if (currentSeason) {
-      currentSeason.memes.forEach(
-        (meme, index) => (meme.rank = ranks[index] ?? 0)
-      );
       dispatch(setCurrentSeason({ currentSeason: currentSeason }));
     }
   };
 
   const onStart = async () => {
-    const res = await getMemeList();
-    await querySanity(res.data);
+    await querySanity();
+    const memeMap = await getMemeMap();
+    dispatch(updateCurrentMemes({ memeMap: memeMap }));
   };
 
   const onStartGameplay = () => {

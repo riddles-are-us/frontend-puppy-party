@@ -58,6 +58,8 @@ const WelcomePage = ({ onStartGame }: Props) => {
 
   useEffect(() => {
     adjustSize();
+    console.log("currentMemes", currentMemes);
+
     window.addEventListener("resize", adjustSize);
     return () => {
       window.removeEventListener("resize", adjustSize);

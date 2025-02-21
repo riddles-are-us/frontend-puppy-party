@@ -26,8 +26,9 @@ import {
   UIState,
 } from "../../data/ui";
 import { Scenario } from "../scenario";
-import { selectCurrentMemes } from "../../data/memeDatas";
+import { selectCurrentMemes, updateCurrentMemes } from "../../data/memeDatas";
 import { MemeData } from "../season";
+import { getMemeMap } from "../express";
 
 const COOL_DOWN = 2;
 const PROGRESS_LOTTERY_THRESHOLD = 1000;
@@ -237,11 +238,16 @@ const Gameplay = () => {
             getDanceTransactionParameter(
               l2account!,
               danceType,
-              BigInt(targetMemeIndex),
+              currentMemes[targetMemeIndex].id,
               BigInt(userState.player.nonce)
             )
           )
-        );
+        ).then(async (action) => {
+          if (sendTransaction.fulfilled.match(action)) {
+            const memeMap = await getMemeMap();
+            dispatch(updateCurrentMemes({ memeMap: memeMap }));
+          }
+        });
 
         setTimeout(() => {
           scenario.restoreActor();

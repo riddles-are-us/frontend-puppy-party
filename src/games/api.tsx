@@ -6,7 +6,7 @@ import { createWithdrawCommand, createCommand } from "zkwasm-minirollup-rpc";
 const CREATE_PLAYER = 1n;
 const VOTE = 2n;
 const STAKE = 3n;
-const BET = 4n;
+const COLLECT = 4n;
 const COMMENT = 5n;
 const LOTTERY = 6n;
 const INSTALL_MEME = 7n;
@@ -33,7 +33,7 @@ export function getCreatePlayerTransactionParameter(
 export function getDanceTransactionParameter(
   l2account: AccountSlice.L2AccountInfo,
   danceType: DanceType,
-  targetMemeIndex: bigint,
+  memeId: number,
   nonce: bigint
 ) {
   const danceCommand =
@@ -42,10 +42,10 @@ export function getDanceTransactionParameter(
       : danceType == DanceType.Side
       ? STAKE
       : danceType == DanceType.Turn
-      ? BET
+      ? COLLECT
       : COMMENT;
   return {
-    cmd: createCommand(nonce, danceCommand, [BigInt(targetMemeIndex), 0n]),
+    cmd: createCommand(nonce, danceCommand, [BigInt(memeId)]),
     prikey: l2account.getPrivateKey(),
   };
 }

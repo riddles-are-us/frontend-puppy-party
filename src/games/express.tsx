@@ -12,8 +12,19 @@ const instance = axios.create({
   },
 });
 
-export async function getMemeList() {
-  return await getRequest("/data/memes");
+export async function getMemeMap(): Promise<{ [key: number]: number }> {
+  const res = await getRequest("/data/memes");
+  const memeMap = res.data.reduce(
+    (
+      acc: { [key: number]: number },
+      { id, rank }: { id: number; rank: number }
+    ) => {
+      acc[id] = rank;
+      return acc;
+    },
+    {} as { [key: number]: number }
+  );
+  return memeMap;
 }
 
 export async function uploadImage(

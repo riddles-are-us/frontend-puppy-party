@@ -4,6 +4,12 @@ export default {
     type: 'document',
     fields: [
       {
+        name: 'id',
+        title: 'Id',
+        type: 'number',
+        description: 'Unique identifier for the meme',
+      },
+      {
         name: 'name',
         title: 'Name',
         type: 'string',
