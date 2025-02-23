@@ -25,32 +25,32 @@ const StageButtons = ({
         <DanceMusicButton
           isCoolDown={isCoolDown}
           progress={progress}
-          isDancing={progress < 1 && danceType == DanceType.Music}
-          onClick={onClickButton(DanceType.Music)}
+          isDancing={progress < 1 && danceType == DanceType.Vote}
+          onClick={onClickButton(DanceType.Vote)}
         />
       </div>
       <div className="stage-buttons-side-container">
         <DanceSideButton
           isCoolDown={isCoolDown}
           progress={progress}
-          isDancing={progress < 1 && danceType == DanceType.Side}
-          onClick={onClickButton(DanceType.Side)}
+          isDancing={progress < 1 && danceType == DanceType.Stake}
+          onClick={onClickButton(DanceType.Stake)}
         />
       </div>
       <div className="stage-buttons-turn-container">
         <DanceTurnButton
           isCoolDown={isCoolDown}
           progress={progress}
-          isDancing={progress < 1 && danceType == DanceType.Turn}
-          onClick={onClickButton(DanceType.Turn)}
+          isDancing={progress < 1 && danceType == DanceType.Collect}
+          onClick={onClickButton(DanceType.Collect)}
         />
       </div>
       <div className="stage-buttons-up-container">
         <DanceUpButton
           isCoolDown={isCoolDown}
           progress={progress}
-          isDancing={progress < 1 && danceType == DanceType.Up}
-          onClick={onClickButton(DanceType.Up)}
+          isDancing={progress < 1 && danceType == DanceType.Comment}
+          onClick={onClickButton(DanceType.Comment)}
         />
       </div>
     </div>

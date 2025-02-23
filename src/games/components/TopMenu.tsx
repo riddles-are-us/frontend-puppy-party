@@ -53,11 +53,11 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
         <DepositButton onClick={onClickDeposit} />
       </div>
       <div className="top-menu-ticket-text">
-        Ticket: {userState.player.data.ticket}
+        Ticket: {userState.player!.data.ticket}
       </div>
       <img src={ticketIcon} className="top-menu-ticket-icon"></img>
       <div className="top-menu-balance-text">
-        DiscoNote: {userState.player.data.ticket}
+        DiscoNote: {userState.player!.data.ticket}
       </div>
       <img src={balanceIcon} className="top-menu-balance-icon"></img>
       <div className="top-menu-vote-text">Vote: {targetMemeRank}</div>

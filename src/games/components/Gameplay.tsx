@@ -40,10 +40,10 @@ const SERVER_TICK_TO_SECOND = 5;
 
 export enum DanceType {
   None,
-  Music,
-  Side,
-  Turn,
-  Up,
+  Vote,
+  Stake,
+  Collect,
+  Comment,
 }
 
 const Gameplay = () => {
@@ -51,8 +51,8 @@ const Gameplay = () => {
   const l2account = useAppSelector(AccountSlice.selectL2Account);
   const userState = useAppSelector(selectUserState);
   const isCountingDownRef = useRef(false);
-  const progressRef = useRef(userState.player.data.progress);
-  const displayProgressRef = useRef(userState.player.data.progress);
+  const progressRef = useRef(userState.player!.data.progress);
+  const displayProgressRef = useRef(userState.player!.data.progress);
   const [displayProgress, setDisplayProgress] = useState(0);
   const currentMemes = useAppSelector(selectCurrentMemes);
   const currentMemesRef = useRef<MemeData[]>([]);
@@ -188,11 +188,11 @@ const Gameplay = () => {
   }, [progressReset]);
 
   useEffect(() => {
-    progressRef.current = userState.player.data.progress;
+    progressRef.current = userState.player!.data.progress;
     dispatch(setProgressReset({ progressReset: false }));
     isDanceButtonCoolDownGlobalRef.current =
       userState.state.counter * SERVER_TICK_TO_SECOND <
-      userState.player.data.last_action_timestamp + COOL_DOWN;
+      userState.player!.data.last_action_timestamp + COOL_DOWN;
   }, [userState]);
 
   useEffect(() => {
@@ -204,7 +204,7 @@ const Gameplay = () => {
       sendTransaction(
         getLotteryransactionParameter(
           l2account!,
-          BigInt(userState.player.nonce)
+          BigInt(userState.player!.nonce)
         )
       )
     );
@@ -212,7 +212,7 @@ const Gameplay = () => {
 
   const onClickDanceButton = (danceType: DanceType) => () => {
     if (isDanceButtonCoolDownLocalRef.current == false) {
-      if (userState.player.data.ticket == 0) {
+      if (userState.player!.data.ticket == 0) {
         dispatch(
           setPopupDescription({
             popupDescription: "Not Enough Ticket",
@@ -225,11 +225,11 @@ const Gameplay = () => {
         danceButtonProgressRef.current = 0;
         setDanceType(danceType);
         let move = 0;
-        if (danceType == DanceType.Side) {
+        if (danceType == DanceType.Stake) {
           move = 1;
-        } else if (danceType == DanceType.Turn) {
+        } else if (danceType == DanceType.Collect) {
           move = 2;
-        } else if (danceType == DanceType.Up) {
+        } else if (danceType == DanceType.Comment) {
           move = 3;
         }
         scenario.focusActor(440, 190, move);
@@ -239,7 +239,7 @@ const Gameplay = () => {
               l2account!,
               danceType,
               currentMemes[targetMemeIndex].id,
-              BigInt(userState.player.nonce)
+              BigInt(userState.player!.nonce)
             )
           )
         ).then(async (action) => {

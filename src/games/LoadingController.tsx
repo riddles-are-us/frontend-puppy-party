@@ -23,8 +23,8 @@ import {
   queryState,
 } from "zkwasm-minirollup-browser/src/connect";
 import { ConnectState } from "zkwasm-minirollup-browser";
-import { ConnectController } from "zkwasm-minirollup-browser/src/connect_controller";
 import "./style.scss";
+import { ConnectController } from "../connect_controller";
 
 export function LoadingController() {
   const dispatch = useAppDispatch();
@@ -100,7 +100,11 @@ export function LoadingController() {
     /* */
   };
 
-  if (config && userState?.player && Object.keys(userState.player).length > 0) {
+  if (
+    config &&
+    userState?.player &&
+    Object.keys(userState.player!).length > 0
+  ) {
     return <Gameplay />;
   } else {
     return (

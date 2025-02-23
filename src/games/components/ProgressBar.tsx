@@ -81,13 +81,13 @@ const ProgressBar = ({ progress }: Props) => {
       <img src={progressBarBackground} className="progress-bar-background" />
       <div className="progress-bar-lottery-heat-button">
         <LotteryHeatButton
-          isDisabled={userState.player.data.lottery_info <= 0}
+          isDisabled={userState.player!.data.lottery_info <= 0}
           onClick={onClickLotteryHeatButton}
         />
       </div>
       <div className="progress-bar-lottery-text">
-        {userState.player.data.lottery_info > 0
-          ? `Lottery Heat: ${userState.player.data.lottery_info}`
+        {userState.player!.data.lottery_info > 0
+          ? `Lottery Heat: ${userState.player!.data.lottery_info}`
           : "Nothing to Cashout"}
       </div>
       {showProgressBarGoodJob && (

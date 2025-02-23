@@ -150,12 +150,12 @@ const GiftboxPopup = () => {
       setRewardAnimation(true);
       dispatch(setUIState({ uIState: UIState.QueryGiftbox }));
       dispatch(setProgressReset({ progressReset: true }));
-      setPreLotterInfo(userState.player.data.lottery_info);
+      setPreLotterInfo(userState.player!.data.lottery_info);
       dispatch(
         sendTransaction(
           getLotteryransactionParameter(
             l2account!,
-            BigInt(userState.player.nonce)
+            BigInt(userState.player!.nonce)
           )
         )
       ).then((action) => {
@@ -175,7 +175,7 @@ const GiftboxPopup = () => {
 
   useEffect(() => {
     if (!rewardAnimation && finishQuery) {
-      if (userState.player.data.lottery_info > preLotteryInfo) {
+      if (userState.player!.data.lottery_info > preLotteryInfo) {
         dispatch(setUIState({ uIState: UIState.SponsorPopup }));
       } else {
         dispatch(setUIState({ uIState: UIState.Idle }));

@@ -43,7 +43,7 @@ const WithdrawPopup = () => {
   const withdraw = (amountString: string) => {
     try {
       const amount = Number(amountString);
-      if (amount > userState.player.data.balance) {
+      if (amount > userState.player!.data.balance) {
         dispatch(
           setPopupDescription({
             popupDescription: "Not Enough Balance",
@@ -52,7 +52,7 @@ const WithdrawPopup = () => {
         dispatch(setUIState({ uIState: UIState.ErrorPopup }));
       } else {
         dispatch(setUIState({ uIState: UIState.QueryWithdraw }));
-        withdrawRewards(BigInt(amount), BigInt(userState.player.nonce));
+        withdrawRewards(BigInt(amount), BigInt(userState.player!.nonce));
       }
     } catch (e) {
       console.log("Error at withdraw " + e);
@@ -77,7 +77,7 @@ const WithdrawPopup = () => {
       <div className="withdraw-popup-main-container">
         <img src={background} className="withdraw-popup-main-background" />
         <p className="withdraw-popup-amount-text">
-          Please enter a number between 0 and {userState.player.data.balance}.
+          Please enter a number between 0 and {userState.player!.data.balance}.
         </p>
         <input
           type="number"

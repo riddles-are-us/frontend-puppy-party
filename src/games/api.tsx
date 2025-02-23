@@ -37,11 +37,11 @@ export function getDanceTransactionParameter(
   nonce: bigint
 ) {
   const danceCommand =
-    danceType == DanceType.Music
+    danceType == DanceType.Vote
       ? VOTE
-      : danceType == DanceType.Side
+      : danceType == DanceType.Stake
       ? STAKE
-      : danceType == DanceType.Turn
+      : danceType == DanceType.Collect
       ? COLLECT
       : COMMENT;
   return {

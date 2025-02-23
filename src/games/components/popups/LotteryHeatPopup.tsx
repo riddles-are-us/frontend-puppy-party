@@ -26,8 +26,8 @@ const LotteryHeatPopup = () => {
         getWithdrawLotteryTransactionParameter(
           l1account!,
           l2account!,
-          BigInt(userState.player.data.lottery_info),
-          BigInt(userState.player.nonce)
+          BigInt(userState.player!.data.lottery_info),
+          BigInt(userState.player!.nonce)
         )
       )
     ).then((action) => {
@@ -53,7 +53,7 @@ const LotteryHeatPopup = () => {
           <div className="lottery-heat-popup-main-animation" />
           <p className="lottery-heat-popup-sponsor-text">Cash out</p>
           <p className="lottery-heat-popup-description-text">
-            {userState.player.data.lottery_info}
+            {userState.player!.data.lottery_info}
           </p>
           <div className="lottery-heat-popup-confirm-button">
             <GiftboxConfirmButton onClick={onClickConfirm} />
