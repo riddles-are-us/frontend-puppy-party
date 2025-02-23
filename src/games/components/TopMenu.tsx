@@ -57,7 +57,7 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
       </div>
       <img src={ticketIcon} className="top-menu-ticket-icon"></img>
       <div className="top-menu-balance-text">
-        DiscoNote: {userState.player!.data.ticket}
+        DiscoNote: {userState.player!.data.balance}
       </div>
       <img src={balanceIcon} className="top-menu-balance-icon"></img>
       <div className="top-menu-vote-text">Vote: {targetMemeRank}</div>

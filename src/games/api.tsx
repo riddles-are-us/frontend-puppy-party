@@ -39,11 +39,15 @@ export function getDanceTransactionParameter(
   const danceCommand =
     danceType == DanceType.Vote
       ? VOTE
-      : danceType == DanceType.Stake
-      ? STAKE
       : danceType == DanceType.Collect
       ? COLLECT
-      : COMMENT;
+      : danceType == DanceType.Comment
+      ? COMMENT
+      : 0n;
+  if (danceCommand == 0n) {
+    throw new Error("Invalid dance type");
+  }
+
   return {
     cmd: createCommand(nonce, danceCommand, [BigInt(memeId)]),
     prikey: l2account.getPrivateKey(),
@@ -81,6 +85,18 @@ export function getWithdrawTransactionParameter(
       sndLimb,
       thirdLimb,
     ]),
+    prikey: l2account.getPrivateKey(),
+  };
+}
+
+export function getStakeTransactionParameter(
+  l2account: AccountSlice.L2AccountInfo,
+  memeId: number,
+  amount: number,
+  nonce: bigint
+) {
+  return {
+    cmd: createCommand(nonce, STAKE, [BigInt(memeId), BigInt(amount)]),
     prikey: l2account.getPrivateKey(),
   };
 }

@@ -18,6 +18,7 @@ import {
   selectGiftboxShake,
   selectProgressReset,
   selectTargetMemeIndex,
+  selectUIState,
   setGiftboxShake,
   setPopupDescription,
   setProgressReset,
@@ -50,6 +51,7 @@ const Gameplay = () => {
   const dispatch = useAppDispatch();
   const l2account = useAppSelector(AccountSlice.selectL2Account);
   const userState = useAppSelector(selectUserState);
+  const uIState = useAppSelector(selectUIState);
   const isCountingDownRef = useRef(false);
   const progressRef = useRef(userState.player!.data.progress);
   const displayProgressRef = useRef(userState.player!.data.progress);
@@ -70,7 +72,7 @@ const Gameplay = () => {
   const danceButtonProgressRef = useRef(0);
   const [danceButtonProgress, setDanceButtonProgress] = useState(0);
 
-  const [danceType, setDanceType] = useState(DanceType.None);
+  const [currentDanceType, setCurrentDanceType] = useState(DanceType.None);
 
   const giftboxShakeRef = useRef(false);
   const progressResetRef = useRef(false);
@@ -210,51 +212,112 @@ const Gameplay = () => {
     );
   }
 
-  const onClickDanceButton = (danceType: DanceType) => () => {
-    if (isDanceButtonCoolDownLocalRef.current == false) {
-      if (userState.player!.data.ticket == 0) {
-        dispatch(
-          setPopupDescription({
-            popupDescription: "Not Enough Ticket",
-          })
-        );
-        dispatch(setUIState({ uIState: UIState.ErrorPopup }));
-      } else {
-        isDanceButtonCoolDownLocalRef.current = true;
-        setIsDanceButtonCoolDownLocal(true);
-        danceButtonProgressRef.current = 0;
-        setDanceType(danceType);
-        let move = 0;
-        if (danceType == DanceType.Stake) {
-          move = 1;
-        } else if (danceType == DanceType.Collect) {
-          move = 2;
-        } else if (danceType == DanceType.Comment) {
-          move = 3;
-        }
-        scenario.focusActor(440, 190, move);
-        dispatch(
-          sendTransaction(
-            getDanceTransactionParameter(
-              l2account!,
-              danceType,
-              currentMemes[targetMemeIndex].id,
-              BigInt(userState.player!.nonce)
-            )
-          )
-        ).then(async (action) => {
-          if (sendTransaction.fulfilled.match(action)) {
-            const memeMap = await getMemeMap();
-            dispatch(updateCurrentMemes({ memeMap: memeMap }));
-          }
-        });
+  const checkDanceButtonCoolDownAndTicketAmount = () => {
+    if (isDanceButtonCoolDownLocalRef.current) {
+      return false;
+    }
+    if (userState.player!.data.ticket == 0) {
+      dispatch(
+        setPopupDescription({
+          popupDescription: "Not Enough Ticket",
+        })
+      );
+      dispatch(setUIState({ uIState: UIState.ErrorPopup }));
+      return false;
+    }
+    return true;
+  };
 
-        setTimeout(() => {
-          scenario.restoreActor();
-        }, 8000);
-      }
+  const startDance = (danceType: DanceType) => {
+    isDanceButtonCoolDownLocalRef.current = true;
+    setIsDanceButtonCoolDownLocal(true);
+    danceButtonProgressRef.current = 0;
+    setCurrentDanceType(danceType);
+
+    scenario.focusActor(440, 190, danceType);
+    setTimeout(() => {
+      scenario.restoreActor();
+    }, 8000);
+  };
+
+  const onClickVoteButton = () => () => {
+    if (checkDanceButtonCoolDownAndTicketAmount()) {
+      startDance(DanceType.Vote);
+
+      dispatch(
+        sendTransaction(
+          getDanceTransactionParameter(
+            l2account!,
+            DanceType.Vote,
+            currentMemes[targetMemeIndex].id,
+            BigInt(userState.player!.nonce)
+          )
+        )
+      ).then(async (action) => {
+        if (sendTransaction.fulfilled.match(action)) {
+          const memeMap = await getMemeMap();
+          dispatch(updateCurrentMemes({ memeMap: memeMap }));
+        }
+      });
     }
   };
+
+  const onClickStakeButton = () => () => {
+    if (checkDanceButtonCoolDownAndTicketAmount()) {
+      dispatch(setUIState({ uIState: UIState.StakePopup }));
+    }
+  };
+
+  const onClickCollectButton = () => () => {
+    if (checkDanceButtonCoolDownAndTicketAmount()) {
+      startDance(DanceType.Collect);
+
+      dispatch(
+        sendTransaction(
+          getDanceTransactionParameter(
+            l2account!,
+            DanceType.Collect,
+            currentMemes[targetMemeIndex].id,
+            BigInt(userState.player!.nonce)
+          )
+        )
+      ).then(async (action) => {
+        if (sendTransaction.fulfilled.match(action)) {
+          const memeMap = await getMemeMap();
+          dispatch(updateCurrentMemes({ memeMap: memeMap }));
+        }
+      });
+    }
+  };
+
+  const onClickCommentButton = () => () => {
+    if (checkDanceButtonCoolDownAndTicketAmount()) {
+      startDance(DanceType.Comment);
+
+      dispatch(
+        sendTransaction(
+          getDanceTransactionParameter(
+            l2account!,
+            DanceType.Comment,
+            currentMemes[targetMemeIndex].id,
+            BigInt(userState.player!.nonce)
+          )
+        )
+      ).then(async (action) => {
+        if (sendTransaction.fulfilled.match(action)) {
+          const memeMap = await getMemeMap();
+          dispatch(updateCurrentMemes({ memeMap: memeMap }));
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (uIState == UIState.FinishStake) {
+      startDance(DanceType.Stake);
+      dispatch(setUIState({ uIState: UIState.Idle }));
+    }
+  }, [uIState]);
 
   function onHoverCanvas(e: MouseEvent<HTMLCanvasElement>) {
     const target = e.currentTarget;
@@ -300,8 +363,11 @@ const Gameplay = () => {
         <StageButtons
           isCoolDown={isDanceButtonCoolDownLocal}
           progress={danceButtonProgress}
-          danceType={danceType}
-          onClickButton={onClickDanceButton}
+          currentDanceType={currentDanceType}
+          onClickVoteButton={onClickVoteButton}
+          onClickStakeButton={onClickStakeButton}
+          onClickCollectButton={onClickCollectButton}
+          onClickCommentButton={onClickCommentButton}
         />
       </div>
     </>

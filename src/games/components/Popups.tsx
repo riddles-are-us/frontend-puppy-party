@@ -10,11 +10,14 @@ import SponsorPopup from "./popups/SponsorPopup";
 import LotteryHeatPopup from "./popups/LotteryHeatPopup";
 import UploadMemePopup from "./popups/UploadMemePopup";
 import { selectPopupDescription, selectUIState, UIState } from "../../data/ui";
+import StakePopup from "./popups/StakePopup";
 
 const Popups = () => {
   const uIState = useAppSelector(selectUIState);
   const showWithdrawPopup = uIState == UIState.WithdrawPopup;
   const showDepositPopup = uIState == UIState.DepositPopup;
+  const showStakePopup =
+    uIState == UIState.StakePopup || uIState == UIState.QueryStake;
   const showConfirmPopup = uIState == UIState.ConfirmPopup;
   const showErrorPopup = uIState == UIState.ErrorPopup;
   const showGiftboxPopup =
@@ -29,6 +32,7 @@ const Popups = () => {
     <>
       {showWithdrawPopup && <WithdrawPopup />}
       {showDepositPopup && <DepositPopup />}
+      {showStakePopup && <StakePopup />}
       {showGiftboxPopup && <GiftboxPopup />}
       {showSponsorPopup && <SponsorPopup />}
       {showLotteryHeatPopup && <LotteryHeatPopup />}

@@ -126,11 +126,11 @@ export class Scenario {
   }
 
   focusActor(left: number, top: number, move: number) {
-    if (move == 1) {
+    if (move == 2) {
       this.waveClips();
-    } else if (move == 2) {
-      this.cicleClips();
     } else if (move == 3) {
+      this.cicleClips();
+    } else if (move == 4) {
       this.lineClips();
     }
     this.actorState = "focus";
