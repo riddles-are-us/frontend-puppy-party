@@ -1,5 +1,5 @@
 import { useState } from "react";
-import background from "../../images/withdraw_frame.png";
+import background from "../../images/stake_frame.png";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { AccountSlice } from "zkwasm-minirollup-browser";
 import ConfirmButton from "../buttons/WithdrawConfirmButton";
