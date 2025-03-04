@@ -169,25 +169,6 @@
     user-select: none;
 }
 
-.welcome-page-next-season-container {
-    position: absolute;
-    left: 65.5%;
-    bottom: 10%;
-    height: 30%;
-    width: auto;
-    aspect-ratio: 0.7 / 1;
-    transform: translate(-50%, -50%);
-}
-
-.welcome-page-next-season-grid {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
 @keyframes speaker-animation {
     0% {
       transform: scale(1);

@@ -8,12 +8,10 @@ import {
 } from "zkwasm-minirollup-browser/src/connect";
 
 interface MemeDatasState {
-	previousSeason: SeasonData;
 	currentSeason: SeasonData;
 }
 
 const initialState: MemeDatasState = {
-	previousSeason: emptySeasonData,
 	currentSeason: emptySeasonData,
 };
 
@@ -21,9 +19,6 @@ export const memeDatasSlice = createSlice({
 	name: "memeDatas",
 	initialState,
 	reducers: {
-		setPreviousSeason: (state, action) => {
-			state.previousSeason = action.payload.previousSeason;
-		},
 		setCurrentSeason: (state, action) => {
 			state.currentSeason = action.payload.currentSeason;
 		},
@@ -35,10 +30,8 @@ export const memeDatasSlice = createSlice({
 	},
 });
 
-export const selectPreviousMemes = (state: RootState) =>
-	state.memeDatas.previousSeason.memes;
 export const selectCurrentMemes = (state: RootState) =>
 	state.memeDatas.currentSeason.memes;
 
-export const { setPreviousSeason, setCurrentSeason, updateCurrentMemes } = memeDatasSlice.actions;
+export const { setCurrentSeason, updateCurrentMemes } = memeDatasSlice.actions;
 export default memeDatasSlice.reducer;

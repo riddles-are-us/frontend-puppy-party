@@ -2,11 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getMemeMap } from "./express";
 import sanityClient from "./sanityClient";
 import { SeasonData } from "./season";
-import {
-  setCurrentSeason,
-  setPreviousSeason,
-  updateCurrentMemes,
-} from "../data/memeDatas";
+import { setCurrentSeason, updateCurrentMemes } from "../data/memeDatas";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
   selectConnectState,
@@ -78,13 +74,7 @@ export function LoadingController() {
         console.error("Error fetching data:", error);
       });
 
-    const previousSeason = seasonDatas.find(
-      (season) => season.isPreviousSeason
-    );
     const currentSeason = seasonDatas.find((season) => season.isCurrentSeason);
-    if (previousSeason) {
-      dispatch(setPreviousSeason({ previousSeason: previousSeason }));
-    }
     if (currentSeason) {
       dispatch(setCurrentSeason({ currentSeason: currentSeason }));
     }

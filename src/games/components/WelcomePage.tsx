@@ -19,14 +19,13 @@ import PlayButton from "./buttons/PlayButton";
 import MemeIcon from "./MemeIcon";
 import Grid from "./Grid";
 import MemeRankingIcon from "./MemeRankingIcon";
-import { selectCurrentMemes, selectPreviousMemes } from "../../data/memeDatas";
+import { selectCurrentMemes } from "../../data/memeDatas";
 
 interface Props {
   onStartGame: () => void;
 }
 
 const WelcomePage = ({ onStartGame }: Props) => {
-  const previousMemes = useAppSelector(selectPreviousMemes);
   const currentMemes = useAppSelector(selectCurrentMemes);
   const rankingContainerRef = useRef<HTMLDivElement>(null);
   const [memeRankingIconElementWidth, setMemeRankingIconElementWidth] =
@@ -146,22 +145,6 @@ const WelcomePage = ({ onStartGame }: Props) => {
           >
             Previous Season
           </p>
-          <div className="welcome-page-next-season-grid">
-            <Grid
-              elementWidth={memeIconElementWidth}
-              elementHeight={memeIconElementWidth}
-              columnCount={3}
-              rowCount={4}
-              elements={previousMemes.slice(0, 12).map((memeData, index) => (
-                <MemeIcon
-                  key={index}
-                  height={memeIconElementWidth}
-                  width={memeIconElementWidth}
-                  image={memeData.avatar}
-                />
-              ))}
-            />
-          </div>
         </div>
         <img
           className="welcome-page-speaker-green-left-image"
