@@ -1,9 +1,8 @@
 import React from "react";
-import DanceMusicButton from "./buttons/DanceMusicButton";
+import VoteButton from "./buttons/VoteButton";
+import StakeButton from "./buttons/StakeButton";
+import CollectButton from "./buttons/CollectButton";
 import "./StageButtons.css";
-import DanceSideButton from "./buttons/DanceSideButton";
-import DanceTurnButton from "./buttons/DanceTurnButton";
-import DanceUpButton from "./buttons/DanceUpButton";
 import { DanceType } from "./Gameplay";
 
 interface Props {
@@ -27,38 +26,30 @@ const StageButtons = ({
 }: Props) => {
   return (
     <div className="stage-buttons-container">
-      <div className="stage-buttons-music-container">
-        <DanceMusicButton
+      <div className="stage-buttons-vote-container">
+        <VoteButton
           isCoolDown={isCoolDown}
           progress={progress}
           isDancing={progress < 1 && currentDanceType == DanceType.Vote}
           onClick={onClickVoteButton()}
         />
       </div>
-      <div className="stage-buttons-side-container">
-        <DanceSideButton
+      <div className="stage-buttons-stake-container">
+        <StakeButton
           isCoolDown={isCoolDown}
           progress={progress}
           isDancing={progress < 1 && currentDanceType == DanceType.Stake}
           onClick={onClickStakeButton()}
         />
       </div>
-      <div className="stage-buttons-turn-container">
-        <DanceTurnButton
+      <div className="stage-buttons-collect-container">
+        <CollectButton
           isCoolDown={isCoolDown}
           progress={progress}
           isDancing={progress < 1 && currentDanceType == DanceType.Collect}
           onClick={onClickCollectButton()}
         />
       </div>
-      {/* <div className="stage-buttons-up-container">
-				<DanceUpButton
-					isCoolDown={isCoolDown}
-					progress={progress}
-					isDancing={progress < 1 && danceType == DanceType.Comment}
-					onClick={onClickCommentButton()}
-				/>
-			</div> */}
     </div>
   );
 };

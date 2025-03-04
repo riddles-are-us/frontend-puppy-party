@@ -1,4 +1,4 @@
-.dance-turn-button-scale{
+.collect-button-scale{
     position: absolute;
     width: 55px;
     height: 55px;
@@ -7,7 +7,7 @@
     transform: translate(-50%, -50%);
 }
 
-.dance-turn-image{
+.collect-image{
     position: absolute;
     width: 65px;
     height: 65px;
