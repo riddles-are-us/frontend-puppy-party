@@ -139,6 +139,17 @@
     transform: translate(-50%, -50%);
 }
 
+.welcome-page-meme-grid {
+    position: absolute;
+    left: 50%;
+    top: 90%;
+    height: 15%;
+    width: auto;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+}
+
 .welcome-page-ranking-text {
     position: absolute;
     left: 50%;

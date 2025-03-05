@@ -21,7 +21,7 @@ const initialState: MemeDatasState = {
   seasonData: emptySeasonData,
   memeDataMap: {},
   memeModelMap: {},
-  currentMemeIds: Array(12),
+  currentMemeIds: Array(12).fill(0),
 };
 
 export const memeDatasSlice = createSlice({
@@ -31,10 +31,7 @@ export const memeDatasSlice = createSlice({
     setSeasonData: (state, action) => {
       state.seasonData = action.payload.seasonData;
       state.memeDataMap = action.payload.seasonData.memes.reduce(
-        (
-          acc: { [key: number]: MemeData },
-          data: MemeData
-        ) => {
+        (acc: { [key: number]: MemeData }, data: MemeData) => {
           acc[data.id] = data;
           return acc;
         },
@@ -43,6 +40,23 @@ export const memeDatasSlice = createSlice({
     },
     setMemeModelMap: (state, action) => {
       state.memeModelMap = action.payload.memeModelMap;
+    },
+    addCurrentMemeId: (state, action) => {
+      const currentNotEmptyMemeIds = state.currentMemeIds
+        .filter((id) => id !== 0)
+        .concat(action.payload.memeId)
+        .slice(0, 12);
+      state.currentMemeIds = currentNotEmptyMemeIds.concat(
+        Array(12 - currentNotEmptyMemeIds.length).fill(0)
+      );
+    },
+    removeCurrentMemeId: (state, action) => {
+      const currentNotEmptyMemeIds = state.currentMemeIds
+        .filter((id) => id !== 0 && id !== action.payload.memeId)
+        .slice(0, 12);
+      state.currentMemeIds = currentNotEmptyMemeIds.concat(
+        Array(12 - currentNotEmptyMemeIds.length).fill(0)
+      );
     },
     fillCurrentMemeIds: (state, action) => {
       const availableMemeIds = state.seasonData.memes
@@ -60,7 +74,9 @@ export const memeDatasSlice = createSlice({
 });
 
 export const selectAllMemes = (state: RootState) =>
-  state.memeDatas.seasonData.memes.map((data) => {
+  state.memeDatas.seasonData.memes.filter((data) => state.memeDatas.currentMemeIds.includes(data.id))
+  .concat(state.memeDatas.seasonData.memes.filter((data) => !state.memeDatas.currentMemeIds.includes(data.id)))
+  .map((data) => {
     return {
       data: data,
       model: state.memeDatas.memeModelMap
@@ -76,6 +92,6 @@ export const selectCurrentMemes = (state: RootState) =>
     } as MemeProp;
   });
 
-export const { setSeasonData, setMemeModelMap, fillCurrentMemeIds } =
+export const { setSeasonData, setMemeModelMap, addCurrentMemeId, removeCurrentMemeId, fillCurrentMemeIds } =
   memeDatasSlice.actions;
 export default memeDatasSlice.reducer;

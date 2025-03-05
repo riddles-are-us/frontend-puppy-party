@@ -88,11 +88,10 @@ export function LoadingController() {
     await querySanity();
     const memeModelMap = await getMemeModelMap();
     dispatch(setMemeModelMap({ memeModelMap }));
-    dispatch(fillCurrentMemeIds({}));
   };
 
   const onStartGameplay = () => {
-    /* */
+    dispatch(fillCurrentMemeIds({}));
   };
 
   if (

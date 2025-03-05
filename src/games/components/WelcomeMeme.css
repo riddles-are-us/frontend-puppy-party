@@ -1,0 +1,28 @@
+.welcome-meme-container {
+    position: relative;
+    width: auto;
+    height: 100%;
+    aspect-ratio: 7 / 10;
+}
+
+.welcome-meme-empty-image {
+    position: absolute;
+    width: auto;
+    height: 100%;
+    aspect-ratio: 158 / 240;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.welcome-meme-image {
+    position: absolute;
+    width: auto;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    object-position: left;
+}

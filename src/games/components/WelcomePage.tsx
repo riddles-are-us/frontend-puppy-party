@@ -16,22 +16,28 @@ import speakerYellowLeft from "../images/animations/welcome/yellow.png";
 import speakerYellowRight from "../images/animations/welcome/yellow1.png";
 import "./WelcomePage.css";
 import PlayButton from "./buttons/PlayButton";
-import MemeIcon from "./MemeIcon";
 import Grid from "./Grid";
 import MemeRankingIcon from "./MemeRankingIcon";
-import { selectAllMemes } from "../../data/memeDatas";
+import {
+  addCurrentMemeId,
+  removeCurrentMemeId,
+  selectAllMemes,
+  selectCurrentMemes,
+} from "../../data/memeDatas";
+import WelcomeMeme from "./WelcomeMeme";
+import { MemeProp } from "../season";
 
 interface Props {
   onStartGame: () => void;
 }
 
 const WelcomePage = ({ onStartGame }: Props) => {
+  const dispatch = useAppDispatch();
   const allMemeProps = useAppSelector(selectAllMemes);
+  const currentMemeProps = useAppSelector(selectCurrentMemes);
   const rankingContainerRef = useRef<HTMLDivElement>(null);
   const [memeRankingIconElementWidth, setMemeRankingIconElementWidth] =
     useState<number>(0);
-  const nextSeasonContainerRef = useRef<HTMLDivElement>(null);
-  const [memeIconElementWidth, setMemeIconElementWidth] = useState<number>(0);
   const textRef = useRef<HTMLParagraphElement>(null);
   const [fontSize, setFontSize] = useState<number>(0);
   const animationContainerRef = useRef<HTMLDivElement>(null);
@@ -47,9 +53,6 @@ const WelcomePage = ({ onStartGame }: Props) => {
         rankingContainerRef.current.offsetWidth / 4
       );
     }
-    if (nextSeasonContainerRef.current) {
-      setMemeIconElementWidth(nextSeasonContainerRef.current.offsetWidth / 3);
-    }
     if (animationContainerRef.current) {
       setScaleSize(animationContainerRef.current.offsetWidth / 300);
     }
@@ -63,6 +66,14 @@ const WelcomePage = ({ onStartGame }: Props) => {
       window.removeEventListener("resize", adjustSize);
     };
   }, []);
+
+  const onClickMeme = (memeId: number) => {
+    if (currentMemeProps.find((memeProp) => memeProp.data.id == memeId)) {
+      dispatch(removeCurrentMemeId({ memeId }));
+    } else {
+      dispatch(addCurrentMemeId({ memeId }));
+    }
+  };
 
   function startGame() {
     loadAudio((ele) => {
@@ -127,23 +138,23 @@ const WelcomePage = ({ onStartGame }: Props) => {
                   fontSize={fontSize}
                   image={memeProp.data.avatar}
                   rank={memeProp.model.rank}
+                  isSelect={
+                    currentMemeProps.find(
+                      (meme) => meme.data.id == memeProp.data.id
+                    )
+                      ? true
+                      : false
+                  }
+                  onClick={() => onClickMeme(memeProp.data.id)}
                 />
               ))}
             />
           </div>
         </div>
-        <div
-          ref={nextSeasonContainerRef}
-          className="welcome-page-next-season-container"
-        >
-          <p
-            className="welcome-page-next-season-text"
-            style={{
-              fontSize: `${fontSize}px`,
-            }}
-          >
-            Previous Season
-          </p>
+        <div className="welcome-page-meme-grid">
+          {currentMemeProps.map((memeProp, index) => (
+            <WelcomeMeme key={index} index={index} meme={memeProp} />
+          ))}
         </div>
         <img
           className="welcome-page-speaker-green-left-image"
