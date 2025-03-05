@@ -27,9 +27,9 @@ import {
   UIState,
 } from "../../data/ui";
 import { Scenario } from "../scenario";
-import { selectCurrentMemes, updateCurrentMemes } from "../../data/memeDatas";
-import { MemeData } from "../season";
-import { getMemeMap } from "../express";
+import { selectCurrentMemes, setMemeModelMap } from "../../data/memeDatas";
+import { MemeData, MemeProp } from "../season";
+import { getMemeModelMap } from "../express";
 
 const COOL_DOWN = 2;
 const PROGRESS_LOTTERY_THRESHOLD = 1000;
@@ -57,14 +57,13 @@ const Gameplay = () => {
   const displayProgressRef = useRef(userState.player!.data.progress);
   const [displayProgress, setDisplayProgress] = useState(0);
   const currentMemes = useAppSelector(selectCurrentMemes);
-  const currentMemesRef = useRef<MemeData[]>([]);
+  const currentMemesRef = useRef<MemeProp[]>([]);
   const [scenario, setScenario] = useState(new Scenario(currentMemes));
 
   const giftboxShake = useAppSelector(selectGiftboxShake);
   const progressReset = useAppSelector(selectProgressReset);
   const targetMemeIndex = useAppSelector(selectTargetMemeIndex);
 
-  const [targetMemeRank, setTargetMemeRank] = useState(0);
   const isDanceButtonCoolDownLocalRef = useRef(false);
   const isDanceButtonCoolDownGlobalRef = useRef(false);
   const [isDanceButtonCoolDownLocal, setIsDanceButtonCoolDownLocal] =
@@ -150,7 +149,7 @@ const Gameplay = () => {
 
         scenario.draw(ratioArray, {
           l2account,
-          memeList: currentMemesRef.current,
+          currentMemes: currentMemesRef.current,
           giftboxShake: giftboxShakeRef.current,
         });
         if (giftboxShakeRef.current) {
@@ -196,10 +195,6 @@ const Gameplay = () => {
       userState.state.counter * SERVER_TICK_TO_SECOND <
       userState.player!.data.last_action_timestamp + COOL_DOWN;
   }, [userState]);
-
-  useEffect(() => {
-    setTargetMemeRank(currentMemes[targetMemeIndex].rank);
-  }, [targetMemeIndex, currentMemes]);
 
   function handleCancelRewards() {
     dispatch(
@@ -249,14 +244,14 @@ const Gameplay = () => {
           getDanceTransactionParameter(
             l2account!,
             DanceType.Vote,
-            currentMemes[targetMemeIndex].id,
+            currentMemes[targetMemeIndex].data.id,
             BigInt(userState.player!.nonce)
           )
         )
       ).then(async (action) => {
         if (sendTransaction.fulfilled.match(action)) {
-          const memeMap = await getMemeMap();
-          dispatch(updateCurrentMemes({ memeMap: memeMap }));
+          const memeModelMap = await getMemeModelMap();
+          dispatch(setMemeModelMap({ memeModelMap }));
         }
       });
     }
@@ -277,14 +272,14 @@ const Gameplay = () => {
           getDanceTransactionParameter(
             l2account!,
             DanceType.Collect,
-            currentMemes[targetMemeIndex].id,
+            currentMemes[targetMemeIndex].data.id,
             BigInt(userState.player!.nonce)
           )
         )
       ).then(async (action) => {
         if (sendTransaction.fulfilled.match(action)) {
-          const memeMap = await getMemeMap();
-          dispatch(updateCurrentMemes({ memeMap: memeMap }));
+          const memeModelMap = await getMemeModelMap();
+          dispatch(setMemeModelMap({ memeModelMap }));
         }
       });
     }
@@ -299,14 +294,14 @@ const Gameplay = () => {
           getDanceTransactionParameter(
             l2account!,
             DanceType.Comment,
-            currentMemes[targetMemeIndex].id,
+            currentMemes[targetMemeIndex].data.id,
             BigInt(userState.player!.nonce)
           )
         )
       ).then(async (action) => {
         if (sendTransaction.fulfilled.match(action)) {
-          const memeMap = await getMemeMap();
-          dispatch(updateCurrentMemes({ memeMap: memeMap }));
+          const memeModelMap = await getMemeModelMap();
+          dispatch(setMemeModelMap({ memeModelMap }));
         }
       });
     }
@@ -347,10 +342,7 @@ const Gameplay = () => {
   return (
     <>
       <Popups />
-      <TopMenu
-        targetMemeIndex={targetMemeIndex}
-        targetMemeRank={targetMemeRank}
-      />
+      <TopMenu targetMemeIndex={targetMemeIndex} />
 
       <div className="center" id="stage">
         <canvas

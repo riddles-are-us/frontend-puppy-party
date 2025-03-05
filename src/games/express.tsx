@@ -1,4 +1,5 @@
 import axios from "axios";
+import { MemeModel } from "./season";
 
 // Get the current URL components
 const currentLocation = window.location;
@@ -12,17 +13,17 @@ const instance = axios.create({
   },
 });
 
-export async function getMemeMap(): Promise<{ [key: number]: number }> {
+export async function getMemeModelMap(): Promise<{ [key: number]: MemeModel }> {
   const res = await getRequest("/data/memes");
   const memeMap = res.data.reduce(
     (
-      acc: { [key: number]: number },
+      acc: { [key: number]: MemeModel },
       { id, rank }: { id: number; rank: number }
     ) => {
-      acc[id] = rank;
+      acc[id] = { id, rank };
       return acc;
     },
-    {} as { [key: number]: number }
+    {} as { [key: number]: MemeModel }
   );
   return memeMap;
 }

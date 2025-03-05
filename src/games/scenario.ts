@@ -6,7 +6,7 @@ import {
 import { ShapeBuilder } from "./ShapeBuilder";
 import { BackgroundDisco } from "./components/backgrounds/BackgroundDisco";
 import { BackgroundBase, ShapeProps } from "./components/backgrounds/BackgroundBase";
-import { MemeData } from "./season";
+import { MemeProp } from "./season";
 
 function getRandomNumber(range: number): number {
     return Math.floor(Math.random() * range);
@@ -26,14 +26,13 @@ export class Scenario {
   background: BackgroundBase;
   context?: CanvasRenderingContext2D;
 
-  constructor(currentMemes: MemeData[]) {
+  constructor(currentMemes: MemeProp[]) {
     this.status = "play";
     this.clips = [];
     for (let i = 0; i< currentMemes.length; i++) {
-      const info = currentMemes[i];
-      const clip = createAnimationClip(i, info.spriteSheet, 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24);
+      const clip = createAnimationClip(i, currentMemes[i].data.spriteSheet, 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24);
       this.clips.push(clip);
-      clip.name = info.name;
+      clip.name = currentMemes[i].data.name;
     }
     this.clips[0].focus = true;
     this.lights = [
@@ -167,7 +166,7 @@ export class Scenario {
   draw(ratioArray: Array<Beat>, state: any) {
     if (this.context){
       const shapeProps = this.getShapeProps();
-      this.background.draw(ratioArray, state.memeList, shapeProps);
+      this.background.draw(ratioArray, state.currentMemes, shapeProps);
   
       const [bLeft, bTop] = this.actor.getZCenter()!;
       this.focusTorch.drawLight(bLeft, bTop, this.context);

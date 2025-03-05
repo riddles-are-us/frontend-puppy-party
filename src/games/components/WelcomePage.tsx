@@ -19,14 +19,14 @@ import PlayButton from "./buttons/PlayButton";
 import MemeIcon from "./MemeIcon";
 import Grid from "./Grid";
 import MemeRankingIcon from "./MemeRankingIcon";
-import { selectCurrentMemes } from "../../data/memeDatas";
+import { selectAllMemes } from "../../data/memeDatas";
 
 interface Props {
   onStartGame: () => void;
 }
 
 const WelcomePage = ({ onStartGame }: Props) => {
-  const currentMemes = useAppSelector(selectCurrentMemes);
+  const allMemeProps = useAppSelector(selectAllMemes);
   const rankingContainerRef = useRef<HTMLDivElement>(null);
   const [memeRankingIconElementWidth, setMemeRankingIconElementWidth] =
     useState<number>(0);
@@ -57,7 +57,6 @@ const WelcomePage = ({ onStartGame }: Props) => {
 
   useEffect(() => {
     adjustSize();
-    console.log("currentMemes", currentMemes);
 
     window.addEventListener("resize", adjustSize);
     return () => {
@@ -120,14 +119,14 @@ const WelcomePage = ({ onStartGame }: Props) => {
               elementHeight={memeRankingIconElementWidth}
               columnCount={4}
               rowCount={3}
-              elements={currentMemes.slice(0, 12).map((memeData, index) => (
+              elements={allMemeProps.slice(0, 12).map((memeProp, index) => (
                 <MemeRankingIcon
                   key={index}
                   height={memeRankingIconElementWidth}
                   width={memeRankingIconElementWidth}
                   fontSize={fontSize}
-                  image={memeData.avatar}
-                  rank={memeData.rank}
+                  image={memeProp.data.avatar}
+                  rank={memeProp.model.rank}
                 />
               ))}
             />

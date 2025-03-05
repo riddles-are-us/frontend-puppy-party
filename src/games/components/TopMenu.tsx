@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import DepositButton from "./buttons/DepositButton";
 import ticketIcon from "../images/ticket_icon.png";
 import balanceIcon from "../images/balance_icon.png";
-import { selectUIState, setUIState, UIState } from "../../data/ui";
+import { setUIState, UIState } from "../../data/ui";
 import { selectConnectState, selectUserState } from "../../data/state";
 import { selectCurrentMemes } from "../../data/memeDatas";
 import JoinButton from "./buttons/JoinButton";
@@ -13,10 +13,9 @@ import { ConnectState } from "zkwasm-minirollup-browser";
 
 interface Props {
   targetMemeIndex: number;
-  targetMemeRank: number;
 }
 
-function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
+function TopMenu({ targetMemeIndex }: Props) {
   const dispatch = useAppDispatch();
   const userState = useAppSelector(selectUserState);
   const connectState = useAppSelector(selectConnectState);
@@ -60,9 +59,11 @@ function TopMenu({ targetMemeIndex, targetMemeRank }: Props) {
         DiscoNote: {userState.player!.data.balance}
       </div>
       <img src={balanceIcon} className="top-menu-balance-icon"></img>
-      <div className="top-menu-vote-text">Vote: {targetMemeRank}</div>
+      <div className="top-menu-vote-text">
+        Vote: {currentMemes[targetMemeIndex].model.rank}
+      </div>
       <img
-        src={currentMemes[targetMemeIndex].avatar}
+        src={currentMemes[targetMemeIndex].data.avatar}
         className="top-menu-vote-icon"
       ></img>
     </div>

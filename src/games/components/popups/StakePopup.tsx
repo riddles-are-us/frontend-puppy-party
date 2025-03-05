@@ -15,11 +15,8 @@ import {
 } from "../../../data/ui";
 import { selectUserState } from "../../../data/state";
 import { sendTransaction } from "zkwasm-minirollup-browser/src/connect";
-import {
-  selectCurrentMemes,
-  updateCurrentMemes,
-} from "../../../data/memeDatas";
-import { getMemeMap } from "../../express";
+import { selectCurrentMemes, setMemeModelMap } from "../../../data/memeDatas";
+import { getMemeModelMap } from "../../express";
 
 const StakePopup = () => {
   const dispatch = useAppDispatch();
@@ -36,15 +33,15 @@ const StakePopup = () => {
       sendTransaction(
         getStakeTransactionParameter(
           l2account!,
-          currentMemes[targetMemeIndex].id,
+          currentMemes[targetMemeIndex].data.id,
           amount,
           BigInt(userState.player!.nonce)
         )
       )
     ).then(async (action) => {
       if (sendTransaction.fulfilled.match(action)) {
-        const memeMap = await getMemeMap();
-        dispatch(updateCurrentMemes({ memeMap: memeMap }));
+        const memeModelMap = await getMemeModelMap();
+        dispatch(setMemeModelMap({ memeModelMap }));
         dispatch(setUIState({ uIState: UIState.FinishStake }));
       }
     });

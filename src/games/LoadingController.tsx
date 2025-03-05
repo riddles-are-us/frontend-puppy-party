@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { getMemeMap } from "./express";
+import { useEffect, useState } from "react";
+import { getMemeModelMap } from "./express";
 import sanityClient from "./sanityClient";
 import { SeasonData } from "./season";
-import { setCurrentSeason, updateCurrentMemes } from "../data/memeDatas";
+import {
+  setSeasonData,
+  setMemeModelMap,
+  fillCurrentMemeIds,
+} from "../data/memeDatas";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
   selectConnectState,
@@ -74,16 +78,17 @@ export function LoadingController() {
         console.error("Error fetching data:", error);
       });
 
-    const currentSeason = seasonDatas.find((season) => season.isCurrentSeason);
-    if (currentSeason) {
-      dispatch(setCurrentSeason({ currentSeason: currentSeason }));
+    const seasonData = seasonDatas.find((season) => season.isCurrentSeason);
+    if (seasonData) {
+      dispatch(setSeasonData({ seasonData }));
     }
   };
 
   const onStart = async () => {
     await querySanity();
-    const memeMap = await getMemeMap();
-    dispatch(updateCurrentMemes({ memeMap: memeMap }));
+    const memeModelMap = await getMemeModelMap();
+    dispatch(setMemeModelMap({ memeModelMap }));
+    dispatch(fillCurrentMemeIds({}));
   };
 
   const onStartGameplay = () => {

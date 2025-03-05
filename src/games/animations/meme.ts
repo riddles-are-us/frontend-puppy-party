@@ -1,7 +1,7 @@
 import {
   HEIGHT, WIDTH,
 }  from "../draw";
-import { MemeData } from "../season";
+import { MemeData, MemeProp } from "../season";
 
 import spirites from "../spirite";
 
@@ -122,7 +122,7 @@ export class Clip {
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D, memes: MemeData[]) {
+  draw(ctx: CanvasRenderingContext2D, memes: MemeProp[]) {
     if (this.currentClip != null && this.currentFrame != null) {
       //Set the fill color
       const rect = this.clips.get(this.currentClip)![this.currentFrame];
@@ -136,7 +136,7 @@ export class Clip {
         ctx.fillStyle = "black";  // Red color
       }
 
-      const rank = memes[this.index].rank;
+      const rank = memes[this.index].model.rank;
       const fullname = `${this.name}:${rank}`;
       {
         ctx.fillRect(this.left + 30, this.top - 13, fullname.length * 7 + 5, 15);

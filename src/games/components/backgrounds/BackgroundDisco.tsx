@@ -12,7 +12,7 @@ import {
   FocusTorch,
   HEIGHT,
 } from "../../draw";
-import { MemeData } from "../../season";
+import { MemeProp } from "../../season";
 import { ShapeBuilder } from "../../ShapeBuilder";
 import spirits from "../../spirite";
 import { BackgroundBase, ShapeProps, ShapeState } from "./BackgroundBase";
@@ -36,7 +36,7 @@ export class BackgroundDisco extends BackgroundBase {
 
   draw(
     ratioArray: Array<Beat>,
-    memes: MemeData[],
+    memes: MemeProp[],
     shapeProps: ShapeProps
   ): void {
     if (!this.context) {
