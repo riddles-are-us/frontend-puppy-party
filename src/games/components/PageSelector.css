@@ -1,0 +1,42 @@
+.page-selector-container{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.page-selector-page-number-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    line-height: 25px;
+    margin: 0px;
+    color: white;
+    width: 56px;
+    height: 25px;
+    font-family: "DS-DIGI";
+    color: #5CFFFF;
+    pointer-events: none;
+    user-select: none;
+}
+
+.page-selector-prev-button{
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    height: 60%;
+    width: auto;
+    aspect-ratio: 32 / 44;
+    transform: translate(-50%, -50%);
+}
+
+.page-selector-next-button{
+    position: absolute;
+    top: 50%;
+    left: 90%;
+    height: 60%;
+    width: auto;
+    aspect-ratio: 32 / 44;
+    transform: translate(-50%, -50%);
+}

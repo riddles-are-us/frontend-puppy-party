@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { AccountSlice } from "zkwasm-minirollup-browser";
 import { loadAudio } from "../audio";
 import background from "../images/welcome/welcome_bg.png";
 import titleImage from "../images/welcome/welcome_title.png";
@@ -25,11 +24,15 @@ import {
   selectCurrentMemes,
 } from "../../data/memeDatas";
 import WelcomeMeme from "./WelcomeMeme";
-import { MemeProp } from "../season";
+import PageSelector from "./PageSelector";
 
 interface Props {
   onStartGame: () => void;
 }
+
+const memeRankingGridColumnCount = 8;
+const memeRankingGridRowCount = 3;
+const amountPerPage = memeRankingGridColumnCount * memeRankingGridRowCount;
 
 const WelcomePage = ({ onStartGame }: Props) => {
   const dispatch = useAppDispatch();
@@ -39,18 +42,26 @@ const WelcomePage = ({ onStartGame }: Props) => {
   const [memeRankingIconElementWidth, setMemeRankingIconElementWidth] =
     useState<number>(0);
   const textRef = useRef<HTMLParagraphElement>(null);
+  const titleTextRef = useRef<HTMLParagraphElement>(null);
   const [fontSize, setFontSize] = useState<number>(0);
+  const [titleFontSize, setTitleFontSize] = useState<number>(0);
   const animationContainerRef = useRef<HTMLDivElement>(null);
   const [scaleSize, setScaleSize] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const pageCount = Math.ceil(allMemeProps.length / amountPerPage);
 
   const adjustSize = () => {
     if (textRef.current) {
       const parentWidth = textRef.current.offsetWidth;
       setFontSize(parentWidth / 25);
     }
+    if (titleTextRef.current) {
+      const parentWidth = titleTextRef.current.offsetWidth;
+      setTitleFontSize(parentWidth / 8);
+    }
     if (rankingContainerRef.current) {
       setMemeRankingIconElementWidth(
-        rankingContainerRef.current.offsetWidth / 4
+        rankingContainerRef.current.offsetWidth / 8
       );
     }
     if (animationContainerRef.current) {
@@ -66,6 +77,14 @@ const WelcomePage = ({ onStartGame }: Props) => {
       window.removeEventListener("resize", adjustSize);
     };
   }, []);
+
+  const onClickPrevPageButton = () => {
+    setCurrentPage((currentPage) => currentPage - 1);
+  };
+
+  const onClickNextPageButton = () => {
+    setCurrentPage((currentPage) => currentPage + 1);
+  };
 
   const onClickMeme = (memeId: number) => {
     if (currentMemeProps.find((memeProp) => memeProp.data.id == memeId)) {
@@ -117,37 +136,52 @@ const WelcomePage = ({ onStartGame }: Props) => {
           className="welcome-page-ranking-container"
         >
           <p
+            ref={titleTextRef}
             className="welcome-page-ranking-text"
             style={{
-              fontSize: `${fontSize}px`,
+              fontSize: `${titleFontSize}px`,
             }}
           >
-            Current Season Ranking
+            Pick Your Memes
           </p>
+          <div className="welcome-page-selector">
+            <PageSelector
+              currentPage={currentPage}
+              pageCount={pageCount}
+              fontSize={fontSize * 1.5}
+              onClickPrevPageButton={onClickPrevPageButton}
+              onClickNextPageButton={onClickNextPageButton}
+            />
+          </div>
           <div className="welcome-page-ranking-grid">
             <Grid
               elementWidth={memeRankingIconElementWidth}
               elementHeight={memeRankingIconElementWidth}
-              columnCount={4}
-              rowCount={3}
-              elements={allMemeProps.slice(0, 12).map((memeProp, index) => (
-                <MemeRankingIcon
-                  key={index}
-                  height={memeRankingIconElementWidth}
-                  width={memeRankingIconElementWidth}
-                  fontSize={fontSize}
-                  image={memeProp.data.avatar}
-                  rank={memeProp.model.rank}
-                  isSelect={
-                    currentMemeProps.find(
-                      (meme) => meme.data.id == memeProp.data.id
-                    )
-                      ? true
-                      : false
-                  }
-                  onClick={() => onClickMeme(memeProp.data.id)}
-                />
-              ))}
+              columnCount={memeRankingGridColumnCount}
+              rowCount={memeRankingGridRowCount}
+              elements={allMemeProps
+                .slice(
+                  currentPage * amountPerPage,
+                  (currentPage + 1) * amountPerPage
+                )
+                .map((memeProp, index) => (
+                  <MemeRankingIcon
+                    key={index}
+                    height={memeRankingIconElementWidth}
+                    width={memeRankingIconElementWidth}
+                    fontSize={fontSize}
+                    image={memeProp.data.avatar}
+                    rank={memeProp.model.rank}
+                    isSelect={
+                      currentMemeProps.find(
+                        (meme) => meme.data.id == memeProp.data.id
+                      )
+                        ? true
+                        : false
+                    }
+                    onClick={() => onClickMeme(memeProp.data.id)}
+                  />
+                ))}
             />
           </div>
         </div>
