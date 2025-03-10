@@ -1,56 +1,53 @@
 import React from "react";
-import DanceMusicButton from "./buttons/DanceMusicButton";
+import VoteButton from "./buttons/VoteButton";
+import StakeButton from "./buttons/StakeButton";
+import CollectButton from "./buttons/CollectButton";
 import "./StageButtons.css";
-import DanceSideButton from "./buttons/DanceSideButton";
-import DanceTurnButton from "./buttons/DanceTurnButton";
-import DanceUpButton from "./buttons/DanceUpButton";
 import { DanceType } from "./Gameplay";
 
 interface Props {
   isCoolDown: boolean;
   progress: number;
-  danceType: DanceType;
-  onClickButton: (danceType: DanceType) => () => void;
+  currentDanceType: DanceType;
+  onClickVoteButton: () => () => void;
+  onClickStakeButton: () => () => void;
+  onClickCollectButton: () => () => void;
+  onClickCommentButton: () => () => void;
 }
 
 const StageButtons = ({
   isCoolDown,
   progress,
-  danceType,
-  onClickButton,
+  currentDanceType,
+  onClickVoteButton,
+  onClickStakeButton,
+  onClickCollectButton,
+  onClickCommentButton,
 }: Props) => {
   return (
     <div className="stage-buttons-container">
-      <div className="stage-buttons-music-container">
-        <DanceMusicButton
+      <div className="stage-buttons-vote-container">
+        <VoteButton
           isCoolDown={isCoolDown}
           progress={progress}
-          isDancing={progress < 1 && danceType == DanceType.Music}
-          onClick={onClickButton(DanceType.Music)}
+          isDancing={progress < 1 && currentDanceType == DanceType.Vote}
+          onClick={onClickVoteButton()}
         />
       </div>
-      <div className="stage-buttons-side-container">
-        <DanceSideButton
+      <div className="stage-buttons-stake-container">
+        <StakeButton
           isCoolDown={isCoolDown}
           progress={progress}
-          isDancing={progress < 1 && danceType == DanceType.Side}
-          onClick={onClickButton(DanceType.Side)}
+          isDancing={progress < 1 && currentDanceType == DanceType.Stake}
+          onClick={onClickStakeButton()}
         />
       </div>
-      <div className="stage-buttons-turn-container">
-        <DanceTurnButton
+      <div className="stage-buttons-collect-container">
+        <CollectButton
           isCoolDown={isCoolDown}
           progress={progress}
-          isDancing={progress < 1 && danceType == DanceType.Turn}
-          onClick={onClickButton(DanceType.Turn)}
-        />
-      </div>
-      <div className="stage-buttons-up-container">
-        <DanceUpButton
-          isCoolDown={isCoolDown}
-          progress={progress}
-          isDancing={progress < 1 && danceType == DanceType.Up}
-          onClick={onClickButton(DanceType.Up)}
+          isDancing={progress < 1 && currentDanceType == DanceType.Collect}
+          onClick={onClickCollectButton()}
         />
       </div>
     </div>

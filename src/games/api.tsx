@@ -1,16 +1,17 @@
 import BN from "bn.js";
 import { AccountSlice } from "zkwasm-minirollup-browser";
-import { getTransactionCommandArray } from "./rpc";
 import { DanceType } from "./components/Gameplay";
+import { createWithdrawCommand, createCommand } from "zkwasm-minirollup-rpc";
 
 const CREATE_PLAYER = 1n;
-const DANCE_MUSIC = 2n;
-const DANCE_SIDE = 3n;
-const DANCE_TURN = 4n;
-const DANCE_UP = 5n;
+const VOTE = 2n;
+const STAKE = 3n;
+const COLLECT = 4n;
+const COMMENT = 5n;
 const LOTTERY = 6n;
-const CANCELL_LOTTERY = 7n;
+const INSTALL_MEME = 7n;
 const WITHDRAW = 8n;
+const DEPOSIT = 9n;
 const WITHDRAW_LOTTERY = 10n;
 
 function bytesToHex(bytes: Array<number>): string {
@@ -24,32 +25,32 @@ export function getCreatePlayerTransactionParameter(
   nonce: bigint
 ) {
   return {
-    cmd: getTransactionCommandArray(CREATE_PLAYER, nonce, [0n, 0n, 0n]),
-    prikey: l2account.address,
+    cmd: createCommand(CREATE_PLAYER, nonce, [0n, 0n, 0n]),
+    prikey: l2account.getPrivateKey(),
   };
 }
 
 export function getDanceTransactionParameter(
   l2account: AccountSlice.L2AccountInfo,
   danceType: DanceType,
-  targetMemeIndex: bigint,
+  memeId: number,
   nonce: bigint
 ) {
   const danceCommand =
-    danceType == DanceType.Music
-      ? DANCE_MUSIC
-      : danceType == DanceType.Side
-      ? DANCE_SIDE
-      : danceType == DanceType.Turn
-      ? DANCE_TURN
-      : DANCE_UP;
+    danceType == DanceType.Vote
+      ? VOTE
+      : danceType == DanceType.Collect
+      ? COLLECT
+      : danceType == DanceType.Comment
+      ? COMMENT
+      : 0n;
+  if (danceCommand == 0n) {
+    throw new Error("Invalid dance type");
+  }
+
   return {
-    cmd: getTransactionCommandArray(danceCommand, nonce, [
-      BigInt(targetMemeIndex),
-      0n,
-      0n,
-    ]),
-    prikey: l2account.address,
+    cmd: createCommand(nonce, danceCommand, [BigInt(memeId)]),
+    prikey: l2account.getPrivateKey(),
   };
 }
 
@@ -58,18 +59,8 @@ export function getLotteryransactionParameter(
   nonce: bigint
 ) {
   return {
-    cmd: getTransactionCommandArray(LOTTERY, nonce, [0n, 0n, 0n]),
-    prikey: l2account!.address,
-  };
-}
-
-export function getCancelLotteryransactionParameter(
-  l2account: AccountSlice.L2AccountInfo,
-  nonce: bigint
-) {
-  return {
-    cmd: getTransactionCommandArray(CANCELL_LOTTERY, nonce, [0n, 0n, 0n]),
-    prikey: l2account!.address,
+    cmd: createCommand(nonce, LOTTERY, []),
+    prikey: l2account!.getPrivateKey(),
   };
 }
 
@@ -82,31 +73,31 @@ export function getWithdrawTransactionParameter(
   const address = l1account.address.slice(2);
   const addressBN = new BN(address, 16);
   const addressBE = addressBN.toArray("be", 20); // 20 bytes = 160 bits and split into 4, 8, 8
-  //   console.log("address is", address);
-  //   console.log("address big endian is", addressBE);
   const firstLimb = BigInt("0x" + bytesToHex(addressBE.slice(0, 4).reverse()));
   const sndLimb = BigInt("0x" + bytesToHex(addressBE.slice(4, 12).reverse()));
   const thirdLimb = BigInt(
     "0x" + bytesToHex(addressBE.slice(12, 20).reverse())
   );
 
-  /*
-    (32 bit amount | 32 bit highbit of address)
-    (64 bit mid bit of address (be))
-    (64 bit tail bit of address (be))
-    */
-
-  //   console.log("first is", firstLimb);
-  //   console.log("snd is", sndLimb);
-  //   console.log("third is", thirdLimb);
-
   return {
-    cmd: getTransactionCommandArray(WITHDRAW, nonce, [
+    cmd: createCommand(nonce, WITHDRAW, [
       (firstLimb << 32n) + amount,
       sndLimb,
       thirdLimb,
     ]),
-    prikey: l2account.address,
+    prikey: l2account.getPrivateKey(),
+  };
+}
+
+export function getStakeTransactionParameter(
+  l2account: AccountSlice.L2AccountInfo,
+  memeId: number,
+  amount: number,
+  nonce: bigint
+) {
+  return {
+    cmd: createCommand(nonce, STAKE, [BigInt(memeId), BigInt(amount)]),
+    prikey: l2account.getPrivateKey(),
   };
 }
 
@@ -125,18 +116,12 @@ export function getWithdrawLotteryTransactionParameter(
     "0x" + bytesToHex(addressBE.slice(12, 20).reverse())
   );
 
-  /*
-      (32 bit amount | 32 bit highbit of address)
-      (64 bit mid bit of address (be))
-      (64 bit tail bit of address (be))
-      */
-
   return {
-    cmd: getTransactionCommandArray(WITHDRAW_LOTTERY, nonce, [
+    cmd: createCommand(nonce, WITHDRAW_LOTTERY, [
       (firstLimb << 32n) + amount,
       sndLimb,
       thirdLimb,
     ]),
-    prikey: l2account.address,
+    prikey: l2account.getPrivateKey(),
   };
 }

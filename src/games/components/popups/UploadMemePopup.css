@@ -1,0 +1,114 @@
+.upload-meme-popup-container {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 20;
+}
+
+.upload-meme-popup-mask {
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.6);
+	user-select: none;
+}
+
+.upload-meme-popup-main-container {
+	position: absolute;
+	transform: translate(-50%, -50%);
+	left: 50%;
+	top: 50%;
+	width: 555px;
+	height: 532px;
+}
+
+.upload-meme-popup-main-background {
+	width: 100%;
+	height: 100%;
+	user-select: none;
+}
+
+.upload-meme-popup-name-container {
+	position: absolute;
+	top: 31%;
+	left: 66%;
+	transform: translate(-50%, -50%);
+	width: 70%;
+}
+
+.upload-meme-popup-name-input {
+	width: 80%;
+	font-size: 14px;
+  font-weight: bold;
+	background-color: transparent;
+	border: none;
+	outline: none;
+	color: #3597ab;
+	font-family: "Inter";
+	user-select: none;
+}
+
+.upload-meme-popup-avatar-container {
+	position: absolute;
+	top: 49.5%;
+	left: 66%;
+	transform: translate(-50%, -50%);
+	width: 70%;
+}
+
+.upload-meme-popup-input-button{
+	position: absolute;
+	height: 22.5px;
+	width: 96px;
+	top: 50%;
+	left: 0;
+	transform: translate(0, -50%);
+}
+
+.upload-meme-popup-input-text{
+	position: absolute;
+	width: 50%;
+	top: 30%;
+	left: 27%;
+	transform: translate(0, -50%);
+	font-size: 15px;
+	line-height: 15px;
+  font-weight: bold;
+	margin: 0px;
+	color: #3597ab;
+	font-family: "Inter";
+	user-select: none;
+}
+
+.upload-meme-popup-sprite-sheet-container {
+	position: absolute;
+	top: 68.5%;
+	left: 66%;
+	transform: translate(-50%, -50%);
+	width: 70%;
+}
+
+.upload-meme-popup-warning-text {
+		position: absolute;
+		top: 93%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		font-size: 18px;
+		text-align: center;
+		line-height: 18px;
+		margin: 0px;
+		width: 80%;
+		height: 35%;
+		color: red;
+		font-family: "Inter";
+		user-select: none;
+}
+
+.upload-meme-popup-confirm-button {
+	position: absolute;
+	top: 88%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}

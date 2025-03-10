@@ -13,6 +13,13 @@
     background-repeat: repeat-x;
 }
 
+.top-menu-join-button{
+    position: absolute;
+    top: 30%;
+    left: 10%;
+    transform: translate(-50%, -50%);
+}
+
 .top-menu-withdraw-button{
     position: absolute;
     top: 30%;

@@ -1,14 +1,16 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { AccountSliceReducer } from 'zkwasm-minirollup-browser';
 import endpointReducer from "../data/endpoint";
-import puppyPartyReducer from "../data/puppy_party/puppy_party";
+import stateReducer from "../data/state";
+import uiReducer from "../data/ui";
+import memeDatasReducer from "../data/memeDatas";
 
 export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ['acccount/deriveL2Account/fulfilled', "client/sendTransaction/fulfilled", "client/sendTransaction/pending", "client/sendTransaction/rejected"],
-        ignoredActionPaths: ['payload.web3','payload.seed', 'payload.injector'],
+        ignoredActions: ['acccount/deriveL2Account/fulfilled'],
+        ignoredActionPaths: ['payload.web3', 'payload.seed', 'payload.injector', 'meta.arg.cmd'],
         ignoredPaths: [
           "acccount/fetchAccount/fulfilled",
           "account.l1Account.web3",
@@ -22,7 +24,9 @@ export const store = configureStore({
   reducer: {
     account: AccountSliceReducer,
     endpoint: endpointReducer,
-    puppyParty: puppyPartyReducer
+    state: stateReducer,
+    uiux: uiReducer,
+    memeDatas: memeDatasReducer,
   },
 });
 

@@ -8,7 +8,7 @@
     transform: translate(-50%, -50%);
 }
 
-.stage-buttons-music-container, .stage-buttons-side-container, .stage-buttons-turn-container, .stage-buttons-up-container{
+.stage-buttons-vote-container, .stage-buttons-stake-container, .stage-buttons-collect-container, .stage-buttons-comment-container{
     position: absolute;
     height: 60px;
     width: 60px;
@@ -16,18 +16,18 @@
     transform: translate(-50%, -50%);
 }
 
-.stage-buttons-music-container{
+.stage-buttons-vote-container{
     left: 20%;
 }
 
-.stage-buttons-side-container{
+.stage-buttons-stake-container{
     left: 40%;
 }
 
-.stage-buttons-turn-container{
+.stage-buttons-collect-container{
     left: 60%;
 }
 
-.stage-buttons-up-container{
+.stage-buttons-comment-container{
     left: 80%;
 }

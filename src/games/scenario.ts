@@ -1,18 +1,18 @@
-import { Clip, createAnimationClip, createDefaultAnimationClip } from "./animations/meme";
+import { Clip, createAnimationClip } from "./animations/meme";
 import {
   Torch, Light, HEIGHT, WIDTH, Beat, FocusTorch,
   processShakeEffect
 } from "./draw";
 import { ShapeBuilder } from "./ShapeBuilder";
-import { MemeSeasonCurrent } from "./config";
 import { BackgroundDisco } from "./components/backgrounds/BackgroundDisco";
 import { BackgroundBase, ShapeProps } from "./components/backgrounds/BackgroundBase";
+import { MemeProp } from "./season";
 
 function getRandomNumber(range: number): number {
     return Math.floor(Math.random() * range);
 }
 
-class Scenario {
+export class Scenario {
   status: string;
   clips: Array<Clip>;
   lights: Array<Light>;
@@ -26,20 +26,13 @@ class Scenario {
   background: BackgroundBase;
   context?: CanvasRenderingContext2D;
 
-  constructor() {
-    this.status = "pause";
+  constructor(currentMemes: MemeProp[]) {
+    this.status = "play";
     this.clips = [];
-    for (let i = 0; i< MemeSeasonCurrent.memeInfoList.length; i++) {
-      const info:any = MemeSeasonCurrent.memeInfoList[i];
-      if (info.animationIndex != null) {
-        const clip = createAnimationClip(0, info.animationIndex, 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24);
-        this.clips.push(clip);
-        clip.name = info.name;
-      } else {
-        const clip = createDefaultAnimationClip(getRandomNumber(4), 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24);
-        clip.name = info.name;
-        this.clips.push(clip);
-      }
+    for (let i = 0; i< currentMemes.length; i++) {
+      const clip = createAnimationClip(i, currentMemes[i].data.spriteSheet, 220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24);
+      this.clips.push(clip);
+      clip.name = currentMemes[i].data.name;
     }
     this.clips[0].focus = true;
     this.lights = [
@@ -74,9 +67,8 @@ class Scenario {
         this.actor.focus = false;
         clip.focus = true;
         this.actor = clip;
-        const index = MemeSeasonCurrent.getMemeIndex(clip.name);
         this.focusTorch.resetFrame();
-        return index;
+        return clip.index;
       }
     }
     return null
@@ -95,11 +87,6 @@ class Scenario {
         clip.hover = false;
       }
     }
-  }
-
-
-  setSelectedMeme(index: number) {
-    return;
   }
 
   cicleClips() {
@@ -138,11 +125,11 @@ class Scenario {
   }
 
   focusActor(left: number, top: number, move: number) {
-    if (move == 1) {
+    if (move == 2) {
       this.waveClips();
-    } else if (move == 2) {
-      this.cicleClips();
     } else if (move == 3) {
+      this.cicleClips();
+    } else if (move == 4) {
       this.lineClips();
     }
     this.actorState = "focus";
@@ -179,7 +166,7 @@ class Scenario {
   draw(ratioArray: Array<Beat>, state: any) {
     if (this.context){
       const shapeProps = this.getShapeProps();
-      this.background.draw(ratioArray, state.memeList, shapeProps);
+      this.background.draw(ratioArray, state.currentMemes, shapeProps);
   
       const [bLeft, bTop] = this.actor.getZCenter()!;
       this.focusTorch.drawLight(bLeft, bTop, this.context);
@@ -227,7 +214,3 @@ class Scenario {
     }
   }
 }
-
-
-
-export const scenario = new Scenario();

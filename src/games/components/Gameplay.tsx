@@ -2,38 +2,34 @@ import React, { useEffect, useRef, useState, MouseEvent } from "react";
 import Popups from "./Popups";
 import TopMenu from "./TopMenu";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { scenario } from "../scenario";
 import { audioSystem } from "../audio";
-import {
-  UIState,
-  selectUIState,
-  setUIState,
-  selectNonce,
-  selectProgress,
-  selectLastActionTimestamp,
-  selectGlobalTimer,
-  selectMemeList,
-  selectLastLotteryTimestamp,
-  selectTargetMemeIndex,
-  selectGiftboxShake,
-  setGiftboxShake,
-  setTargetMemeIndex,
-  selectTicket,
-  setPopupDescription,
-  selectProgressReset,
-  setProgressReset,
-  MemeListElement,
-} from "../../data/puppy_party/properties";
 import { AccountSlice } from "zkwasm-minirollup-browser";
 import { getBeat } from "../draw";
-import { queryState, sendTransaction, SERVER_TICK_TO_SECOND } from "../request";
 import "./Gameplay.css";
 import StageButtons from "./StageButtons";
 import ProgressBar from "./ProgressBar";
 import {
-  getCancelLotteryransactionParameter,
   getDanceTransactionParameter,
+  getLotteryransactionParameter,
 } from "../api";
+import { MemeListElement, selectUserState } from "../../data/state";
+import { sendTransaction } from "zkwasm-minirollup-browser/src/connect";
+import {
+  selectGiftboxShake,
+  selectProgressReset,
+  selectTargetMemeIndex,
+  selectUIState,
+  setGiftboxShake,
+  setPopupDescription,
+  setProgressReset,
+  setTargetMemeIndex,
+  setUIState,
+  UIState,
+} from "../../data/ui";
+import { Scenario } from "../scenario";
+import { selectCurrentMemes, setMemeModelMap } from "../../data/memeDatas";
+import { MemeData, MemeProp } from "../season";
+import { getMemeModelMap } from "../express";
 
 const COOL_DOWN = 2;
 const PROGRESS_LOTTERY_THRESHOLD = 1000;
@@ -41,34 +37,33 @@ const MIN_PROGRESS_UPDATE = 30;
 const PROGRESS_UPDATE_RATE = 0.2;
 const PROGRESS_COUNTING_DOWN_SPEED = 10;
 
+const SERVER_TICK_TO_SECOND = 5;
+
 export enum DanceType {
   None,
-  Music,
-  Side,
-  Turn,
-  Up,
+  Vote,
+  Stake,
+  Collect,
+  Comment,
 }
 
 const Gameplay = () => {
   const dispatch = useAppDispatch();
   const l2account = useAppSelector(AccountSlice.selectL2Account);
+  const userState = useAppSelector(selectUserState);
   const uIState = useAppSelector(selectUIState);
-  const [inc, setInc] = useState(0);
-  const nonce = useAppSelector(selectNonce);
-  const progress = useAppSelector(selectProgress);
-  const progressRef = useRef(progress);
-  const displayProgressRef = useRef(progress);
   const isCountingDownRef = useRef(false);
+  const progressRef = useRef(userState.player!.data.progress);
+  const displayProgressRef = useRef(userState.player!.data.progress);
   const [displayProgress, setDisplayProgress] = useState(0);
-  const [lastDanceActionTimeCache, setLastDanceActionTimeCache] = useState(0);
-  const lastLotteryTimestamp = useAppSelector(selectLastLotteryTimestamp);
-  const lastActionTimestamp = useAppSelector(selectLastActionTimestamp);
-  const memeList = useAppSelector(selectMemeList);
-  const memeListRef = useRef<MemeListElement[]>([]);
+  const currentMemes = useAppSelector(selectCurrentMemes);
+  const currentMemesRef = useRef<MemeProp[]>([]);
+  const [scenario, setScenario] = useState(new Scenario(currentMemes));
+
   const giftboxShake = useAppSelector(selectGiftboxShake);
   const progressReset = useAppSelector(selectProgressReset);
   const targetMemeIndex = useAppSelector(selectTargetMemeIndex);
-  const [targetMemeRank, setTargetMemeRank] = useState(0);
+
   const isDanceButtonCoolDownLocalRef = useRef(false);
   const isDanceButtonCoolDownGlobalRef = useRef(false);
   const [isDanceButtonCoolDownLocal, setIsDanceButtonCoolDownLocal] =
@@ -76,9 +71,7 @@ const Gameplay = () => {
   const danceButtonProgressRef = useRef(0);
   const [danceButtonProgress, setDanceButtonProgress] = useState(0);
 
-  const [danceType, setDanceType] = useState(DanceType.None);
-  const ticket = useAppSelector(selectTicket);
-  const globalTimer = useAppSelector(selectGlobalTimer);
+  const [currentDanceType, setCurrentDanceType] = useState(DanceType.None);
 
   const giftboxShakeRef = useRef(false);
   const progressResetRef = useRef(false);
@@ -88,7 +81,7 @@ const Gameplay = () => {
   const updateDisplayProgressRef = () => {
     if (progressRef.current == 0) {
       displayProgressRef.current = 0;
-      setDisplayProgress(displayProgressRef.current);
+      setDisplayProgress(0);
       return;
     }
 
@@ -156,7 +149,7 @@ const Gameplay = () => {
 
         scenario.draw(ratioArray, {
           l2account,
-          memeList: memeListRef.current,
+          currentMemes: currentMemesRef.current,
           giftboxShake: giftboxShakeRef.current,
         });
         if (giftboxShakeRef.current) {
@@ -183,82 +176,143 @@ const Gameplay = () => {
   }, [giftboxShake]);
 
   useEffect(() => {
-    memeListRef.current = memeList;
-  }, [memeList]);
+    currentMemesRef.current = currentMemes;
+  }, [currentMemes]);
 
   useEffect(() => {
     progressResetRef.current = progressReset;
     if (progressReset) {
       isCountingDownRef.current = false;
       displayProgressRef.current = 0;
-      setDisplayProgress(displayProgressRef.current);
+      setDisplayProgress(0);
     }
   }, [progressReset]);
 
   useEffect(() => {
-    progressRef.current = progress;
+    progressRef.current = userState.player!.data.progress;
     dispatch(setProgressReset({ progressReset: false }));
-  }, [progress]);
-
-  useEffect(() => {
-    if (memeList[targetMemeIndex] != undefined) {
-      setTargetMemeRank(memeList[targetMemeIndex].rank);
-    }
-  }, [targetMemeIndex, memeList]);
-
-  useEffect(() => {
     isDanceButtonCoolDownGlobalRef.current =
-      globalTimer < lastActionTimestamp + COOL_DOWN;
-  }, [lastActionTimestamp, globalTimer]);
+      userState.state.counter * SERVER_TICK_TO_SECOND <
+      userState.player!.data.last_action_timestamp + COOL_DOWN;
+  }, [userState]);
 
   function handleCancelRewards() {
     dispatch(
-      sendTransaction(getCancelLotteryransactionParameter(l2account!, nonce))
+      sendTransaction(
+        getLotteryransactionParameter(
+          l2account!,
+          BigInt(userState.player!.nonce)
+        )
+      )
     );
-    dispatch(queryState({ cmd: [], prikey: l2account!.address }));
   }
 
-  const onClickDanceButton = (danceType: DanceType) => () => {
-    if (isDanceButtonCoolDownLocalRef.current == false) {
-      if (ticket == 0) {
-        dispatch(
-          setPopupDescription({
-            popupDescription: "Not Enough Ticket",
-          })
-        );
-        dispatch(setUIState({ uIState: UIState.ErrorPopup }));
-      } else {
-        isDanceButtonCoolDownLocalRef.current = true;
-        setIsDanceButtonCoolDownLocal(true);
-        danceButtonProgressRef.current = 0;
-        setDanceType(danceType);
-        let move = 0;
-        if (danceType == DanceType.Side) {
-          move = 1;
-        } else if (danceType == DanceType.Turn) {
-          move = 2;
-        } else if (danceType == DanceType.Up) {
-          move = 3;
-        }
-        scenario.focusActor(440, 190, move);
-        dispatch(
-          sendTransaction(
-            getDanceTransactionParameter(
-              l2account!,
-              danceType,
-              BigInt(targetMemeIndex),
-              nonce
-            )
-          )
-        );
+  const checkDanceButtonCoolDownAndTicketAmount = () => {
+    if (isDanceButtonCoolDownLocalRef.current) {
+      return false;
+    }
+    if (userState.player!.data.ticket == 0) {
+      dispatch(
+        setPopupDescription({
+          popupDescription: "Not Enough Ticket",
+        })
+      );
+      dispatch(setUIState({ uIState: UIState.ErrorPopup }));
+      return false;
+    }
+    return true;
+  };
 
-        dispatch(queryState({ cmd: [], prikey: l2account!.address }));
-        setTimeout(() => {
-          scenario.restoreActor();
-        }, 8000);
-      }
+  const startDance = (danceType: DanceType) => {
+    isDanceButtonCoolDownLocalRef.current = true;
+    setIsDanceButtonCoolDownLocal(true);
+    danceButtonProgressRef.current = 0;
+    setCurrentDanceType(danceType);
+
+    scenario.focusActor(440, 190, danceType);
+    setTimeout(() => {
+      scenario.restoreActor();
+    }, 8000);
+  };
+
+  const onClickVoteButton = () => () => {
+    if (checkDanceButtonCoolDownAndTicketAmount()) {
+      startDance(DanceType.Vote);
+
+      dispatch(
+        sendTransaction(
+          getDanceTransactionParameter(
+            l2account!,
+            DanceType.Vote,
+            currentMemes[targetMemeIndex].data.id,
+            BigInt(userState.player!.nonce)
+          )
+        )
+      ).then(async (action) => {
+        if (sendTransaction.fulfilled.match(action)) {
+          const memeModelMap = await getMemeModelMap();
+          dispatch(setMemeModelMap({ memeModelMap }));
+        }
+      });
     }
   };
+
+  const onClickStakeButton = () => () => {
+    if (checkDanceButtonCoolDownAndTicketAmount()) {
+      dispatch(setUIState({ uIState: UIState.StakePopup }));
+    }
+  };
+
+  const onClickCollectButton = () => () => {
+    if (checkDanceButtonCoolDownAndTicketAmount()) {
+      startDance(DanceType.Collect);
+
+      dispatch(
+        sendTransaction(
+          getDanceTransactionParameter(
+            l2account!,
+            DanceType.Collect,
+            currentMemes[targetMemeIndex].data.id,
+            BigInt(userState.player!.nonce)
+          )
+        )
+      ).then(async (action) => {
+        if (sendTransaction.fulfilled.match(action)) {
+          const memeModelMap = await getMemeModelMap();
+          dispatch(setMemeModelMap({ memeModelMap }));
+        }
+      });
+    }
+  };
+
+  const onClickCommentButton = () => () => {
+    if (checkDanceButtonCoolDownAndTicketAmount()) {
+      startDance(DanceType.Comment);
+
+      dispatch(
+        sendTransaction(
+          getDanceTransactionParameter(
+            l2account!,
+            DanceType.Comment,
+            currentMemes[targetMemeIndex].data.id,
+            BigInt(userState.player!.nonce)
+          )
+        )
+      ).then(async (action) => {
+        if (sendTransaction.fulfilled.match(action)) {
+          const memeModelMap = await getMemeModelMap();
+          dispatch(setMemeModelMap({ memeModelMap }));
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (uIState == UIState.FinishStake) {
+      startDance(DanceType.Stake);
+      dispatch(setUIState({ uIState: UIState.Idle }));
+    }
+  }, [uIState]);
 
   function onHoverCanvas(e: MouseEvent<HTMLCanvasElement>) {
     const target = e.currentTarget;
@@ -288,10 +342,7 @@ const Gameplay = () => {
   return (
     <>
       <Popups />
-      <TopMenu
-        targetMemeIndex={targetMemeIndex}
-        targetMemeRank={targetMemeRank}
-      />
+      <TopMenu targetMemeIndex={targetMemeIndex} />
 
       <div className="center" id="stage">
         <canvas
@@ -304,8 +355,11 @@ const Gameplay = () => {
         <StageButtons
           isCoolDown={isDanceButtonCoolDownLocal}
           progress={danceButtonProgress}
-          danceType={danceType}
-          onClickButton={onClickDanceButton}
+          currentDanceType={currentDanceType}
+          onClickVoteButton={onClickVoteButton}
+          onClickStakeButton={onClickStakeButton}
+          onClickCollectButton={onClickCollectButton}
+          onClickCommentButton={onClickCommentButton}
         />
       </div>
     </>
