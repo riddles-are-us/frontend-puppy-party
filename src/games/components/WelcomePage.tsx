@@ -25,8 +25,13 @@ import {
 } from "../../data/memeDatas";
 import WelcomeMeme from "./WelcomeMeme";
 import PageSelector from "./PageSelector";
+import ConnectWalletButton from "./buttons/ConnectWalletButton";
+import JoinButton from "./buttons/JoinButton";
+import UploadMemePopup from "./popups/UploadMemePopup";
 
 interface Props {
+  isLogin: boolean;
+  onLogin: () => void;
   onStartGame: () => void;
 }
 
@@ -34,7 +39,7 @@ const memeRankingGridColumnCount = 8;
 const memeRankingGridRowCount = 3;
 const amountPerPage = memeRankingGridColumnCount * memeRankingGridRowCount;
 
-const WelcomePage = ({ onStartGame }: Props) => {
+const WelcomePage = ({ isLogin, onLogin, onStartGame }: Props) => {
   const dispatch = useAppDispatch();
   const allMemeProps = useAppSelector(selectAllMemes);
   const currentMemeProps = useAppSelector(selectCurrentMemes);
@@ -49,6 +54,8 @@ const WelcomePage = ({ onStartGame }: Props) => {
   const [scaleSize, setScaleSize] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const pageCount = Math.ceil(allMemeProps.length / amountPerPage);
+  const [openUploadMemePopup, setOpenUploadMemePopup] =
+    useState<boolean>(false);
 
   const adjustSize = () => {
     if (textRef.current) {
@@ -105,6 +112,10 @@ const WelcomePage = ({ onStartGame }: Props) => {
     startGame();
   };
 
+  const onClickJoinMeme = () => {
+    setOpenUploadMemePopup(true);
+  };
+
   return (
     <div className="welcome-page-container">
       <img className="welcome-page-background" src={background} />
@@ -127,9 +138,20 @@ const WelcomePage = ({ onStartGame }: Props) => {
           >
             Current season runs until Jan 30, 2025
           </p>
-          <div className="welcome-page-panel-play-button">
-            <PlayButton onClick={onClickPlay} />
-          </div>
+          {isLogin ? (
+            <>
+              <div className="welcome-page-panel-join-meme-button">
+                <JoinButton onClick={onClickJoinMeme} />
+              </div>
+              <div className="welcome-page-panel-play-button">
+                <PlayButton onClick={onClickPlay} />
+              </div>
+            </>
+          ) : (
+            <div className="welcome-page-panel-connect-wallet-button">
+              <ConnectWalletButton onClick={onLogin} />
+            </div>
+          )}
         </div>
         <div
           ref={rankingContainerRef}
@@ -234,6 +256,9 @@ const WelcomePage = ({ onStartGame }: Props) => {
           />
         </div>
       </div>
+      {openUploadMemePopup && (
+        <UploadMemePopup onClose={() => setOpenUploadMemePopup(false)} />
+      )}
     </div>
   );
 };

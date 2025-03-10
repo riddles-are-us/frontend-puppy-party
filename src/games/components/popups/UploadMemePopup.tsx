@@ -1,15 +1,15 @@
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import background from "../../images/upload_meme_frame.png";
 import "./UploadMemePopup.css";
-import { selectUIState, setUIState, UIState } from "../../../data/ui";
 import ConfirmButton from "../buttons/WithdrawConfirmButton";
 import { uploadImage } from "../../express";
 import { useRef, useState } from "react";
 import SelectFileButton from "../buttons/SelectFileButton";
 
-const UploadMemePopup = () => {
-  const dispatch = useAppDispatch();
-  const uIState = useAppSelector(selectUIState);
+interface Props {
+  onClose: () => void;
+}
+
+const UploadMemePopup = ({ onClose }: Props) => {
   const [formData, setFormData] = useState({
     name: "",
     avatar: null,
@@ -21,6 +21,7 @@ const UploadMemePopup = () => {
   const [avatarFileName, setAvatarFileName] = useState("No file selected");
   const [spriteSheetFileName, setSpriteSheetFileName] =
     useState("No file selected");
+  const [isQuerying, setIsQuerying] = useState(false);
 
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
@@ -38,15 +39,17 @@ const UploadMemePopup = () => {
   };
 
   const onClickUpload = () => {
-    if (uIState == UIState.UploadMemePopup) {
+    if (!isQuerying) {
       if (formData.name != "" && formData.avatar && formData.spriteSheet) {
         setMessage("Uploading");
+        setIsQuerying(true);
         uploadImage(formData.name, formData.avatar, formData.spriteSheet).then(
           () => {
             setFormData({ name: "", avatar: null, spriteSheet: null });
             setAvatarFileName("No file selected");
             setSpriteSheetFileName("No file selected");
-            dispatch(setUIState({ uIState: UIState.Idle }));
+            setIsQuerying(false);
+            onClose();
           }
         );
       } else {
@@ -68,8 +71,9 @@ const UploadMemePopup = () => {
   };
 
   const onClickCancel = () => {
-    if (uIState == UIState.UploadMemePopup) {
-      dispatch(setUIState({ uIState: UIState.Idle }));
+    if (!isQuerying) {
+      setIsQuerying(false);
+      onClose();
     }
   };
 

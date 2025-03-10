@@ -24,7 +24,7 @@ import {
 } from "zkwasm-minirollup-browser/src/connect";
 import { ConnectState } from "zkwasm-minirollup-browser";
 import "./style.scss";
-import { ConnectController } from "../connect_controller";
+import { ConnectController } from "./components/common/ConnectController";
 
 export function LoadingController() {
   const dispatch = useAppDispatch();
@@ -36,9 +36,7 @@ export function LoadingController() {
 
   // update State
   function updateState() {
-    if (connectState == ConnectState.Idle && l2account) {
-      dispatch(queryState(l2account!.getPrivateKey()));
-    } else if (connectState == ConnectState.Init && userState == null) {
+    if (connectState == ConnectState.Init && userState == null) {
       dispatch(queryInitialState("1"));
     }
     setInc(inc + 1);
@@ -104,14 +102,8 @@ export function LoadingController() {
     return (
       <ConnectController
         imageUrls={imageUrls}
-        LoadingComponent={LoadingPage}
-        WelcomeComponent={WelcomePage}
         onStart={onStart}
         onStartGameplay={onStartGameplay}
-        useAppSelector={useAppSelector}
-        useAppDispatch={useAppDispatch}
-        selectConnectState={selectConnectState}
-        setConnectState={setConnectState}
       />
     );
   }

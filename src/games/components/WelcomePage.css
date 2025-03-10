@@ -111,10 +111,30 @@
     user-select: none;
 }
 
-.welcome-page-panel-play-button{
+.welcome-page-panel-connect-wallet-button{
     position: absolute;
     top: 70%;
     left: 50%;
+    height: 40%;
+    width: auto;
+    aspect-ratio: 237 / 42;
+    transform: translate(-50%, -50%);
+}
+
+.welcome-page-panel-join-meme-button{
+    position: absolute;
+    top: 70%;
+    left: 35%;
+    height: 40%;
+    width: auto;
+    aspect-ratio: 206 / 45;
+    transform: translate(-50%, -50%);
+}
+
+.welcome-page-panel-play-button{
+    position: absolute;
+    top: 70%;
+    left: 65%;
     height: 40%;
     width: auto;
     aspect-ratio: 152 / 45;

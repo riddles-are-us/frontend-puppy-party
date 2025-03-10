@@ -16,8 +16,6 @@ export enum UIState{
 	SponsorPopup,
 	LotteryHeatPopup,
 	QueryLotteryHeat,
-	UploadMemePopup,
-	QueryUploadMeme,
 	ConfirmPopup,
 	ErrorPopup,
 }
