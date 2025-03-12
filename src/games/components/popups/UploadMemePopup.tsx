@@ -4,6 +4,8 @@ import ConfirmButton from "../buttons/WithdrawConfirmButton";
 import { uploadImage } from "../../express";
 import { useRef, useState } from "react";
 import SelectFileButton from "../buttons/SelectFileButton";
+import UploadMemeHelpPopup from "./UploadMemeHelpPopup";
+import UploadMemeHelpButton from "../buttons/UploadMemeHelpConfirmButton";
 
 interface Props {
   onClose: () => void;
@@ -21,6 +23,7 @@ const UploadMemePopup = ({ onClose }: Props) => {
   const [avatarFileName, setAvatarFileName] = useState("No file selected");
   const [spriteSheetFileName, setSpriteSheetFileName] =
     useState("No file selected");
+  const [isShowingHelpPopup, setIsShowingHelpPopup] = useState(false);
   const [isQuerying, setIsQuerying] = useState(false);
 
   const handleInputChange = (e: any) => {
@@ -58,6 +61,14 @@ const UploadMemePopup = ({ onClose }: Props) => {
     }
   };
 
+  const onClickHelpButton = () => {
+    setIsShowingHelpPopup(true);
+  };
+
+  const onCloseHelpPopup = () => {
+    setIsShowingHelpPopup(false);
+  };
+
   const onClickAvatarInputButton = () => {
     if (avatarFileNameInputRef.current) {
       avatarFileNameInputRef.current.click();
@@ -79,56 +90,70 @@ const UploadMemePopup = ({ onClose }: Props) => {
 
   return (
     <div className="upload-meme-popup-container">
-      <div onClick={onClickCancel} className="upload-meme-popup-mask" />
-      <div className="upload-meme-popup-main-container">
-        <img src={background} className="upload-meme-popup-main-background" />
-        <div className="upload-meme-popup-name-container">
-          <input
-            className="upload-meme-popup-name-input"
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="upload-meme-popup-avatar-container">
-          <input
-            type="file"
-            name="avatar"
-            accept="image/*"
-            onChange={handleFileChange}
-            required
-            ref={avatarFileNameInputRef}
-            style={{ display: "none" }}
-          />
-          <div className="upload-meme-popup-input-button">
-            <SelectFileButton onClick={onClickAvatarInputButton} />
+      {isShowingHelpPopup ? (
+        <UploadMemeHelpPopup onClose={onCloseHelpPopup} />
+      ) : (
+        <>
+          <div onClick={onClickCancel} className="upload-meme-popup-mask" />
+          <div className="upload-meme-popup-main-container">
+            <img
+              src={background}
+              className="upload-meme-popup-main-background"
+            />
+            <div className="upload-meme-popup-help-button">
+              <UploadMemeHelpButton onClick={onClickHelpButton} />
+            </div>
+            <div className="upload-meme-popup-name-container">
+              <input
+                className="upload-meme-popup-name-input"
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="upload-meme-popup-avatar-container">
+              <input
+                type="file"
+                name="avatar"
+                accept="image/*"
+                onChange={handleFileChange}
+                required
+                ref={avatarFileNameInputRef}
+                style={{ display: "none" }}
+              />
+              <div className="upload-meme-popup-input-button">
+                <SelectFileButton onClick={onClickAvatarInputButton} />
+              </div>
+              <p className="upload-meme-popup-input-text">{avatarFileName}</p>
+            </div>
+            <div className="upload-meme-popup-sprite-sheet-container">
+              <input
+                type="file"
+                name="spriteSheet"
+                accept="image/*"
+                onChange={handleFileChange}
+                required
+                ref={spriteSheetFileNameInputRef}
+                style={{ display: "none" }}
+              />
+              <div className="upload-meme-popup-input-button">
+                <SelectFileButton onClick={onClickSpriteSheetInputButton} />
+              </div>
+              <p className="upload-meme-popup-input-text">
+                {spriteSheetFileName}
+              </p>
+            </div>
+            <div className="upload-meme-popup-warning-text">
+              <p>{message}</p>
+            </div>
+            <div className="upload-meme-popup-confirm-button">
+              <ConfirmButton onClick={onClickUpload} />
+            </div>
           </div>
-          <p className="upload-meme-popup-input-text">{avatarFileName}</p>
-        </div>
-        <div className="upload-meme-popup-sprite-sheet-container">
-          <input
-            type="file"
-            name="spriteSheet"
-            accept="image/*"
-            onChange={handleFileChange}
-            required
-            ref={spriteSheetFileNameInputRef}
-            style={{ display: "none" }}
-          />
-          <div className="upload-meme-popup-input-button">
-            <SelectFileButton onClick={onClickSpriteSheetInputButton} />
-          </div>
-          <p className="upload-meme-popup-input-text">{spriteSheetFileName}</p>
-        </div>
-        <div className="upload-meme-popup-warning-text">
-          <p>{message}</p>
-        </div>
-        <div className="upload-meme-popup-confirm-button">
-          <ConfirmButton onClick={onClickUpload} />
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };

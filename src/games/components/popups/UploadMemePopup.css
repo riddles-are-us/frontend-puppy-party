@@ -30,6 +30,15 @@
 	user-select: none;
 }
 
+.upload-meme-popup-help-button{
+	position: absolute;
+	height: 40px;
+	width: 40px;
+	top: 13%;
+	left: 78%;
+	transform: translate(0, -50%);
+}
+
 .upload-meme-popup-name-container {
 	position: absolute;
 	top: 31%;
