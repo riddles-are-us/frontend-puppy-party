@@ -4,10 +4,14 @@ import {
   getConfig,
   queryState,
   sendTransaction,
+  getRpcUrl,
+  setRpcUrl
 } from "zkwasm-minirollup-browser/src/connect";
 import { createCommand } from "zkwasm-minirollup-rpc";
 
 const CREATE_PLAYER = 1n;
+
+setRpcUrl("https://rpc.memedisco.zkwasm.ai")
 
 interface Props {
   imageUrls: string[];
@@ -105,6 +109,7 @@ export function ConnectController({
 
   const onStartGame = () => {
     dispatch(AccountSlice.loginL2AccountAsync(l1account!.address));
+    console.log(getRpcUrl())
   };
 
   if (connectState == ConnectState.Init) {
