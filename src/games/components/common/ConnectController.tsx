@@ -4,6 +4,8 @@ import {
   getConfig,
   sendTransaction,
   queryState,
+  getRpcUrl,
+  setRpcUrl
 } from "zkwasm-minirollup-browser/src/connect";
 import { createCommand } from "zkwasm-minirollup-rpc";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -12,6 +14,7 @@ import LoadingPage from "../LoadingPage";
 import WelcomePage from "../WelcomePage";
 
 const CREATE_PLAYER = 1n;
+setRpcUrl("https://rpc.memedisco.zkwasm.ai")
 
 interface Props {
   imageUrls: string[];
@@ -70,6 +73,7 @@ export function ConnectController({
   }, [l1account]);
 
   useEffect(() => {
+    console.log(getRpcUrl())
     console.log("connectState", connectState);
     if (connectState == ConnectState.OnStart) {
       onStart().then(() => {

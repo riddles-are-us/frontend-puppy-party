@@ -71,6 +71,7 @@ export function ConnectController({
   };
 
   useEffect(() => {
+    console.log(getRpcUrl())
     dispatch(AccountSlice.loginL1AccountAsync());
   }, []);
 
@@ -88,6 +89,7 @@ export function ConnectController({
   }, [l2account]);
 
   useEffect(() => {
+    console.log(getRpcUrl())
     if (connectState == ConnectState.OnStart) {
       onStart().then(() => {
         dispatch(setConnectState(ConnectState.Preloading));
