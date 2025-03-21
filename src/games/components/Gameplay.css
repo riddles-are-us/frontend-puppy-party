@@ -30,43 +30,6 @@ button.btn-confirm {
   background-color: black;
 }
 
-div.stage-buttons {
-  position: absolute;
-  left: 300px;
-  top: 460px;
-  .button1 {
-    display: inline-block;
-    height:70px;
-    width:70px;
-    background-image: url('../images/btn1.png');
-    background-size: cover;
-  }
-  .button2 {
-    margin-left:15px;
-    display: inline-block;
-    height:70px;
-    width:70px;
-    background-image: url('../images/btn2.png');
-    background-size: cover;
-  }
-  .button3 {
-    margin-left:15px;
-    display: inline-block;
-    height:70px;
-    width:70px;
-    background-image: url('../images/btn3.png');
-    background-size: cover;
-  }
-  .button4 {
-    margin-left:15px;
-    display: inline-block;
-    height:70px;
-    width:70px;
-    background-image: url('../images/btn4.png');
-    background-size: cover;
-  }
-}
-
 div.giftbox-buttons {
   position: absolute;
   left: 260px;

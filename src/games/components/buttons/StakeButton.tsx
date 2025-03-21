@@ -1,10 +1,10 @@
 import React from "react";
 import ImageButton from "../common/ImageButton";
-import buttonImage from "../../images/buttons/dance_side/side_normal.png";
-import buttonHoverImage from "../../images/buttons/dance_side/side_hv.png";
-import buttonClickImage from "../../images/buttons/dance_side/side_click.png";
-import buttonDisabledImage from "../../images/buttons/dance_side/side_idle.png";
-import buttonDancingImage from "../../images/buttons/dance_side/side_wait.png";
+import buttonImage from "../../images/buttons/stake/stake_normal.png";
+import buttonHoverImage from "../../images/buttons/stake/stake_hover.png";
+import buttonClickImage from "../../images/buttons/stake/stake_click.png";
+import buttonDisabledImage from "../../images/buttons/stake/stake_idle.png";
+import buttonDancingImage from "../../images/buttons/stake/stake_wait.png";
 import progressImage from "../../images/dance_button_progress.png";
 
 import "./StakeButton.css";
