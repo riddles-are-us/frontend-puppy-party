@@ -1,10 +1,10 @@
 import React from "react";
 import ImageButton from "../common/ImageButton";
-import buttonImage from "../../images/buttons/dance_turn/turn_normal.png";
-import buttonHoverImage from "../../images/buttons/dance_turn/turn_hv.png";
-import buttonClickImage from "../../images/buttons/dance_turn/turn_click.png";
-import buttonDisabledImage from "../../images/buttons/dance_turn/turn_idle.png";
-import buttonDancingImage from "../../images/buttons/dance_turn/turn_wait.png";
+import buttonImage from "../../images/buttons/collect/collect_normal.png";
+import buttonHoverImage from "../../images/buttons/collect/collect_hover.png";
+import buttonClickImage from "../../images/buttons/collect/collect_click.png";
+import buttonDisabledImage from "../../images/buttons/collect/collect_idle.png";
+import buttonDancingImage from "../../images/buttons/collect/collect_wait.png";
 import progressImage from "../../images/dance_button_progress.png";
 
 import "./CollectButton.css";
