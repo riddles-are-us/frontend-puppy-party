@@ -7,7 +7,7 @@ const protocol = currentLocation.protocol; // e.g., 'http:' or 'https:'
 const hostname = currentLocation.hostname; // e.g., 'sinka' or 'localhost'
 
 const instance = axios.create({
-  baseURL: `${protocol}//${hostname}` + ":3000",
+  baseURL: `https://rpc.memedisco.zkwasm.ai`,
   headers: {
     "Content-Type": "multipart/form-data",
   },

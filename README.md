@@ -1,2 +1,1 @@
-# trustless-blade-td
-tower defence
+# party-ui
