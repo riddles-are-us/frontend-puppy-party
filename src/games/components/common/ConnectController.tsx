@@ -12,9 +12,11 @@ import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { selectConnectState, setConnectState } from "../../../data/state";
 import LoadingPage from "../LoadingPage";
 import WelcomePage from "../WelcomePage";
+import { rpcURL }  from "../../api";
 
 const CREATE_PLAYER = 1n;
-setRpcUrl("https://rpc.memedisco.zkwasm.ai")
+setRpcUrl(rpcURL);
+//setRpcUrl("https://rpc.memedisco.zkwasm.ai")
 
 interface Props {
   imageUrls: string[];

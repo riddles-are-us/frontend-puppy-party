@@ -14,6 +14,9 @@ const WITHDRAW = 8n;
 const DEPOSIT = 9n;
 const WITHDRAW_LOTTERY = 10n;
 
+//export const rpcURL = "http://localhost:3000";
+export const rpcURL = "https://rpc.memedisco.zkwasm.ai";
+
 function bytesToHex(bytes: Array<number>): string {
   return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join(
     ""
@@ -71,20 +74,9 @@ export function getWithdrawTransactionParameter(
   nonce: bigint
 ) {
   const address = l1account.address.slice(2);
-  const addressBN = new BN(address, 16);
-  const addressBE = addressBN.toArray("be", 20); // 20 bytes = 160 bits and split into 4, 8, 8
-  const firstLimb = BigInt("0x" + bytesToHex(addressBE.slice(0, 4).reverse()));
-  const sndLimb = BigInt("0x" + bytesToHex(addressBE.slice(4, 12).reverse()));
-  const thirdLimb = BigInt(
-    "0x" + bytesToHex(addressBE.slice(12, 20).reverse())
-  );
-
+  const cmd = createWithdrawCommand(nonce, WITHDRAW, address, 0n, amount);
   return {
-    cmd: createCommand(nonce, WITHDRAW, [
-      (firstLimb << 32n) + amount,
-      sndLimb,
-      thirdLimb,
-    ]),
+    cmd,
     prikey: l2account.getPrivateKey(),
   };
 }
