@@ -100,20 +100,9 @@ export function getWithdrawLotteryTransactionParameter(
   nonce: bigint
 ) {
   const address = l1account.address.slice(2);
-  const addressBN = new BN(address, 16);
-  const addressBE = addressBN.toArray("be", 20); // 20 bytes = 160 bits and split into 4, 8, 8
-  const firstLimb = BigInt("0x" + bytesToHex(addressBE.slice(0, 4).reverse()));
-  const sndLimb = BigInt("0x" + bytesToHex(addressBE.slice(4, 12).reverse()));
-  const thirdLimb = BigInt(
-    "0x" + bytesToHex(addressBE.slice(12, 20).reverse())
-  );
-
+  const cmd = createWithdrawCommand(nonce, WITHDRAW, address, 1n, amount);
   return {
-    cmd: createCommand(nonce, WITHDRAW_LOTTERY, [
-      (firstLimb << 32n) + amount,
-      sndLimb,
-      thirdLimb,
-    ]),
+    cmd,
     prikey: l2account.getPrivateKey(),
   };
 }
