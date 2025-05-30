@@ -9,15 +9,15 @@ import {
 } from "zkwasm-minirollup-browser/src/connect";
 import { createCommand } from "zkwasm-minirollup-rpc";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { selectConnectState, setConnectState } from "../../../data/state";
+import { selectUserState, selectConnectState, setConnectState } from "../../../data/state";
 import LoadingPage from "../LoadingPage";
 import WelcomePage from "../WelcomePage";
-import { rpcURL }  from "../../api";
+import { rpcURL, queryStake }  from "../../api";
 
 const CREATE_PLAYER = 1n;
 setRpcUrl(rpcURL);
 //setRpcUrl("https://rpc.memedisco.zkwasm.ai")
-
+//
 interface Props {
   imageUrls: string[];
   onStart: () => Promise<void>;
@@ -34,6 +34,7 @@ export function ConnectController({
   const l1account = useAppSelector(AccountSlice.selectL1Account);
   const l2account = useAppSelector(AccountSlice.selectL2Account);
   const connectState = useAppSelector(selectConnectState);
+  const userState = useAppSelector(selectUserState);
   const [queryingLogin, setQueryingLogin] = useState(false);
 
   async function preloadImages(imageUrls: string[]): Promise<void> {
@@ -63,6 +64,13 @@ export function ConnectController({
       console.error("Error loading images:", error);
     }
   };
+
+  useEffect(() => {
+    if (l2account) {
+        dispatch(queryStake(l2account!.getPrivateKey()));
+    }
+  }, [connectState]);
+
 
   useEffect(() => {
     dispatch(AccountSlice.loginL1AccountAsync());

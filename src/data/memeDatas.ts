@@ -8,12 +8,19 @@ import {
   SeasonData,
   emptyMemeModel,
   MemeProp,
+  StakeInfo,
 } from "../games/season";
+
+import {
+    queryStake
+} from "../games/api";
+
 
 interface MemeDatasState {
   seasonData: SeasonData;
   memeDataMap: { [key: number]: MemeData };
   memeModelMap: { [key: number]: MemeModel };
+  memeStakeMap: { [key: number]: number };
   currentMemeIds: number[];
 }
 
@@ -21,6 +28,7 @@ const initialState: MemeDatasState = {
   seasonData: emptySeasonData,
   memeDataMap: {},
   memeModelMap: {},
+  memeStakeMap: {},
   currentMemeIds: Array(12).fill(0),
 };
 
@@ -71,6 +79,28 @@ export const memeDatasSlice = createSlice({
       );
     },
   },
+  extraReducers: (builder) => {
+      builder
+      /*
+      .addCase(queryStake.pending, (state, action) => {
+      })
+      */
+      .addCase(queryStake.fulfilled, (state, action) => {
+          for (const r of action.payload) {
+              state.memeStakeMap[Number(r.object_index)] = r.data[0];
+          }
+      })
+      /*
+      .addCase(queryStake.rejected, (state, action) => {
+          state.lastError = {
+              errorInfo: `query config rejected: ${action.payload}`,
+              payload: action.payload,
+          }
+      })
+      */
+
+  }
+
 });
 
 export const selectAllMemes = (state: RootState) =>
