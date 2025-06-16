@@ -44,7 +44,7 @@ export async function uploadImage(
 async function getRequest(path: string) {
   try {
     const response = await instance.get(path);
-    if (response.status === 200) {
+    if (response.status === 200 || response.status === 201) {
       const jsonResponse = response.data;
       return jsonResponse;
     } else {
@@ -58,7 +58,7 @@ async function getRequest(path: string) {
 async function postRequest(path: string, formData: FormData) {
   try {
     const response = await instance.post(path, formData);
-    if (response.status === 200) {
+    if (response.status === 200 || response.status === 201) {
       const jsonResponse = response.data;
       return jsonResponse;
     } else {
