@@ -106,7 +106,7 @@ export function ConnectController({
 
   const onLogin = () => {
     if (!queryingLogin) {
-      dispatch(AccountSlice.loginL2AccountAsync(l1account!.address));
+      dispatch(AccountSlice.loginL2AccountAsync("0xMEMEDISCO"));
       setQueryingLogin(true);
     }
   };
